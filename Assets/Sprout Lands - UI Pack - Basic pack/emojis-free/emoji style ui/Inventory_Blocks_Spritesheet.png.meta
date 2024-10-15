@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 03648fe178bac684b8a40092447acfde
+guid: 348c658fb5ecd52409e818553ad31db4
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -93,43 +93,17 @@ TextureImporter:
     ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
-  - serializedVersion: 3
-    buildTarget: iPhone
-    maxTextureSize: 2048
-    resizeAlgorithm: 0
-    textureFormat: -1
-    textureCompression: 1
-    compressionQuality: 50
-    crunchedCompression: 0
-    allowsAlphaSplitting: 0
-    overridden: 0
-    ignorePlatformSupport: 0
-    androidETC2FallbackOverride: 0
-    forceMaximumCompressionQuality_BC6H_BC7: 0
-  - serializedVersion: 3
-    buildTarget: Android
-    maxTextureSize: 2048
-    resizeAlgorithm: 0
-    textureFormat: -1
-    textureCompression: 1
-    compressionQuality: 50
-    crunchedCompression: 0
-    allowsAlphaSplitting: 0
-    overridden: 0
-    ignorePlatformSupport: 0
-    androidETC2FallbackOverride: 0
-    forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Basic_tools_and_meterials_0
+      name: Inventory_Blocks_Spritesheet_0
       rect:
         serializedVersion: 2
-        x: 0
-        y: 18
-        width: 16
-        height: 10
+        x: 9
+        y: 103
+        width: 30
+        height: 32
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -137,20 +111,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 76cb1cfd83ca2bb4bb36cd116fd16437
-      internalID: -825561318
+      spriteID: 75efc82f30f4c454dbe4d781d56074e9
+      internalID: -1036578004
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Basic_tools_and_meterials_1
+      name: Inventory_Blocks_Spritesheet_1
       rect:
         serializedVersion: 2
-        x: 18
-        y: 16
-        width: 13
-        height: 16
+        x: 57
+        y: 103
+        width: 30
+        height: 32
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -158,20 +132,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 68f1dcee4d21d2f499e0d15b113e68f6
-      internalID: -742294562
+      spriteID: b24bd9cc706a5274ca89b0798825ca59
+      internalID: 1873981788
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Basic_tools_and_meterials_2
+      name: Inventory_Blocks_Spritesheet_2
       rect:
         serializedVersion: 2
-        x: 34
-        y: 17
-        width: 13
-        height: 15
+        x: 105
+        y: 103
+        width: 30
+        height: 32
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -179,20 +153,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: ea46b743782aee140bdbd8b5b2efcedc
-      internalID: -1878461214
+      spriteID: 0a919989baf35d7438f10b79c81e33e7
+      internalID: -1735505648
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Basic_tools_and_meterials_3
+      name: Inventory_Blocks_Spritesheet_3
       rect:
         serializedVersion: 2
-        x: 1
-        y: 1
-        width: 14
-        height: 13
+        x: 9
+        y: 55
+        width: 30
+        height: 32
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -200,20 +174,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 360d8537bbda46241a1690f9691014e6
-      internalID: 2072165855
+      spriteID: 59d385fd1bad06b449d0fec7fa06f3e4
+      internalID: 538251915
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Basic_tools_and_meterials_4
+      name: Inventory_Blocks_Spritesheet_4
       rect:
         serializedVersion: 2
-        x: 17
-        y: 1
-        width: 13
-        height: 14
+        x: 57
+        y: 55
+        width: 30
+        height: 32
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -221,20 +195,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: baddee958706bee45a88778369972e19
-      internalID: -1040950944
+      spriteID: 10dc5d39c9aa6e340b05daebf8541494
+      internalID: 270513158
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Basic_tools_and_meterials_5
+      name: Inventory_Blocks_Spritesheet_5
       rect:
         serializedVersion: 2
-        x: 33
-        y: 1
-        width: 14
-        height: 14
+        x: 105
+        y: 55
+        width: 30
+        height: 32
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -242,8 +216,71 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 6979ca9452959114e9c27b84dd14c6bd
-      internalID: 8116400
+      spriteID: 62fb0a89cefaae04b8201ff1582210fd
+      internalID: -2038132392
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Inventory_Blocks_Spritesheet_6
+      rect:
+        serializedVersion: 2
+        x: 3
+        y: 2
+        width: 42
+        height: 44
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a239fb6d92a6ec94da9cf89bed32c37e
+      internalID: 1480287972
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Inventory_Blocks_Spritesheet_7
+      rect:
+        serializedVersion: 2
+        x: 51
+        y: 2
+        width: 42
+        height: 44
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d9a2671b7fad2a447900c86a58d6714a
+      internalID: -810376920
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Inventory_Blocks_Spritesheet_8
+      rect:
+        serializedVersion: 2
+        x: 99
+        y: 2
+        width: 42
+        height: 44
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 940ed9d32c48dde488d28daf4aaf4c54
+      internalID: -80191869
       vertices: []
       indices: 
       edges: []
@@ -259,12 +296,15 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      Basic_tools_and_meterials_0: -825561318
-      Basic_tools_and_meterials_1: -742294562
-      Basic_tools_and_meterials_2: -1878461214
-      Basic_tools_and_meterials_3: 2072165855
-      Basic_tools_and_meterials_4: -1040950944
-      Basic_tools_and_meterials_5: 8116400
+      Inventory_Blocks_Spritesheet_0: -1036578004
+      Inventory_Blocks_Spritesheet_1: 1873981788
+      Inventory_Blocks_Spritesheet_2: -1735505648
+      Inventory_Blocks_Spritesheet_3: 538251915
+      Inventory_Blocks_Spritesheet_4: 270513158
+      Inventory_Blocks_Spritesheet_5: -2038132392
+      Inventory_Blocks_Spritesheet_6: 1480287972
+      Inventory_Blocks_Spritesheet_7: -810376920
+      Inventory_Blocks_Spritesheet_8: -80191869
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

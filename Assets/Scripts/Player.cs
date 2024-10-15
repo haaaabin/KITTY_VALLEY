@@ -10,7 +10,14 @@ public class Player : MonoBehaviour
     Vector2 movement;
     Vector2 lastMoveDirection;
     Animator anim;
-    bool isMove;
+
+    public Inventory inventory;
+
+    void Awake()
+    {
+        inventory = new Inventory(9);    
+    }
+
 
     // Start is called before the first frame update
     void Start()
@@ -24,6 +31,8 @@ public class Player : MonoBehaviour
     {
         GetInput();
         UpdateAnimation();
+
+
     }
 
     void FixedUpdate()
@@ -68,4 +77,5 @@ public class Player : MonoBehaviour
             anim.SetFloat("LastVertical", lastMoveDirection.y);
         }
     }
+
 }
