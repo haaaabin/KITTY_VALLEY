@@ -123,8 +123,10 @@ public class Inventory_UI : MonoBehaviour
         {
             Vector2 position;
 
+            // 스크린상의 마우스 위치를 캔버스의 로컬 좌표로 변환
             RectTransformUtility.ScreenPointToLocalPointInRectangle(canvas.transform as RectTransform, Input.mousePosition, null, out position);
 
+            // 변환된 로컬 위치를 다시 세계 좌표로 변환하여 게임 오브젝트를 해당 위치로 이동시킴
             toMove.transform.position = canvas.transform.TransformPoint(position);
         }
     }

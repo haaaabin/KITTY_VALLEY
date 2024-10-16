@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public enum CollectableType { NONE, RICE_SEED }
+public enum CollectableType { NONE, RICE_SEED , TOMATO_SEED }
 
 public class Collectable : MonoBehaviour
 {
