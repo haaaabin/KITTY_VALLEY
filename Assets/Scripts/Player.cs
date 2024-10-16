@@ -15,9 +15,8 @@ public class Player : MonoBehaviour
 
     void Awake()
     {
-        inventory = new Inventory(9);    
+        inventory = new Inventory(24);
     }
-
 
     // Start is called before the first frame update
     void Start()
@@ -78,4 +77,22 @@ public class Player : MonoBehaviour
         }
     }
 
+    public void DropItem(Collectable item)
+    {
+        Vector3 spawnLocation = transform.position;
+
+        Vector3 spawnOffset = Random.insideUnitCircle * 2f;
+
+        Collectable droppedItem = Instantiate(item, spawnLocation + spawnOffset, Quaternion.identity);
+
+        droppedItem.rigid.AddForce(spawnOffset * 0.3f, ForceMode2D.Impulse);
+    }
+
+    public void DropItem(Collectable item, int numToDrop)
+    {
+        for (int i = 0; i < numToDrop; i++)
+        {
+            DropItem(item);
+        }
+    }
 }
