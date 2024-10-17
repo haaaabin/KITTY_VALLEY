@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 8980008206741427699}
   - component: {fileID: 5763102337225412862}
   - component: {fileID: 6975030879514230535}
+  - component: {fileID: 6324485900466675690}
   m_Layer: 0
   m_Name: RICE_SEED
   m_TagString: Object
@@ -75,7 +76,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 5
   m_Sprite: {fileID: 1238799929, guid: c5ad5767aaefecb49bdc5978439fd6e1, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -171,6 +172,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 883675ec1d208e84f990356347d42b1e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  type: 1
-  icon: {fileID: 1238799929, guid: c5ad5767aaefecb49bdc5978439fd6e1, type: 3}
-  rigid: {fileID: 8980008206741427699}
+--- !u!114 &6324485900466675690
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2467313692846777651}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ee6bb4c47463d8247b046887abbcecff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  data: {fileID: 11400000, guid: 946229b01853b7e48bfa8f6bdf7c4779, type: 2}
+  rigid: {fileID: 0}

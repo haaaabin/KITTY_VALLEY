@@ -4,33 +4,33 @@ using UnityEngine;
 
 public class ItemManager : MonoBehaviour
 {
-    public Collectable[] collectableItems; // 수집 가능한 아이템 배열
-    
+    public Item[] items; // 수집 가능한 아이템 배열
+
     // 아이템 타입과 아이템 매핑을 위한 딕셔너리
-    private Dictionary<CollectableType, Collectable> collectableItemsDict = new Dictionary<CollectableType, Collectable>();
+    private Dictionary<string, Item> nameToItemDict = new Dictionary<string, Item>();
 
     private void Awake()
     {
-        foreach (Collectable item in collectableItems)
+        foreach (Item item in items)
         {
             AddItem(item);
         }
     }
 
-    public void AddItem(Collectable item)
+    public void AddItem(Item item)
     {
-        if (!collectableItemsDict.ContainsKey(item.type))
+        if (!nameToItemDict.ContainsKey(item.data.itemName))
         {
-            collectableItemsDict.Add(item.type, item);
+            nameToItemDict.Add(item.data.itemName, item);
         }
     }
 
     // 주어진 타입의 아이템 검색
-    public Collectable GetItemByType(CollectableType type)
+    public Item GetItemByName(string key)
     {
-        if (collectableItemsDict.ContainsKey(type))
+        if (nameToItemDict.ContainsKey(key))
         {
-            return collectableItemsDict[type]; //해당 타입의 아이템 반환
+            return nameToItemDict[key]; //해당 타입의 아이템 반환
         }
 
         return null;

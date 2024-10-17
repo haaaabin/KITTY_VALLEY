@@ -6,57 +6,37 @@ public class Inventory_UI : MonoBehaviour
 {
     [SerializeField] private Canvas canvas;
     public Player player;
-    private Slot_UI draggedSlot;
-    public GameObject inventory;
-    private Image draggedIcon;
-    private bool dragSingle;
+    public GameObject inventoryPanel;
     public List<Slot_UI> slots = new List<Slot_UI>();
+    public string inventoryName;
+    private Inventory inventory;
+
 
     void Awake()
     {
         canvas = FindObjectOfType<Canvas>();
-        inventory.SetActive(false);
+        if (inventoryPanel != null)
+            inventoryPanel.SetActive(false);
     }
 
-    void Update()
+    void Start()
     {
-        if (Input.GetKeyDown(KeyCode.Tab))
-        {
-            ToggleInventory();
-        }
-        if (Input.GetKey(KeyCode.LeftShift))
-        {
-            dragSingle = true;
-        }
-        else
-        {
-            dragSingle = false;
-        }
-    }
+        inventory = GameManager.instance.player.inventory.GetInventoryByName(inventoryName);
 
-    public void ToggleInventory()
-    {
-        if (!inventory.activeSelf)
-        {
-            inventory.SetActive(true);
-            Refresh();
-        }
-        else
-        {
-            inventory.SetActive(false);
-        }
+        SetUpSlot();
+        Refresh();
     }
 
     // 인벤토리 갱신
-    void Refresh()
+    public void Refresh()
     {
-        if (slots.Count == player.inventory.slots.Count)
+        if (slots.Count == inventory.slots.Count)
         {
             for (int i = 0; i < slots.Count; i++)
             {
-                if (player.inventory.slots[i].type != CollectableType.NONE)
+                if (inventory.slots[i].itemName != "")
                 {
-                    slots[i].SetItem(player.inventory.slots[i]);
+                    slots[i].SetItem(inventory.slots[i]);
                 }
                 else
                 {
@@ -68,53 +48,67 @@ public class Inventory_UI : MonoBehaviour
 
     public void Remove()
     {
-        Collectable itemToDrop = GameManager.instance.itemManager.GetItemByType(player.inventory.slots[draggedSlot.slotID].type);
+        Item itemToDrop = GameManager.instance.itemManager.GetItemByName(inventory.slots[UIManager.draggedSlot.slotID].itemName);
 
         if (itemToDrop != null)
         {
-            if (dragSingle)
+            if (UIManager.dragSingle)
             {
-                player.DropItem(itemToDrop);
-                player.inventory.Remove(draggedSlot.slotID);
+                GameManager.instance.player.DropItem(itemToDrop);
+                inventory.Remove(UIManager.draggedSlot.slotID);
             }
             else
             {
-                player.DropItem(itemToDrop, player.inventory.slots[draggedSlot.slotID].count);
-                player.inventory.Remove(draggedSlot.slotID, player.inventory.slots[draggedSlot.slotID].count);
+                GameManager.instance.player.DropItem(itemToDrop, inventory.slots[UIManager.draggedSlot.slotID].count);
+                inventory.Remove(UIManager.draggedSlot.slotID, inventory.slots[UIManager.draggedSlot.slotID].count);
             }
             Refresh();
         }
 
-        draggedSlot = null;
+        UIManager.draggedSlot = null;
     }
 
     public void SlotBeginDrag(Slot_UI slot)
     {
-        draggedSlot = slot;
-        draggedIcon = Instantiate(draggedSlot.itemIcon);
-        draggedIcon.transform.SetParent(canvas.transform);
-        draggedIcon.raycastTarget = false;
-        draggedIcon.rectTransform.sizeDelta = new Vector2(100, 100);
+        UIManager.draggedSlot = slot;
+        UIManager.draggedIcon = Instantiate(slot.itemIcon);
+        UIManager.draggedIcon.transform.SetParent(canvas.transform);
+        UIManager.draggedIcon.raycastTarget = false;
+        UIManager.draggedIcon.rectTransform.sizeDelta = new Vector2(100, 100);
 
-        MoveToMousePosition(draggedIcon.gameObject);
-        Debug.Log("Start Drag:" + draggedSlot.name);
+        MoveToMousePosition(UIManager.draggedIcon.gameObject);
+        // Debug.Log("Start Drag:" + draggedSlot.name);
     }
 
     public void SlotDrag()
     {
-        MoveToMousePosition(draggedIcon.gameObject);
-        Debug.Log("Dragging:" + draggedSlot.name);
+        MoveToMousePosition(UIManager.draggedIcon.gameObject);
+        // Debug.Log("Dragging:" + draggedSlot.name);
     }
 
     public void SlotEndDrag()
     {
-        Destroy(draggedIcon.gameObject);
-        draggedIcon = null;
+        Destroy(UIManager.draggedIcon.gameObject);
+        UIManager.draggedIcon = null;
     }
 
     public void SlotDrop(Slot_UI slot)
     {
-        Debug.Log("Dropped :" + draggedSlot.name + " on " + slot.name);
+        // Debug.Log("Dragged Slot: " + UIManager.draggedSlot.name);
+        // Debug.Log("Dragged Slot Inventory: " + UIManager.draggedSlot.inventory);
+
+        // Debug.Log("Dragged Slot: " + slot.name);
+        // Debug.Log("Dragged Slot Inventory: " + slot.inventory);
+
+        if (UIManager.dragSingle)
+        {
+            UIManager.draggedSlot.inventory.MoveSlot(UIManager.draggedSlot.slotID, slot.slotID, slot.inventory);
+        }
+        else
+        {
+            UIManager.draggedSlot.inventory.MoveSlot(UIManager.draggedSlot.slotID, slot.slotID, slot.inventory, UIManager.draggedSlot.inventory.slots[UIManager.draggedSlot.slotID].count);
+        }
+        GameManager.instance.uiManager.RefreshAll();
     }
 
     public void MoveToMousePosition(GameObject toMove)
@@ -128,6 +122,18 @@ public class Inventory_UI : MonoBehaviour
 
             // 변환된 로컬 위치를 다시 세계 좌표로 변환하여 게임 오브젝트를 해당 위치로 이동시킴
             toMove.transform.position = canvas.transform.TransformPoint(position);
+        }
+    }
+
+    void SetUpSlot()
+    {
+        int counter = 0;
+
+        foreach (Slot_UI slot in slots)
+        {
+            slot.slotID = counter;
+            counter++;
+            slot.inventory = inventory;
         }
     }
 }

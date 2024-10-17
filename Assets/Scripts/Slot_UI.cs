@@ -4,8 +4,11 @@ using UnityEngine.UI;
 public class Slot_UI : MonoBehaviour
 {
     public int slotID;
+    public Inventory inventory;
     public Image itemIcon;
     public Text quantityText;
+
+    [SerializeField] private GameObject highlight;
 
     public void SetItem(Inventory.Slot slot)
     {
@@ -13,7 +16,10 @@ public class Slot_UI : MonoBehaviour
         {
             itemIcon.sprite = slot.icon;
             itemIcon.color = new Color(1, 1, 1, 1);
-            quantityText.text = slot.count.ToString();
+            if (slot.count == 1)
+                quantityText.text = "";
+            else
+                quantityText.text = slot.count.ToString();
         }
     }
 
@@ -22,5 +28,10 @@ public class Slot_UI : MonoBehaviour
         itemIcon.sprite = null;
         itemIcon.color = new Color(1, 1, 1, 0);
         quantityText.text = "";
+    }
+
+    public void SetHighlight(bool isOn)
+    {
+        highlight.SetActive(isOn);
     }
 }

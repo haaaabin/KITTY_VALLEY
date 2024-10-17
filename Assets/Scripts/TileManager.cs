@@ -16,7 +16,11 @@ public class TileManager : MonoBehaviour
     {
         foreach (var position in interactableMap.cellBounds.allPositionsWithin)
         {
-            interactableMap.SetTile(position, hiddenInteractableTile);
+            TileBase tile = interactableMap.GetTile(position);
+            if(tile != null && tile.name == "Interactable_Visible")
+            {
+                interactableMap.SetTile(position, hiddenInteractableTile);
+            }
         }
     }
 
@@ -26,9 +30,7 @@ public class TileManager : MonoBehaviour
 
         if (tile != null)
         {
-            Debug.Log($"Tile name: {tile.name}");
-
-            if (tile.name == "HideInInteractable")
+            if (tile.name == "Interactable")
             {
                 return true;
             }

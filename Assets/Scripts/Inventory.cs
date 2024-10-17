@@ -9,44 +9,65 @@ public class Inventory
     [System.Serializable]
     public class Slot
     {
-        public CollectableType type;
+        public string itemName;
         public Sprite icon;
         public int count;
         public int maxAllowed;
 
         public Slot()
         {
-            type = CollectableType.NONE;
+            itemName = "";
             count = 0;
             maxAllowed = 99;
         }
 
-        public bool CanAddItem()
+        public bool isEmpty
         {
-            if (count < maxAllowed)
+            get
+            {
+                if (itemName == "" && count == 0)
+                {
+                    return true;
+                }
+
+                return false;
+            }
+        }
+
+        public bool CanAddItem(string itemName)
+        {
+            if (this.itemName == itemName && count < maxAllowed)
             {
                 return true;
             }
             return false;
         }
 
-        public void AddItem(Collectable item)
+        public void AddItem(Item item)
         {
-            this.type = item.type;
-            this.icon = item.icon;
+            this.itemName = item.data.itemName;
+            this.icon = item.data.icon;
             count++;
+        }
+
+        public void AddItem(string itemName, Sprite icon, int maxAllowed)
+        {
+            this.itemName = itemName;
+            this.icon = icon;
+            count++;
+            this.maxAllowed = maxAllowed;
         }
 
         public void RemoveItem()
         {
-            if(count > 0)
+            if (count > 0)
             {
                 count--;
 
-                if(count == 0)
+                if (count == 0)
                 {
                     icon = null;
-                    type = CollectableType.NONE;
+                    itemName = "";
                 }
             }
         }
@@ -61,12 +82,12 @@ public class Inventory
         }
     }
 
-    public void Add(Collectable item)
-    {   
+    public void Add(Item item)
+    {
         // 슬롯의 타입이 추가하려는 아이템의 타입과 같고 maxAllowed보다 적으면
         foreach (Slot slot in slots)
         {
-            if (slot.type == item.type && slot.CanAddItem())
+            if (slot.itemName == item.data.itemName && slot.CanAddItem(item.data.itemName))
             {
                 slot.AddItem(item);
                 return;
@@ -77,7 +98,7 @@ public class Inventory
         foreach (Slot slot in slots)
         {
             // 빈 슬롯이면
-            if (slot.type == CollectableType.NONE)
+            if (slot.itemName == "")
             {
                 slot.AddItem(item);
                 return;
@@ -91,11 +112,26 @@ public class Inventory
     }
     public void Remove(int index, int numToRemove)
     {
-        if(slots[index].count >= numToRemove)
+        if (slots[index].count >= numToRemove)
         {
-            for(int i = 0; i < numToRemove; i++)
+            for (int i = 0; i < numToRemove; i++)
             {
                 Remove(index);
+            }
+        }
+    }
+
+    public void MoveSlot(int fromIndex, int toIndex, Inventory toInventory, int numToMove = 1)
+    {
+        Slot fromSlot = slots[fromIndex];
+        Slot toSlot = toInventory.slots[toIndex];
+
+        if (toSlot.isEmpty || toSlot.CanAddItem(fromSlot.itemName))
+        {
+            for(int i = 0; i < numToMove; i++)
+            {
+                toSlot.AddItem(fromSlot.itemName, fromSlot.icon, fromSlot.maxAllowed);
+                fromSlot.RemoveItem();
             }
         }
     }
