@@ -1,11 +1,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+// Inventory 클래스는 게임 내 슬롯 기반 인벤토리 시스템을 구현합니다.
+// 각 슬롯은 아이템 정보를 저장하며, 아이템의 추가, 제거, 이동을 관리합니다.
+// 아이템의 최대 수량 제한을 두고, 같은 아이템을 같은 슬롯에 추가하거나 빈 슬롯에 새로 추가할 수 있습니다.
+// 인벤토리 간 슬롯 이동 기능도 제공하여 유저가 아이템을 자유롭게 정리할 수 있습니다.
+
 [System.Serializable]
 public class Inventory
 {
-    public List<Slot> slots = new List<Slot>();
-
     [System.Serializable]
     public class Slot
     {
@@ -73,6 +76,9 @@ public class Inventory
         }
     }
 
+    public List<Slot> slots = new List<Slot>();
+    public Slot selectedSlot = null;
+
     public Inventory(int numSlots)
     {
         for (int i = 0; i < numSlots; i++)
@@ -128,11 +134,20 @@ public class Inventory
 
         if (toSlot.isEmpty || toSlot.CanAddItem(fromSlot.itemName))
         {
-            for(int i = 0; i < numToMove; i++)
+            for (int i = 0; i < numToMove; i++)
             {
                 toSlot.AddItem(fromSlot.itemName, fromSlot.icon, fromSlot.maxAllowed);
                 fromSlot.RemoveItem();
             }
         }
     }
+
+    public void SelectSlot(int index)
+    {
+        if(slots != null && slots.Count > 0)
+        {
+            selectedSlot = slots[index];
+        }
+    }
+
 }

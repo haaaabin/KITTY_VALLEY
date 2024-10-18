@@ -3,6 +3,9 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
+/* 인벤토리 UI 관리
+    다양한 인벤토리 UI 관리, 상태 갱신, 토글*/
+
 public class UIManager : MonoBehaviour
 {
     public Dictionary<string, Inventory_UI> inventoryUIByName = new Dictionary<string, Inventory_UI>();
@@ -61,6 +64,7 @@ public class UIManager : MonoBehaviour
         }
     }
 
+    // inventoryName에 해당하는 인벤토리를 찾아 그 인벤토리 ui만 갱신
     public void RefreshInventoryUI(string inventoryName)
     {
         if (inventoryUIByName.ContainsKey(inventoryName))
@@ -69,6 +73,7 @@ public class UIManager : MonoBehaviour
         }
     }
 
+    // inventoryUIByName 딕셔너리에 저장된 모든 인벤토리 ui 갱신
     public void RefreshAll()
     {
         foreach (KeyValuePair<string, Inventory_UI> keyValuePair in inventoryUIByName)

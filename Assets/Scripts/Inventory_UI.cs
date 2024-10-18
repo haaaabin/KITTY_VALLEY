@@ -2,6 +2,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+/* 개별 인벤토리 UI 담당 */
+
 public class Inventory_UI : MonoBehaviour
 {
     [SerializeField] private Canvas canvas;
@@ -21,7 +23,7 @@ public class Inventory_UI : MonoBehaviour
 
     void Start()
     {
-        inventory = GameManager.instance.player.inventory.GetInventoryByName(inventoryName);
+        inventory = GameManager.instance.player.inventoryManager.GetInventoryByName(inventoryName);
 
         SetUpSlot();
         Refresh();
@@ -77,13 +79,11 @@ public class Inventory_UI : MonoBehaviour
         UIManager.draggedIcon.rectTransform.sizeDelta = new Vector2(100, 100);
 
         MoveToMousePosition(UIManager.draggedIcon.gameObject);
-        // Debug.Log("Start Drag:" + draggedSlot.name);
     }
 
     public void SlotDrag()
     {
         MoveToMousePosition(UIManager.draggedIcon.gameObject);
-        // Debug.Log("Dragging:" + draggedSlot.name);
     }
 
     public void SlotEndDrag()
@@ -94,12 +94,6 @@ public class Inventory_UI : MonoBehaviour
 
     public void SlotDrop(Slot_UI slot)
     {
-        // Debug.Log("Dragged Slot: " + UIManager.draggedSlot.name);
-        // Debug.Log("Dragged Slot Inventory: " + UIManager.draggedSlot.inventory);
-
-        // Debug.Log("Dragged Slot: " + slot.name);
-        // Debug.Log("Dragged Slot Inventory: " + slot.inventory);
-
         if (UIManager.dragSingle)
         {
             UIManager.draggedSlot.inventory.MoveSlot(UIManager.draggedSlot.slotID, slot.slotID, slot.inventory);

@@ -24,23 +24,34 @@ public class TileManager : MonoBehaviour
         }
     }
 
-    public bool IsInteractable(Vector3Int position)
-    {
-        TileBase tile = interactableMap.GetTile(position);
-
-        if (tile != null)
-        {
-            if (tile.name == "Interactable")
-            {
-                return true;
-            }
-        }
-        return false;
-
-    }
-
     public void SetInteracted(Vector3Int position)
     {
         interactableMap.SetTile(position, interactedTile);
     }
+
+    public string GetTileName(Vector3Int position)
+    {
+        if ( interactableMap != null)
+        {
+            TileBase tile = interactableMap.GetTile(position);
+
+            if (tile != null)
+                return tile.name;
+        }
+        return "";
+    }    
 }
+
+    // public bool IsInteractable(Vector3Int position)
+    // {
+    //     TileBase tile = interactableMap.GetTile(position);
+
+    //     if (tile != null)
+    //     {
+    //         if (tile.name == "Interactable")
+    //         {
+    //             return true;
+    //         }
+    //     }
+    //     return false;
+    // }

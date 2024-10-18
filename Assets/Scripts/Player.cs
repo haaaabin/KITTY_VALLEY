@@ -1,6 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
-using System.Runtime.InteropServices.WindowsRuntime;
 using UnityEngine;
 
 public class Player : MonoBehaviour
@@ -10,37 +8,35 @@ public class Player : MonoBehaviour
     Vector2 movement;
     Vector2 lastMoveDirection;
     Animator anim;
-    public InventoryManager inventory;
+    public InventoryManager inventoryManager;
+    private TileManager tileManager;
+    bool isHoeing = false;
+
 
     void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
-        
-        inventory = GetComponent<InventoryManager>();
+
+        inventoryManager = GetComponent<InventoryManager>();
     }
 
+    void Start()
+    {
+        tileManager = GameManager.instance.tileManager;
+    }
 
     void Update()
     {
         GetInput();
         UpdateAnimation();
-
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            Vector3Int position = new Vector3Int((int)transform.position.x, (int)transform.position.y, 0);
-
-            if (GameManager.instance.tileManager.IsInteractable(position))
-            {
-                Debug.Log("Tile is interatable");
-                GameManager.instance.tileManager.SetInteracted(position);
-            }
-        }
+        Plow();
     }
 
     void FixedUpdate()
     {
-        Move();
+        if (!isHoeing)
+            Move();
     }
 
     void Move()
@@ -78,6 +74,94 @@ public class Player : MonoBehaviour
         {
             anim.SetFloat("LastHorizontal", lastMoveDirection.x);
             anim.SetFloat("LastVertical", lastMoveDirection.y);
+        }
+    }
+
+    Vector3Int GetTargetTilePosition(Vector3Int playerPosition, Vector2 direction)
+    {
+        Vector3Int targetPosition = playerPosition;
+
+        if (direction == Vector2.up)
+        {
+            targetPosition += new Vector3Int(0, 1, 0);
+        }
+        else if (direction == Vector2.down)
+        {
+            targetPosition += new Vector3Int(0, -1, 0);
+        }
+        else if (direction == Vector2.left)
+        {
+            targetPosition += new Vector3Int(-1, 0, 0);
+        }
+        else if (direction == -Vector2.right)
+        {
+            targetPosition += new Vector3Int(1, 0, 0);
+        }
+
+        return targetPosition;
+    }
+
+    void Plow()
+    {
+        if (isHoeing) return;
+
+        if (Input.GetMouseButton(0))
+        {
+            Vector3 mousePosition = Input.mousePosition;
+            Vector3 worldMousePosition = UnityEngine.Camera.main.ScreenToWorldPoint(mousePosition);
+            worldMousePosition.z = 0;
+
+            Vector3 playerPosition = transform.position;
+            Vector2 direction = GetDirectionFromMouse(playerPosition, worldMousePosition);
+
+            Vector3Int gridPlayerPosition = new Vector3Int(Mathf.FloorToInt(playerPosition.x), Mathf.FloorToInt(playerPosition.y), 0);
+            Vector3Int targetPosition = GetTargetTilePosition(gridPlayerPosition, direction);
+
+            if (tileManager != null)
+            {
+                string tileName = tileManager.GetTileName(targetPosition);
+
+                if (!string.IsNullOrWhiteSpace(tileName))
+                {
+                    if (tileName == "Interactable" && inventoryManager.toolbar.selectedSlot.itemName == "Hoe")
+                    {
+                        isHoeing = true;
+                        anim.SetTrigger("isHoeing");
+                        tileManager.SetInteracted(targetPosition);
+
+                        StartCoroutine(WaitForHoeingAnimation());
+                    }
+                    else
+                        return;
+                }
+                else
+                    return;
+            }
+        }
+
+    }
+
+    IEnumerator WaitForHoeingAnimation()
+    {
+        yield return new WaitForSeconds(0.5f);
+        isHoeing = false;
+    }
+
+    private Vector2 GetDirectionFromMouse(Vector3 playerPosition, Vector3 mousePosition)
+    {
+        // 플레이어와 마우스 클릭 위치 차이 계산
+        Vector3 direction = mousePosition - playerPosition;
+
+        // 가로 혹은 세로 방향으로 더 많이 차이 나는 쪽을 결정
+        if (Mathf.Abs(direction.x) > Mathf.Abs(direction.y))
+        {
+            // 수평 방향이 더 큼 (왼쪽 또는 오른쪽)
+            return direction.x > 0 ? Vector2.right : Vector2.left;
+        }
+        else
+        {
+            // 수직 방향이 더 큼 (위 또는 아래)
+            return direction.y > 0 ? Vector2.up : Vector2.down;
         }
     }
 

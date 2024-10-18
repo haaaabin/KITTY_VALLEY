@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+// 아이템 관리
+
 public class ItemManager : MonoBehaviour
 {
     public Item[] items; // 수집 가능한 아이템 배열
