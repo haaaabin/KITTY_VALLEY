@@ -7,10 +7,13 @@ public class Item : MonoBehaviour
 {
     public ItemData data;
 
+    public bool canInteract;
+
     [HideInInspector] public Rigidbody2D rigid;
 
     void Awake()
     {
         rigid = GetComponent<Rigidbody2D>();
+        canInteract = true;
     }
 }

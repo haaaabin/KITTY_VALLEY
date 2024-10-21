@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ff688d6b06fa21f4f9ee4c8aea0d6c27, type: 3}
-  m_Name: TOMATO_SEED
+  m_Name: Tomato_Seed
   m_EditorClassIdentifier: 
-  itemName: Tomato Seed
+  itemName: Tomato_Seed
   icon: {fileID: -1110057899, guid: c5ad5767aaefecb49bdc5978439fd6e1, type: 3}

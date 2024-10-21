@@ -11,6 +11,9 @@ public class Player : MonoBehaviour
     public InventoryManager inventoryManager;
     private TileManager tileManager;
     bool isHoeing = false;
+    public bool isFloating = false;
+
+    [SerializeField] private GameObject ricePlantPrefab;
 
 
     void Awake()
@@ -76,54 +79,51 @@ public class Player : MonoBehaviour
             anim.SetFloat("LastVertical", lastMoveDirection.y);
         }
     }
-
-    Vector3Int GetTargetTilePosition(Vector3Int playerPosition, Vector2 direction)
-    {
-        Vector3Int targetPosition = playerPosition;
-
-        if (direction == Vector2.up)
-        {
-            targetPosition += new Vector3Int(0, 1, 0);
-        }
-        else if (direction == Vector2.down)
-        {
-            targetPosition += new Vector3Int(0, -1, 0);
-        }
-        else if (direction == Vector2.left)
-        {
-            targetPosition += new Vector3Int(-1, 0, 0);
-        }
-        else if (direction == -Vector2.right)
-        {
-            targetPosition += new Vector3Int(1, 0, 0);
-        }
-
-        return targetPosition;
-    }
-
     void Plow()
     {
         if (isHoeing) return;
+        if (tileManager == null) return;
+        if (inventoryManager == null || inventoryManager.toolbar == null || inventoryManager.toolbar.selectedSlot == null)  return; 
+        if (inventoryManager.toolbar.selectedSlot.itemName == null)  return;
 
-        if (Input.GetMouseButton(0))
+        if (Input.GetMouseButtonDown(0))
         {
             Vector3 mousePosition = Input.mousePosition;
             Vector3 worldMousePosition = UnityEngine.Camera.main.ScreenToWorldPoint(mousePosition);
             worldMousePosition.z = 0;
 
+            Vector3Int targetPosition = new Vector3Int(Mathf.FloorToInt(worldMousePosition.x), Mathf.FloorToInt(worldMousePosition.y),0);
+           
             Vector3 playerPosition = transform.position;
-            Vector2 direction = GetDirectionFromMouse(playerPosition, worldMousePosition);
+            Vector3Int gridPlayerPosition = new Vector3Int(Mathf.FloorToInt(playerPosition.x), Mathf.FloorToInt(playerPosition.y),0);
+            
+            Vector3Int[] validTiels = new Vector3Int[]
+            {
+                gridPlayerPosition,
+                gridPlayerPosition + new Vector3Int(0,1,0),
+                gridPlayerPosition + new Vector3Int(0,-1,0),
+                gridPlayerPosition + new Vector3Int(-1,0,0),
+                gridPlayerPosition + new Vector3Int(1,0,0)
+            };
 
-            Vector3Int gridPlayerPosition = new Vector3Int(Mathf.FloorToInt(playerPosition.x), Mathf.FloorToInt(playerPosition.y), 0);
-            Vector3Int targetPosition = GetTargetTilePosition(gridPlayerPosition, direction);
+            bool isValidTile = false;
+        
+            foreach(var tile in validTiels)
+            {
+                if (tile == targetPosition)
+                {
+                    isValidTile = true;
+                    break;
+                }
+            }
 
-            if (tileManager != null)
+            if (isValidTile)
             {
                 string tileName = tileManager.GetTileName(targetPosition);
 
-                if (!string.IsNullOrWhiteSpace(tileName))
+                if (tileName != null)
                 {
-                    if (tileName == "Interactable" && inventoryManager.toolbar.selectedSlot.itemName == "Hoe")
+                    if(tileName == "Interactable" && inventoryManager.toolbar.selectedSlot.itemName == "Hoe")
                     {
                         isHoeing = true;
                         anim.SetTrigger("isHoeing");
@@ -131,45 +131,99 @@ public class Player : MonoBehaviour
 
                         StartCoroutine(WaitForHoeingAnimation());
                     }
-                    else
-                        return;
+                    else if (tileName == "Plowed" && inventoryManager.toolbar.selectedSlot.itemName == "Rice_Seed")
+                    {
+                        inventoryManager.toolbar.selectedSlot.RemoveItem();  // 씨앗 갯수 줄이기
+                        Debug.Log("Remaining seeds: " + inventoryManager.toolbar.selectedSlot.count);
+
+                        tileManager.PlantSeed(targetPosition, "Rice");  // 씨앗 심기
+
+                        if (inventoryManager.toolbar.selectedSlot.isEmpty)
+                        {
+                            inventoryManager.toolbar.selectedSlot = null;  // 씨앗이 다 떨어지면 슬롯 비우기
+                        }
+                    }
+                }   
+
+                string tileState = tileManager.GetTileState(targetPosition);
+                if(tileState != null)
+                {   
+                    if (tileState == "Grown" && inventoryManager.toolbar.selectedSlot.itemName == "Hoe")
+                    {
+                        tileManager.RemoveTile(targetPosition);
+
+                        Vector3 spawnPosition = tileManager.interactableMap.GetCellCenterWorld(targetPosition);
+                        GameObject ricePlant = Instantiate(ricePlantPrefab, spawnPosition, Quaternion.identity);
+
+                        Rigidbody2D rb = ricePlant.GetComponent<Rigidbody2D>();
+                        if(rb != null)
+                        {
+                            StartCoroutine(FloatAndLand(ricePlant));
+                        }
+                    }
                 }
-                else
-                    return;
             }
         }
+    }
 
+    private IEnumerator FloatAndLand(GameObject ricePlant)
+    {
+        float floatDuration = 0.5f;
+        float landDuration = 0.5f;
+        float smoothTime = 0.2f; // 부드럽게 이동할 시간
+        Vector2 velocity = Vector2.zero; // 속도를 관리하기 위한 변수
+
+        Vector2 initialPosition = ricePlant.transform.position;
+        Vector2 floatTargetPosition = initialPosition + new Vector2(0, 0.5f); // 살짝 위로 떠오를 목표 지점
+
+        float elapsedTime = 0;
+
+        Item interactable = ricePlant.GetComponent<Item>();
+        if (interactable != null)   
+            interactable.canInteract = false;
+
+        // 위로 부드럽게 떠오르는 애니메이션
+        while (elapsedTime < floatDuration)
+        {
+            ricePlant.transform.position = Vector2.SmoothDamp(ricePlant.transform.position, floatTargetPosition, ref velocity, smoothTime);
+            elapsedTime += Time.deltaTime;
+            yield return null; // 다음 프레임을 기다림
+        }
+
+        // 정확한 위치로 설정
+        ricePlant.transform.position = floatTargetPosition;
+
+        // 약간 대기
+        yield return new WaitForSeconds(0.2f);
+
+        // 착지할 때 다시 속도 초기화
+        velocity = Vector2.zero;
+        elapsedTime = 0;
+
+        // 아래로 부드럽게 내려오는 애니메이션
+        while (elapsedTime < landDuration)
+        {
+            ricePlant.transform.position = Vector2.SmoothDamp(ricePlant.transform.position, initialPosition, ref velocity, smoothTime);
+            elapsedTime += Time.deltaTime;
+            yield return null; // 다음 프레임을 기다림
+        }
+
+        // 마지막으로 정확한 착지 위치로 설정
+        ricePlant.transform.position = initialPosition;
+        interactable.canInteract = true;
     }
 
     IEnumerator WaitForHoeingAnimation()
     {
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(0.7f);
         isHoeing = false;
-    }
-
-    private Vector2 GetDirectionFromMouse(Vector3 playerPosition, Vector3 mousePosition)
-    {
-        // 플레이어와 마우스 클릭 위치 차이 계산
-        Vector3 direction = mousePosition - playerPosition;
-
-        // 가로 혹은 세로 방향으로 더 많이 차이 나는 쪽을 결정
-        if (Mathf.Abs(direction.x) > Mathf.Abs(direction.y))
-        {
-            // 수평 방향이 더 큼 (왼쪽 또는 오른쪽)
-            return direction.x > 0 ? Vector2.right : Vector2.left;
-        }
-        else
-        {
-            // 수직 방향이 더 큼 (위 또는 아래)
-            return direction.y > 0 ? Vector2.up : Vector2.down;
-        }
     }
 
     public void DropItem(Item item)
     {
         Vector3 spawnLocation = transform.position;
 
-        Vector3 spawnOffset = Random.insideUnitCircle * 2f;
+        Vector3 spawnOffset = Random.insideUnitCircle * 1.25f;
 
         Item droppedItem = Instantiate(item, spawnLocation + spawnOffset, Quaternion.identity);
 
