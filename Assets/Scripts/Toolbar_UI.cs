@@ -8,16 +8,37 @@ public class Toolbar_UI : MonoBehaviour
     [SerializeField] 
     private List<Slot_UI> toolbarSlots = new List<Slot_UI>();
     private Slot_UI selectedSlot;
+  
 
     void Start()
     {
-        // SelectSlot(0);
+        SelectSlot(0);
     }
 
     void Update()
     {
+        Refresh();
         CheckAlphaNumericKeys();
     }
+
+    public void Refresh()
+    {
+        if (toolbarSlots.Count == GameManager.instance.player.inventoryManager.toolbarSlotCount)
+        {
+            for (int i = 0; i < toolbarSlots.Count; i++)
+            {
+                if (GameManager.instance.player.inventoryManager.toolbar.slots[i].itemName != "")
+                {
+                    toolbarSlots[i].SetItem(GameManager.instance.player.inventoryManager.toolbar.slots[i]);
+                }
+                else
+                {
+                    toolbarSlots[i].EmptyItem();
+                }
+            }
+        }
+    }
+
     public void SelectSlot(int index)
     {
         if (toolbarSlots.Count == 9)
