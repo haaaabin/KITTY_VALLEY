@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
@@ -8,19 +9,21 @@ using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour
 {
-    public Dictionary<string, Inventory_UI> inventoryUIByName = new Dictionary<string, Inventory_UI>();
+    public Dictionary<string, InventoryBase> inventoryUIByName = new Dictionary<string, InventoryBase>();
     public GameObject inventoryPanel;
-    public List<Inventory_UI> inventoryUIs;
+    public List<InventoryBase> inventoryUIs;
     public static Slot_UI draggedSlot;
     public static Image draggedIcon;
     public static bool dragSingle;
+
+    public TextMeshProUGUI timeText;
 
     void Awake()
     {
         Initialize();
     }
 
-    public Inventory_UI GetInventoryUI(string inventoryName)
+    public InventoryBase GetInventoryUI(string inventoryName)
     {
         if (inventoryUIByName.ContainsKey(inventoryName))
         {
@@ -76,7 +79,7 @@ public class UIManager : MonoBehaviour
     // inventoryUIByName 딕셔너리에 저장된 모든 인벤토리 ui 갱신
     public void RefreshAll()
     {
-        foreach (KeyValuePair<string, Inventory_UI> keyValuePair in inventoryUIByName)
+        foreach (KeyValuePair<string, InventoryBase> keyValuePair in inventoryUIByName)
         {
             keyValuePair.Value.Refresh();
         }
@@ -84,7 +87,7 @@ public class UIManager : MonoBehaviour
 
     void Initialize()
     {
-        foreach (Inventory_UI ui in inventoryUIs)
+        foreach (InventoryBase ui in inventoryUIs)
         {
             if (!inventoryUIByName.ContainsKey(ui.inventoryName))
             {

@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.Tilemaps;
 
 public class Player : MonoBehaviour
 {
@@ -12,6 +13,7 @@ public class Player : MonoBehaviour
     private TileManager tileManager;
     bool isHoeing = false;
     public bool isFloating = false;
+    public bool isWatering = false;
 
     [SerializeField] private GameObject ricePlantPrefab;
 
@@ -38,7 +40,7 @@ public class Player : MonoBehaviour
 
     void FixedUpdate()
     {
-        if (!isHoeing)
+        if (!isHoeing && !isWatering)
             Move();
     }
 
@@ -83,8 +85,8 @@ public class Player : MonoBehaviour
     {
         if (isHoeing) return;
         if (tileManager == null) return;
-        if (inventoryManager == null || inventoryManager.toolbar == null || inventoryManager.toolbar.selectedSlot == null)  return; 
-        if (inventoryManager.toolbar.selectedSlot.itemName == null)  return;
+        if (inventoryManager == null || inventoryManager.toolbar == null || inventoryManager.toolbar.selectedSlot == null) return;
+        if (inventoryManager.toolbar.selectedSlot.itemName == null) return;
 
         if (Input.GetMouseButtonDown(0))
         {
@@ -92,12 +94,12 @@ public class Player : MonoBehaviour
             Vector3 worldMousePosition = UnityEngine.Camera.main.ScreenToWorldPoint(mousePosition);
             worldMousePosition.z = 0;
 
-            Vector3Int targetPosition = new Vector3Int(Mathf.FloorToInt(worldMousePosition.x), Mathf.FloorToInt(worldMousePosition.y),0);
-           
+            Vector3Int targetPosition = new Vector3Int(Mathf.FloorToInt(worldMousePosition.x), Mathf.FloorToInt(worldMousePosition.y), 0);
+
             Vector3 playerPosition = transform.position;
-            Vector3Int gridPlayerPosition = new Vector3Int(Mathf.FloorToInt(playerPosition.x), Mathf.FloorToInt(playerPosition.y),0);
-            
-            Vector3Int[] validTiels = new Vector3Int[]
+            Vector3Int gridPlayerPosition = new Vector3Int(Mathf.FloorToInt(playerPosition.x), Mathf.FloorToInt(playerPosition.y), 0);
+
+            Vector3Int[] validTiles = new Vector3Int[]
             {
                 gridPlayerPosition,
                 gridPlayerPosition + new Vector3Int(0,1,0),
@@ -107,8 +109,8 @@ public class Player : MonoBehaviour
             };
 
             bool isValidTile = false;
-        
-            foreach(var tile in validTiels)
+
+            foreach (var tile in validTiles)
             {
                 if (tile == targetPosition)
                 {
@@ -120,16 +122,17 @@ public class Player : MonoBehaviour
             if (isValidTile)
             {
                 string tileName = tileManager.GetTileName(targetPosition);
+                string tileState = tileManager.GetTileState(targetPosition);
 
                 if (tileName != null)
                 {
-                    if(tileName == "Interactable" && inventoryManager.toolbar.selectedSlot.itemName == "Hoe")
+                    if (tileName == "Interactable" && inventoryManager.toolbar.selectedSlot.itemName == "Hoe")
                     {
                         isHoeing = true;
                         anim.SetTrigger("isHoeing");
                         tileManager.SetInteracted(targetPosition);
 
-                        StartCoroutine(WaitForHoeingAnimation());
+                        StartCoroutine(WaitForAnimation());
                     }
                     else if (tileName == "Plowed" && inventoryManager.toolbar.selectedSlot.itemName == "Rice_Seed")
                     {
@@ -143,20 +146,30 @@ public class Player : MonoBehaviour
                             inventoryManager.toolbar.selectedSlot = null;  // 씨앗이 다 떨어지면 슬롯 비우기
                         }
                     }
-                }   
+                    else if (tileName == "Plowed" && inventoryManager.toolbar.selectedSlot.itemName == "Watering" && !tileManager.GetWateringTile(targetPosition))
+                    {
+                        isWatering = true;
+                        anim.SetTrigger("isWatering");
+                        tileManager.WaterTile(targetPosition);
 
-                string tileState = tileManager.GetTileState(targetPosition);
-                if(tileState != null)
-                {   
+                        StartCoroutine(WaitForAnimation());
+                        Debug.Log(tileState);
+                    }
+                }
+
+                if (tileState != null)
+                {
                     if (tileState == "Grown" && inventoryManager.toolbar.selectedSlot.itemName == "Hoe")
                     {
+                        Debug.Log(inventoryManager.toolbar.selectedSlot.itemName);
+                        Debug.Log(tileState);
+                        Debug.Log("배기");
                         tileManager.RemoveTile(targetPosition);
-
                         Vector3 spawnPosition = tileManager.interactableMap.GetCellCenterWorld(targetPosition);
                         GameObject ricePlant = Instantiate(ricePlantPrefab, spawnPosition, Quaternion.identity);
 
                         Rigidbody2D rb = ricePlant.GetComponent<Rigidbody2D>();
-                        if(rb != null)
+                        if (rb != null)
                         {
                             StartCoroutine(FloatAndLand(ricePlant));
                         }
@@ -179,7 +192,7 @@ public class Player : MonoBehaviour
         float elapsedTime = 0;
 
         Item interactable = ricePlant.GetComponent<Item>();
-        if (interactable != null)   
+        if (interactable != null)
             interactable.canInteract = false;
 
         // 위로 부드럽게 떠오르는 애니메이션
@@ -194,7 +207,7 @@ public class Player : MonoBehaviour
         ricePlant.transform.position = floatTargetPosition;
 
         // 약간 대기
-        yield return new WaitForSeconds(0.2f);
+        yield return new WaitForSeconds(0.1f);
 
         // 착지할 때 다시 속도 초기화
         velocity = Vector2.zero;
@@ -210,13 +223,19 @@ public class Player : MonoBehaviour
 
         // 마지막으로 정확한 착지 위치로 설정
         ricePlant.transform.position = initialPosition;
+
         interactable.canInteract = true;
     }
 
-    IEnumerator WaitForHoeingAnimation()
+    IEnumerator WaitForAnimation()
     {
+
         yield return new WaitForSeconds(0.7f);
-        isHoeing = false;
+
+        if (isHoeing)
+            isHoeing = false;
+        if (isWatering)
+            isWatering = false;
     }
 
     public void DropItem(Item item)

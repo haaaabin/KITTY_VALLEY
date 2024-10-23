@@ -3,7 +3,6 @@ using UnityEngine;
 [RequireComponent(typeof(Item))]
 public class Collectable : MonoBehaviour
 {
-
     void OnTriggerEnter2D(Collider2D other)
     {
         Player player = other.GetComponent<Player>();

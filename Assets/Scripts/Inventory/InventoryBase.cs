@@ -1,31 +1,30 @@
+using System.Collections;
 using System.Collections.Generic;
+using System.Data.Common;
+using UnityEditor.VersionControl;
 using UnityEngine;
-using UnityEngine.UI;
+using UnityEngine.Pool;
 
-/* 개별 인벤토리 UI 담당 */
-
-public class Inventory_UI : MonoBehaviour
+public class InventoryBase : MonoBehaviour
 {
-    [SerializeField] private Canvas canvas;
-    public Player player;
-    public GameObject inventoryPanel;
-    public List<Slot_UI> slots = new List<Slot_UI>();
+    [SerializeField] protected List<Slot_UI> slots = new List<Slot_UI>();
+    [SerializeField] protected Canvas canvas;
+    protected Inventory inventory;
     public string inventoryName;
-    private Inventory inventory;
 
-
-    void Awake()
+    protected virtual void Awake()
     {
         canvas = FindObjectOfType<Canvas>();
-        if (inventoryPanel != null)
-            inventoryPanel.SetActive(false);
     }
 
-    void Start()
+    protected virtual void Start()
     {
         inventory = GameManager.instance.player.inventoryManager.GetInventoryByName(inventoryName);
-
         SetUpSlot();
+    }
+
+    protected virtual void Update()
+    {
         Refresh();
     }
 
@@ -50,6 +49,8 @@ public class Inventory_UI : MonoBehaviour
 
     public void Remove()
     {
+        if (inventory == null || UIManager.draggedSlot == null) return;
+
         Item itemToDrop = GameManager.instance.itemManager.GetItemByName(inventory.slots[UIManager.draggedSlot.slotID].itemName);
 
         if (itemToDrop != null)
@@ -64,9 +65,8 @@ public class Inventory_UI : MonoBehaviour
                 GameManager.instance.player.DropItem(itemToDrop, inventory.slots[UIManager.draggedSlot.slotID].count);
                 inventory.Remove(UIManager.draggedSlot.slotID, inventory.slots[UIManager.draggedSlot.slotID].count);
             }
-            Refresh();
         }
-
+        Refresh();
         UIManager.draggedSlot = null;
     }
 
@@ -94,6 +94,8 @@ public class Inventory_UI : MonoBehaviour
 
     public void SlotDrop(Slot_UI slot)
     {
+        if (slot == null) return;
+
         if (UIManager.dragSingle)
         {
             UIManager.draggedSlot.inventory.MoveSlot(UIManager.draggedSlot.slotID, slot.slotID, slot.inventory);
@@ -119,7 +121,7 @@ public class Inventory_UI : MonoBehaviour
         }
     }
 
-    void SetUpSlot()
+    protected void SetUpSlot()
     {
         int counter = 0;
 
