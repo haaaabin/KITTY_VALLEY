@@ -2,5 +2,6 @@
 * text=auto
 *.shader linguist-language=C#
 *.shader linguist-vendored
+*.hlsl linguist-vendored
 
 /Assets/Shaders/* linguist-vendored
