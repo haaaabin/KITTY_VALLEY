@@ -5,7 +5,8 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody2D))]
 public class Item : MonoBehaviour
 {
-    public ItemData data;
+    public ItemData itemData;
+    public PlantData plantData;
 
     public bool canInteract;
 

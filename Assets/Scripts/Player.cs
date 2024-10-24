@@ -134,102 +134,50 @@ public class Player : MonoBehaviour
 
                         StartCoroutine(WaitForAnimation());
                     }
-                    else if (tileName == "Plowed" && inventoryManager.toolbar.selectedSlot.itemName == "Rice_Seed")
+                    
+                    if (tileName == "Plowed")
                     {
-                        inventoryManager.toolbar.selectedSlot.RemoveItem();  // 씨앗 갯수 줄이기
-                        Debug.Log("Remaining seeds: " + inventoryManager.toolbar.selectedSlot.count);
-
-                        tileManager.PlantSeed(targetPosition, "Rice");  // 씨앗 심기
-
-                        if (inventoryManager.toolbar.selectedSlot.isEmpty)
+                        if(inventoryManager.toolbar.selectedSlot.itemName == "RiceSeed" || inventoryManager.toolbar.selectedSlot.itemName == "TomatoSeed")
                         {
-                            inventoryManager.toolbar.selectedSlot = null;  // 씨앗이 다 떨어지면 슬롯 비우기
-                        }
-                    }
-                    else if (tileName == "Plowed" && inventoryManager.toolbar.selectedSlot.itemName == "Watering" && !tileManager.GetWateringTile(targetPosition))
-                    {
-                        isWatering = true;
-                        anim.SetTrigger("isWatering");
-                        tileManager.WaterTile(targetPosition);
+                            PlantData plantData = inventoryManager.toolbar.selectedSlot.plantData;
+                            Debug.Log(plantData.plantName);
 
-                        StartCoroutine(WaitForAnimation());
-                        Debug.Log(tileState);
-                    }
+                            inventoryManager.toolbar.selectedSlot.RemoveItem();  // 씨앗 갯수 줄이기
+                            // Debug.Log("Remaining seeds: " + inventoryManager.toolbar.selectedSlot.count);
+
+                            GameManager.instance.plantGrowthManager.PlantSeed(targetPosition, plantData);  // 씨앗 심기
+
+                            if (inventoryManager.toolbar.selectedSlot.isEmpty)
+                            {
+                                inventoryManager.toolbar.selectedSlot = null;  // 씨앗이 다 떨어지면 슬롯 비우기
+                            }
+                        }
+                        else if (inventoryManager.toolbar.selectedSlot.itemName == "Watering") // && !tileManager.GetWateringTile(targetPosition))
+                        {
+                            isWatering = true;
+                            anim.SetTrigger("isWatering");
+                            tileManager.WaterTile(targetPosition);
+
+                            StartCoroutine(WaitForAnimation());
+                            Debug.Log(tileState);
+                        }
+                    }  
                 }
 
                 if (tileState != null)
                 {
                     if (tileState == "Grown" && inventoryManager.toolbar.selectedSlot.itemName == "Hoe")
                     {
-                        Debug.Log(inventoryManager.toolbar.selectedSlot.itemName);
-                        Debug.Log(tileState);
-                        Debug.Log("배기");
                         tileManager.RemoveTile(targetPosition);
-                        Vector3 spawnPosition = tileManager.interactableMap.GetCellCenterWorld(targetPosition);
-                        GameObject ricePlant = Instantiate(ricePlantPrefab, spawnPosition, Quaternion.identity);
-
-                        Rigidbody2D rb = ricePlant.GetComponent<Rigidbody2D>();
-                        if (rb != null)
-                        {
-                            StartCoroutine(FloatAndLand(ricePlant));
-                        }
+                        GameManager.instance.plantGrowthManager.HarvestPlant(targetPosition);
                     }
                 }
             }
         }
     }
 
-    private IEnumerator FloatAndLand(GameObject ricePlant)
-    {
-        float floatDuration = 0.5f;
-        float landDuration = 0.5f;
-        float smoothTime = 0.2f; // 부드럽게 이동할 시간
-        Vector2 velocity = Vector2.zero; // 속도를 관리하기 위한 변수
-
-        Vector2 initialPosition = ricePlant.transform.position;
-        Vector2 floatTargetPosition = initialPosition + new Vector2(0, 0.5f); // 살짝 위로 떠오를 목표 지점
-
-        float elapsedTime = 0;
-
-        Item interactable = ricePlant.GetComponent<Item>();
-        if (interactable != null)
-            interactable.canInteract = false;
-
-        // 위로 부드럽게 떠오르는 애니메이션
-        while (elapsedTime < floatDuration)
-        {
-            ricePlant.transform.position = Vector2.SmoothDamp(ricePlant.transform.position, floatTargetPosition, ref velocity, smoothTime);
-            elapsedTime += Time.deltaTime;
-            yield return null; // 다음 프레임을 기다림
-        }
-
-        // 정확한 위치로 설정
-        ricePlant.transform.position = floatTargetPosition;
-
-        // 약간 대기
-        yield return new WaitForSeconds(0.1f);
-
-        // 착지할 때 다시 속도 초기화
-        velocity = Vector2.zero;
-        elapsedTime = 0;
-
-        // 아래로 부드럽게 내려오는 애니메이션
-        while (elapsedTime < landDuration)
-        {
-            ricePlant.transform.position = Vector2.SmoothDamp(ricePlant.transform.position, initialPosition, ref velocity, smoothTime);
-            elapsedTime += Time.deltaTime;
-            yield return null; // 다음 프레임을 기다림
-        }
-
-        // 마지막으로 정확한 착지 위치로 설정
-        ricePlant.transform.position = initialPosition;
-
-        interactable.canInteract = true;
-    }
-
     IEnumerator WaitForAnimation()
     {
-
         yield return new WaitForSeconds(0.7f);
 
         if (isHoeing)

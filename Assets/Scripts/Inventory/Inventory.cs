@@ -16,12 +16,14 @@ public class Inventory
         public Sprite icon;
         public int count;
         public int maxAllowed;
+        public PlantData plantData;
 
         public Slot()
         {
             itemName = "";
             count = 0;
             maxAllowed = 99;
+            plantData = null;
         }
 
         public bool isEmpty
@@ -48,17 +50,19 @@ public class Inventory
 
         public void AddItem(Item item)
         {
-            this.itemName = item.data.itemName;
-            this.icon = item.data.icon;
+            this.itemName = item.itemData.itemName;
+            this.icon = item.itemData.icon;
+            this.plantData = item.plantData;
             count++;
         }
 
-        public void AddItem(string itemName, Sprite icon, int maxAllowed)
+        public void AddItem(string itemName, Sprite icon, int maxAllowed, PlantData plantData)
         {
             this.itemName = itemName;
             this.icon = icon;
             count++;
             this.maxAllowed = maxAllowed;
+            this.plantData = plantData;
         }
 
         public void RemoveItem()
@@ -71,6 +75,7 @@ public class Inventory
                 {
                     icon = null;
                     itemName = "";
+                    plantData = null;
                 }
             }
         }
@@ -93,7 +98,7 @@ public class Inventory
         // 슬롯의 타입이 추가하려는 아이템의 타입과 같고 maxAllowed보다 적으면
         foreach (Slot slot in slots)
         {
-            if (slot.itemName == item.data.itemName && slot.CanAddItem(item.data.itemName))
+            if (slot.itemName == item.itemData.itemName && slot.CanAddItem(item.itemData.itemName))
             {
                 slot.AddItem(item);
                 return;
@@ -136,7 +141,7 @@ public class Inventory
         {
             for (int i = 0; i < numToMove; i++)
             {
-                toSlot.AddItem(fromSlot.itemName, fromSlot.icon, fromSlot.maxAllowed);
+                toSlot.AddItem(fromSlot.itemName, fromSlot.icon, fromSlot.maxAllowed, fromSlot.plantData);
                 fromSlot.RemoveItem();
             }
         }

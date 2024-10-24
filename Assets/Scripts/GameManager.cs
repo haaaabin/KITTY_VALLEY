@@ -10,6 +10,7 @@ public class GameManager : MonoBehaviour
     public UIManager uiManager;
     public Player player;
     public TimeManager timeManager;
+    public PlantGrowthManager plantGrowthManager;
 
     void Awake()
     {
@@ -28,6 +29,7 @@ public class GameManager : MonoBehaviour
         tileManager = GetComponent<TileManager>();
         uiManager = GetComponent<UIManager>();
         timeManager = GetComponent<TimeManager>();
+        plantGrowthManager = GetComponent<PlantGrowthManager>();
         
         player = FindObjectOfType<Player>();
     }
