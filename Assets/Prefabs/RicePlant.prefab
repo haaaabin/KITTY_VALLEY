@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 2149797926061443982}
   - component: {fileID: 4048553624533294762}
   m_Layer: 0
-  m_Name: Rice plant
+  m_Name: RicePlant
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -172,7 +172,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ee6bb4c47463d8247b046887abbcecff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  data: {fileID: 11400000, guid: 8ae26da96a44b1d47855e558c3259060, type: 2}
+  itemData: {fileID: 11400000, guid: 8ae26da96a44b1d47855e558c3259060, type: 2}
+  plantData: {fileID: 11400000, guid: bcce14d1c97837a4d8e46b6322603de4, type: 2}
+  canInteract: 0
   rigid: {fileID: 0}
 --- !u!114 &4048553624533294762
 MonoBehaviour:

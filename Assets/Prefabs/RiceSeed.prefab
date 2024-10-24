@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 6975030879514230535}
   - component: {fileID: 6324485900466675690}
   m_Layer: 0
-  m_Name: Rice_Seed
+  m_Name: RiceSeed
   m_TagString: Object
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -30,7 +30,7 @@ Transform:
   m_GameObject: {fileID: 2467313692846777651}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 5.1, y: -0.21, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.8, y: 0.8, z: 0.8}
   m_ConstrainProportionsScale: 1
   m_Children: []
@@ -184,5 +184,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ee6bb4c47463d8247b046887abbcecff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  data: {fileID: 11400000, guid: 946229b01853b7e48bfa8f6bdf7c4779, type: 2}
+  itemData: {fileID: 11400000, guid: 946229b01853b7e48bfa8f6bdf7c4779, type: 2}
+  plantData: {fileID: 11400000, guid: bcce14d1c97837a4d8e46b6322603de4, type: 2}
+  canInteract: 0
   rigid: {fileID: 0}
