@@ -3,5 +3,6 @@
 *.shader linguist-language=C#
 *.shader linguist-vendored
 *.hlsl linguist-vendored
+*.hlsl linguist-language=C#
 
 /Assets/Shaders/* linguist-vendored
