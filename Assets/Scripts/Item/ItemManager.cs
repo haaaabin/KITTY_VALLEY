@@ -15,10 +15,6 @@ public class ItemManager : MonoBehaviour
     {
         foreach (Item item in items)
         {
-            if (item == null || item.plantData == null)
-            {
-                continue;
-            }
             AddItem(item);
         }
     }

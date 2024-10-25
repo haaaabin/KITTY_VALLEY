@@ -52,6 +52,8 @@ public class InventoryBase : MonoBehaviour
         if (inventory == null || UIManager.draggedSlot == null) return;
 
         Item itemToDrop = GameManager.instance.itemManager.GetItemByName(inventory.slots[UIManager.draggedSlot.slotID].itemName);
+        Debug.Log("inventory_slots " + inventory.slots[UIManager.draggedSlot.slotID].itemName);
+        Debug.Log("itemToDrop " + itemToDrop.name);
 
         if (itemToDrop != null)
         {
@@ -66,6 +68,7 @@ public class InventoryBase : MonoBehaviour
                 inventory.Remove(UIManager.draggedSlot.slotID, inventory.slots[UIManager.draggedSlot.slotID].count);
             }
         }
+        
         Refresh();
         UIManager.draggedSlot = null;
     }

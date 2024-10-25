@@ -1,4 +1,5 @@
 using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -12,8 +13,9 @@ public class Player : MonoBehaviour
     public InventoryManager inventoryManager;
     private TileManager tileManager;
     bool isHoeing = false;
-    public bool isFloating = false;
-    public bool isWatering = false;
+    bool isFloating = false;
+    bool isWatering = false;
+    bool isAxing = false;
 
     [SerializeField] private GameObject ricePlantPrefab;
 
@@ -24,18 +26,20 @@ public class Player : MonoBehaviour
         anim = GetComponent<Animator>();
 
         inventoryManager = GetComponent<InventoryManager>();
+        tileManager = GameManager.instance.tileManager;
     }
 
     void Start()
     {
-        tileManager = GameManager.instance.tileManager;
     }
 
     void Update()
     {
         GetInput();
         UpdateAnimation();
-        Plow();
+        Plow(); 
+        Hit();
+       
     }
 
     void FixedUpdate()
@@ -79,6 +83,28 @@ public class Player : MonoBehaviour
         {
             anim.SetFloat("LastHorizontal", lastMoveDirection.x);
             anim.SetFloat("LastVertical", lastMoveDirection.y);
+        }
+    }
+
+    void Hit()
+    {
+        Debug.DrawRay(rb.position + Vector2.up * 0.5f , lastMoveDirection * 1f, new Color(0,1,0));
+        RaycastHit2D rayHit = Physics2D.Raycast(rb.position, lastMoveDirection, 1f, LayerMask.GetMask("Tree"));
+        
+        if (rayHit.collider != null)
+        {
+            if(Input.GetMouseButtonDown(0))
+            {
+                if (inventoryManager.toolbar.selectedSlot.itemName == "Axe")
+                {
+                    isAxing = true;
+                    anim.SetTrigger("isAxing");
+                    
+                    Tree tree  = FindObjectOfType<Tree>();
+                    tree.hitCount++;
+                    Debug.Log("tree.hitCount : " + tree.hitCount);
+                }
+            }   
         }
     }
     void Plow()
@@ -187,7 +213,8 @@ public class Player : MonoBehaviour
     }
 
     public void DropItem(Item item)
-    {
+    {   
+        Debug.Log(item.name);
         Vector3 spawnLocation = transform.position;
 
         Vector3 spawnOffset = Random.insideUnitCircle * 1.25f;

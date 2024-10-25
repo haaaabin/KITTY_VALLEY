@@ -184,5 +184,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ee6bb4c47463d8247b046887abbcecff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  data: {fileID: 11400000, guid: 9c0a24ce253183444a8e9f78f74d3adf, type: 2}
+  itemData: {fileID: 11400000, guid: 9c0a24ce253183444a8e9f78f74d3adf, type: 2}
+  plantData: {fileID: 0}
+  canInteract: 0
   rigid: {fileID: 0}
