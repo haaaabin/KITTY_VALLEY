@@ -9,15 +9,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 13b75c95f34a00d4e8c04f76b73312e6, type: 3}
-  m_Name: New Animated Tile
+  m_Script: {fileID: 11500000, guid: ff688d6b06fa21f4f9ee4c8aea0d6c27, type: 3}
+  m_Name: Fruit
   m_EditorClassIdentifier: 
-  m_AnimatedSprites:
-  - {fileID: 0}
-  - {fileID: 0}
-  m_MinSpeed: 1
-  m_MaxSpeed: 1
-  m_AnimationStartTime: 0
-  m_AnimationStartFrame: 0
-  m_TileColliderType: 0
-  m_TileAnimationFlags: 0
+  itemName: Fruit
+  icon: {fileID: -316339343, guid: 4bffa5d6383e7e547b492283063ff1eb, type: 3}

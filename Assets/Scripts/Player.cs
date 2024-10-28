@@ -1,24 +1,20 @@
 using System.Collections;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.Tilemaps;
 
 public class Player : MonoBehaviour
 {
-    public float moveSpeed = 5;
-    Rigidbody2D rb;
-    Vector2 movement;
-    Vector2 lastMoveDirection;
-    Animator anim;
+    private Rigidbody2D rb;
+    private Vector2 movement;
+    private Vector2 lastMoveDirection;
+    private Animator anim;
+
     public InventoryManager inventoryManager;
     private TileManager tileManager;
-    bool isHoeing = false;
-    bool isFloating = false;
-    bool isWatering = false;
-    bool isAxing = false;
 
-    [SerializeField] private GameObject ricePlantPrefab;
-
+    public float moveSpeed = 5;
+    private bool isHoeing = false;
+    private bool isWatering = false;
+    public bool isAxing = false;
 
     void Awake()
     {
@@ -29,22 +25,19 @@ public class Player : MonoBehaviour
         tileManager = GameManager.instance.tileManager;
     }
 
-    void Start()
-    {
-    }
-
     void Update()
     {
+        Debug.DrawRay(rb.position + Vector2.up * 0.1f, lastMoveDirection * 1f, new Color(0, 1, 0));
+        
         GetInput();
         UpdateAnimation();
-        Plow(); 
+        Plow();
         Hit();
-       
     }
 
     void FixedUpdate()
     {
-        if (!isHoeing && !isWatering)
+        if (!isHoeing && !isWatering && !isAxing)
             Move();
     }
 
@@ -88,25 +81,24 @@ public class Player : MonoBehaviour
 
     void Hit()
     {
-        Debug.DrawRay(rb.position + Vector2.up * 0.5f , lastMoveDirection * 1f, new Color(0,1,0));
         RaycastHit2D rayHit = Physics2D.Raycast(rb.position, lastMoveDirection, 1f, LayerMask.GetMask("Tree"));
-        
+
         if (rayHit.collider != null)
         {
-            if(Input.GetMouseButtonDown(0))
+            if (Input.GetMouseButtonDown(0))
             {
                 if (inventoryManager.toolbar.selectedSlot.itemName == "Axe")
                 {
                     isAxing = true;
                     anim.SetTrigger("isAxing");
-                    
-                    Tree tree  = FindObjectOfType<Tree>();
+                    Tree tree = rayHit.collider.GetComponent<Tree>();
                     tree.hitCount++;
-                    Debug.Log("tree.hitCount : " + tree.hitCount);
+                    StartCoroutine(WaitForAnimation());
                 }
-            }   
+            }
         }
     }
+    
     void Plow()
     {
         if (isHoeing) return;
@@ -160,16 +152,15 @@ public class Player : MonoBehaviour
 
                         StartCoroutine(WaitForAnimation());
                     }
-                    
+
                     if (tileName == "Plowed")
                     {
-                        if(inventoryManager.toolbar.selectedSlot.itemName == "RiceSeed" || inventoryManager.toolbar.selectedSlot.itemName == "TomatoSeed")
+                        if (inventoryManager.toolbar.selectedSlot.itemName == "RiceSeed" || inventoryManager.toolbar.selectedSlot.itemName == "TomatoSeed")
                         {
                             PlantData plantData = inventoryManager.toolbar.selectedSlot.plantData;
                             Debug.Log(plantData.plantName);
 
                             inventoryManager.toolbar.selectedSlot.RemoveItem();  // 씨앗 갯수 줄이기
-                            // Debug.Log("Remaining seeds: " + inventoryManager.toolbar.selectedSlot.count);
 
                             GameManager.instance.plantGrowthManager.PlantSeed(targetPosition, plantData);  // 씨앗 심기
 
@@ -187,7 +178,7 @@ public class Player : MonoBehaviour
                             StartCoroutine(WaitForAnimation());
                             Debug.Log(tileState);
                         }
-                    }  
+                    }
                 }
 
                 if (tileState != null)
@@ -210,10 +201,12 @@ public class Player : MonoBehaviour
             isHoeing = false;
         if (isWatering)
             isWatering = false;
+        if (isAxing)
+            isAxing = false;
     }
 
     public void DropItem(Item item)
-    {   
+    {
         Debug.Log(item.name);
         Vector3 spawnLocation = transform.position;
 

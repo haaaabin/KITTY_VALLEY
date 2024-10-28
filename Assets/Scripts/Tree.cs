@@ -1,32 +1,104 @@
 using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class Tree : MonoBehaviour
 {
     public int hitCount;
+    public GameObject WoodPrefab;
+    Animator anim;
+    public bool isFruitTree;
+    public Sprite newSprite;
+    public GameObject fruitPrefab;
+    private SpriteRenderer spriteRenderer;
+    public Transform fruitSpawnPos;
+    public Transform fallPos;
+    private bool isFruitDrop = false;
+    private float fruitOffset = 0.5f;
 
-    // Start is called before the first frame update
     void Start()
     {
-
+        anim = GetComponent<Animator>();
+        spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
-    // Update is called once per frame
     void Update()
     {
-        if(hitCount == 3)
+        if (hitCount == 4)
         {
-            SpawnWood();
+            Invoke("SpawnWood", 0.3f);
             hitCount = 0;
         }
+
+        if (!isFruitDrop && isFruitTree && hitCount == 1 && !GameManager.instance.player.isAxing)
+        {
+            anim.enabled = false;
+            ChangeSprite();
+            DropFruit();
+        }
+    }
+
+    void ChangeSprite()
+    {
+        if (spriteRenderer != null && newSprite != null)
+        {
+            spriteRenderer.sprite = newSprite;
+        }
+    }
+
+    void DropFruit()
+    {
+        isFruitDrop = true;
+
+        for (int i = 0; i < 3; i++)
+        {
+            Vector3 spawnPosition = fruitSpawnPos.position + new Vector3(i * fruitOffset - fruitOffset, 0, 0);
+            GameObject fruit = Instantiate(fruitPrefab, spawnPosition, Quaternion.identity);
+            StartCoroutine(MoveFruitToPosition(fruit, fallPos.position + new Vector3(i * fruitOffset - fruitOffset, 0, 0), 1f));
+        }
+    }
+
+    IEnumerator MoveFruitToPosition(GameObject fruit, Vector2 targetPosition, float duration)
+    {
+        Vector3 startPosition = fruit.transform.position;
+        float elapsedTime = 0f;
+
+        Item interactable = fruit.GetComponent<Item>();
+        if (interactable != null)
+            interactable.canInteract = false;
+
+        while (elapsedTime < duration)
+        {
+            fruit.transform.position = Vector2.Lerp(startPosition, targetPosition, elapsedTime / duration);
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+
+        fruit.transform.position = targetPosition;
+        interactable.canInteract = true;
     }
 
     void SpawnWood()
     {
+        anim.enabled = true;
+        Vector3 spawnPosition = transform.position;
+        GameObject wood = Instantiate(WoodPrefab, spawnPosition, Quaternion.identity);
+        Rigidbody2D rb = wood.GetComponent<Rigidbody2D>();
+        if (rb != null)
+        {
+            float randomX = Random.Range(-1f, 2f);
+            float randomY = Random.Range(1f, -2f);
+            rb.AddForce(new Vector2(randomX, randomY), ForceMode2D.Impulse);
+        }
+
+        GameObject wood2 = Instantiate(WoodPrefab, spawnPosition, Quaternion.identity);
+        Rigidbody2D rb2 = wood2.GetComponent<Rigidbody2D>();
+        if (rb2 != null)
+        {
+            float randomX = Random.Range(-1f, 2f);
+            float randomY = Random.Range(1f, -3f);
+            rb2.AddForce(new Vector2(randomX, randomY), ForceMode2D.Impulse);
+        }
+        anim.SetTrigger("isFalling");
         Destroy(gameObject, 1f);
     }
-
-    
 }
