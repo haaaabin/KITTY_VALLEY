@@ -9,6 +9,7 @@ using UnityEngine.UI;
 public class TimeManager : MonoBehaviour
 {
     public TextMeshProUGUI dayText;
+    public TextMeshProUGUI timeText;
     public Image fadeImg;
 
     private float timePerGameMinute = 1f;
@@ -19,7 +20,7 @@ public class TimeManager : MonoBehaviour
     private int currentDayIndex = 0;
     private float fadeDuration = 4f;
     private bool isDayEnding = false;
-    private int day = 0;
+    private int day = 1;
 
     public event Action OnDayEnd;
 
@@ -97,11 +98,7 @@ public class TimeManager : MonoBehaviour
 
     void UpdateTimeUI()
     {
-        dayText.text = $"{daysOfWeek[currentDayIndex]} {gameHour:D2}:{gameMinute:D2}";
-    }
-
-    public int GetDay()
-    {
-        return day;
+        dayText.text = $"{daysOfWeek[currentDayIndex]}\n{day}";
+        timeText.text = $"{gameHour:D2} : {gameMinute:D2}";
     }
 }
