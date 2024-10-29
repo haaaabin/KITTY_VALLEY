@@ -35,7 +35,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 100, y: 110}
+  m_SizeDelta: {x: 100, y: 120}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &5685969064478488851
 CanvasRenderer:
@@ -250,6 +250,7 @@ MonoBehaviour:
       icon: {fileID: 0}
       count: 0
       maxAllowed: 99
+      plantData: {fileID: 0}
   itemIcon: {fileID: 1696917502735967292}
   quantityText: {fileID: 3216585808155487677}
   highlight: {fileID: 5442698195224744869}

@@ -1,4 +1,6 @@
+using System.Collections;
 using System.Collections.Generic;
+using System.Reflection;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -10,17 +12,26 @@ using UnityEngine.UI;
 public class UIManager : MonoBehaviour
 {
     public Dictionary<string, InventoryBase> inventoryUIByName = new Dictionary<string, InventoryBase>();
-    public GameObject inventoryPanel;
+    public RectTransform inventoryPanel;
     public List<InventoryBase> inventoryUIs;
     public static Slot_UI draggedSlot;
     public static Image draggedIcon;
     public static bool dragSingle;
 
     public TextMeshProUGUI timeText;
+    public float moveDistance = 270f;
+    public float moveSpeed = 5f;
+
+    public bool isInventoryOpen = false;
+    bool isInventoryMoving = false;
+    Vector2 closePosition;
+    Vector2 openPosition;
 
     void Awake()
     {
         Initialize();
+        closePosition = inventoryPanel.anchoredPosition;
+        openPosition = closePosition + new Vector2(0, moveDistance);
     }
 
     public InventoryBase GetInventoryUI(string inventoryName)
@@ -36,7 +47,7 @@ public class UIManager : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Tab) || Input.GetKeyDown(KeyCode.E))
+        if (Input.GetKeyDown(KeyCode.E) && !isInventoryMoving)
         {
             ToggleInventoryUI();
         }
@@ -53,18 +64,21 @@ public class UIManager : MonoBehaviour
 
     public void ToggleInventoryUI()
     {
-        if (inventoryPanel != null)
+        isInventoryOpen = !isInventoryOpen;
+        Vector2 targetPosition = isInventoryOpen ? openPosition : closePosition;
+        StartCoroutine(MovePanel(targetPosition));
+    }
+
+    IEnumerator MovePanel(Vector2 targetPosition)
+    {
+        isInventoryMoving = true;
+        while (Vector2.Distance(inventoryPanel.anchoredPosition, targetPosition) > 0.1f)
         {
-            if (!inventoryPanel.activeSelf)
-            {
-                inventoryPanel.SetActive(true);
-                RefreshInventoryUI("Backpack");
-            }
-            else
-            {
-                inventoryPanel.SetActive(false);
-            }
+            inventoryPanel.anchoredPosition = Vector2.Lerp(inventoryPanel.anchoredPosition, targetPosition, Time.deltaTime * moveSpeed);
+            yield return null;
         }
+        inventoryPanel.anchoredPosition = targetPosition;
+        isInventoryMoving = false;
     }
 
     // inventoryName에 해당하는 인벤토리를 찾아 그 인벤토리 ui만 갱신

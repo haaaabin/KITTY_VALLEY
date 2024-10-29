@@ -29,7 +29,7 @@ RectTransform:
   m_GameObject: {fileID: 1492612727042809005}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 3, y: 2.5, z: 3}
+  m_LocalScale: {x: 2.2, y: 1.7, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 6444321054737920788}
@@ -418,6 +418,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1126224593981423768}
     m_Modifications:
+    - target: {fileID: 3185721067909500728, guid: 09a74b1fac804654f9737b2a0bf42b30, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 120
+      objectReference: {fileID: 0}
     - target: {fileID: 6218076319435553010, guid: 09a74b1fac804654f9737b2a0bf42b30, type: 3}
       propertyPath: m_Name
       value: ToolBar_Slot
