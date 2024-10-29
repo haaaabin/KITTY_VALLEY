@@ -16,6 +16,7 @@ public class Inventory
         public Sprite icon;
         public int count;
         public int maxAllowed;
+        public int price;
         public PlantData plantData;
 
         public Slot()
@@ -23,6 +24,7 @@ public class Inventory
             itemName = "";
             count = 0;
             maxAllowed = 99;
+            price = 0;
             plantData = null;
         }
 
@@ -52,16 +54,18 @@ public class Inventory
         {
             this.itemName = item.itemData.itemName;
             this.icon = item.itemData.icon;
+            this.price = item.itemData.price;
             this.plantData = item.plantData;
             count++;
         }
 
-        public void AddItem(string itemName, Sprite icon, int maxAllowed, PlantData plantData)
+        public void AddItem(string itemName, Sprite icon, int maxAllowed, PlantData plantData, int price)
         {
             this.itemName = itemName;
             this.icon = icon;
             count++;
             this.maxAllowed = maxAllowed;
+            this.price = price;
             this.plantData = plantData;
         }
 
@@ -83,7 +87,6 @@ public class Inventory
 
     public List<Slot> slots = new List<Slot>();
     public Slot selectedSlot = null;
-
     public Inventory(int numSlots)
     {
         for (int i = 0; i < numSlots; i++)
@@ -141,7 +144,7 @@ public class Inventory
         {
             for (int i = 0; i < numToMove; i++)
             {
-                toSlot.AddItem(fromSlot.itemName, fromSlot.icon, fromSlot.maxAllowed, fromSlot.plantData);
+                toSlot.AddItem(fromSlot.itemName, fromSlot.icon, fromSlot.maxAllowed, fromSlot.plantData, fromSlot.price);
                 fromSlot.RemoveItem();
             }
         }
@@ -149,7 +152,7 @@ public class Inventory
 
     public void SelectSlot(int index)
     {
-        if(slots != null && slots.Count > 0)
+        if (slots != null && slots.Count > 0)
         {
             selectedSlot = slots[index];
         }

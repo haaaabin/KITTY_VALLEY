@@ -10,11 +10,11 @@ public class Player : MonoBehaviour
 
     public InventoryManager inventoryManager;
     private TileManager tileManager;
-
     public float moveSpeed = 5;
     private bool isHoeing = false;
     private bool isWatering = false;
     public bool isAxing = false;
+
 
     void Awake()
     {
@@ -27,8 +27,6 @@ public class Player : MonoBehaviour
 
     void Update()
     {
-        Debug.DrawRay(rb.position + Vector2.up * 0.1f, lastMoveDirection * 1f, new Color(0, 1, 0));
-        
         GetInput();
         UpdateAnimation();
         Plow();
@@ -81,24 +79,26 @@ public class Player : MonoBehaviour
 
     void Hit()
     {
-        RaycastHit2D rayHit = Physics2D.Raycast(rb.position, lastMoveDirection, 1f, LayerMask.GetMask("Tree"));
+        Debug.DrawRay(rb.position + Vector2.up * 0.1f, lastMoveDirection * 1f, new Color(0, 1, 0));
+        RaycastHit2D rayHit;
 
+        rayHit = Physics2D.Raycast(rb.position, lastMoveDirection, 1f, LayerMask.GetMask("Tree"));
         if (rayHit.collider != null)
         {
+            Tree tree = rayHit.collider.GetComponent<Tree>();
             if (Input.GetMouseButtonDown(0))
             {
                 if (inventoryManager.toolbar.selectedSlot.itemName == "Axe")
                 {
                     isAxing = true;
                     anim.SetTrigger("isAxing");
-                    Tree tree = rayHit.collider.GetComponent<Tree>();
                     tree.hitCount++;
                     StartCoroutine(WaitForAnimation());
                 }
             }
         }
     }
-    
+
     void Plow()
     {
         if (isHoeing) return;

@@ -34,7 +34,7 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: 1
+    filterMode: 0
     aniso: 1
     mipBias: 0
     wrapU: 1
@@ -43,12 +43,12 @@ TextureImporter:
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 1
+  spriteMode: 2
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 100
+  spritePixelsToUnits: 16
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -95,7 +95,385 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
-    sprites: []
+    sprites:
+    - serializedVersion: 2
+      name: Inventory_Light_Herat_Spritesheet_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 320
+        width: 15
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ced8a69481e878a44b3d83075a7758ff
+      internalID: -2137127931
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Inventory_Light_Herat_Spritesheet_1
+      rect:
+        serializedVersion: 2
+        x: 16
+        y: 320
+        width: 15
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 437318a72fc7af6459b3cbfc6a58d25c
+      internalID: -1180567
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Inventory_Light_Herat_Spritesheet_2
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 320
+        width: 15
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8644a054d167b0744a8edfd60cc63700
+      internalID: 1259619249
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Inventory_Light_Herat_Spritesheet_3
+      rect:
+        serializedVersion: 2
+        x: 48
+        y: 320
+        width: 48
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9f63d45af2e0fae4599954dec8e3fac5
+      internalID: 1766207783
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Inventory_Light_Herat_Spritesheet_4
+      rect:
+        serializedVersion: 2
+        x: 7
+        y: 295
+        width: 18
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e8ae68d53be9a734d887813d69e3a353
+      internalID: -1031117622
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Inventory_Light_Herat_Spritesheet_5
+      rect:
+        serializedVersion: 2
+        x: 39
+        y: 295
+        width: 18
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4a9a19c531d9872419fdd0c72da81602
+      internalID: -2027872304
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Inventory_Light_Herat_Spritesheet_6
+      rect:
+        serializedVersion: 2
+        x: 71
+        y: 295
+        width: 18
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 700416b2640d2364d89d6b5b4578ab65
+      internalID: -1505402576
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Inventory_Light_Herat_Spritesheet_7
+      rect:
+        serializedVersion: 2
+        x: 4
+        y: 262
+        width: 23
+        height: 20
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4ca5e18efe753c048b8417112a1b139c
+      internalID: -1997286631
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Inventory_Light_Herat_Spritesheet_8
+      rect:
+        serializedVersion: 2
+        x: 36
+        y: 262
+        width: 23
+        height: 20
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3cb72cf8711d2014d9c61fccca53568b
+      internalID: -1646877851
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Inventory_Light_Herat_Spritesheet_9
+      rect:
+        serializedVersion: 2
+        x: 68
+        y: 262
+        width: 23
+        height: 20
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2d51dc570cc30224ba6717808dff2e56
+      internalID: -1968990099
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Inventory_Light_Herat_Spritesheet_10
+      rect:
+        serializedVersion: 2
+        x: 8
+        y: 224
+        width: 95
+        height: 23
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4472a0f182fbfa14ea1bce5343fca386
+      internalID: -448552914
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Inventory_Light_Herat_Spritesheet_11
+      rect:
+        serializedVersion: 2
+        x: 6
+        y: 192
+        width: 100
+        height: 23
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: bcc1001fdc53ff7489898e63099cc022
+      internalID: -236058102
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Inventory_Light_Herat_Spritesheet_12
+      rect:
+        serializedVersion: 2
+        x: 1
+        y: 160
+        width: 110
+        height: 25
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5c0e3c670983c97479bda4e6fc19d768
+      internalID: 1351552141
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Inventory_Light_Herat_Spritesheet_13
+      rect:
+        serializedVersion: 2
+        x: 1
+        y: 128
+        width: 110
+        height: 29
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d15d99e23093a514aa25c78c10cf27e7
+      internalID: -487982535
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Inventory_Light_Herat_Spritesheet_14
+      rect:
+        serializedVersion: 2
+        x: 8
+        y: 96
+        width: 95
+        height: 23
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 013324d3fd59ad342abbc6f4f36beb07
+      internalID: -1433186094
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Inventory_Light_Herat_Spritesheet_15
+      rect:
+        serializedVersion: 2
+        x: 6
+        y: 64
+        width: 100
+        height: 23
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 039b6dccd5807b241a6ffafb865e3284
+      internalID: -1529693664
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Inventory_Light_Herat_Spritesheet_16
+      rect:
+        serializedVersion: 2
+        x: 1
+        y: 32
+        width: 110
+        height: 25
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 83424a4801bee594d85d8fe0d6d70b6f
+      internalID: 543957132
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Inventory_Light_Herat_Spritesheet_17
+      rect:
+        serializedVersion: 2
+        x: 1
+        y: 0
+        width: 110
+        height: 29
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 40d8ea1782116b244a3543d2ae46a214
+      internalID: 1327543490
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     physicsShape: []
     bones: []
@@ -106,7 +484,25 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      Inventory_Light_Herat_Spritesheet_0: -2137127931
+      Inventory_Light_Herat_Spritesheet_1: -1180567
+      Inventory_Light_Herat_Spritesheet_10: -448552914
+      Inventory_Light_Herat_Spritesheet_11: -236058102
+      Inventory_Light_Herat_Spritesheet_12: 1351552141
+      Inventory_Light_Herat_Spritesheet_13: -487982535
+      Inventory_Light_Herat_Spritesheet_14: -1433186094
+      Inventory_Light_Herat_Spritesheet_15: -1529693664
+      Inventory_Light_Herat_Spritesheet_16: 543957132
+      Inventory_Light_Herat_Spritesheet_17: 1327543490
+      Inventory_Light_Herat_Spritesheet_2: 1259619249
+      Inventory_Light_Herat_Spritesheet_3: 1766207783
+      Inventory_Light_Herat_Spritesheet_4: -1031117622
+      Inventory_Light_Herat_Spritesheet_5: -2027872304
+      Inventory_Light_Herat_Spritesheet_6: -1505402576
+      Inventory_Light_Herat_Spritesheet_7: -1997286631
+      Inventory_Light_Herat_Spritesheet_8: -1646877851
+      Inventory_Light_Herat_Spritesheet_9: -1968990099
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

@@ -14,3 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemName: Wood
   icon: {fileID: 8116400, guid: 03648fe178bac684b8a40092447acfde, type: 3}
+  price: 50
