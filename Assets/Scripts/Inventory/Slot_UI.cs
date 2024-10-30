@@ -9,8 +9,6 @@ public class Slot_UI : MonoBehaviour
     public Image itemIcon;
     public Text quantityText;
 
-    public Inventory.Slot inventorySlot;
-
     [SerializeField] private GameObject highlight;
 
     public void SetItem(Inventory.Slot slot)

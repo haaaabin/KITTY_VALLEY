@@ -7,6 +7,7 @@ public class Player : MonoBehaviour
     private Vector2 movement;
     private Vector2 lastMoveDirection;
     private Animator anim;
+    public Animator doorAnim;
 
     public InventoryManager inventoryManager;
     private TileManager tileManager;
@@ -14,6 +15,9 @@ public class Player : MonoBehaviour
     private bool isHoeing = false;
     private bool isWatering = false;
     public bool isAxing = false;
+    bool isOpenDoor = false;
+
+    RaycastHit2D rayHit;
 
 
     void Awake()
@@ -27,10 +31,13 @@ public class Player : MonoBehaviour
 
     void Update()
     {
+        Debug.DrawRay(rb.position + Vector2.up * 0.1f, lastMoveDirection * 1f, new Color(0, 1, 0));
+
         GetInput();
         UpdateAnimation();
         Plow();
         Hit();
+        OpenDoor();
     }
 
     void FixedUpdate()
@@ -79,9 +86,6 @@ public class Player : MonoBehaviour
 
     void Hit()
     {
-        Debug.DrawRay(rb.position + Vector2.up * 0.1f, lastMoveDirection * 1f, new Color(0, 1, 0));
-        RaycastHit2D rayHit;
-
         rayHit = Physics2D.Raycast(rb.position, lastMoveDirection, 1f, LayerMask.GetMask("Tree"));
         if (rayHit.collider != null)
         {
@@ -96,6 +100,25 @@ public class Player : MonoBehaviour
                     StartCoroutine(WaitForAnimation());
                 }
             }
+        }
+    }
+
+    void OpenDoor()
+    {
+        rayHit = Physics2D.Raycast(rb.position, lastMoveDirection, 1f, LayerMask.GetMask("Door"));
+        if (rayHit.collider != null)
+        {
+            if (Input.GetMouseButtonDown(1))
+            {
+                isOpenDoor = true;
+                doorAnim.SetBool("isOpen", isOpenDoor);
+            }
+        }
+        else
+        {
+            Debug.Log("no Door");
+            isOpenDoor = false;
+            doorAnim.SetBool("isOpen", isOpenDoor);
         }
     }
 
