@@ -10,15 +10,13 @@ public class Inventory_UI : InventoryBase
 
     protected override void Awake()
     {
-        if (inventoryPanel != null)
-            inventoryPanel.SetActive(false);
         base.Awake();
     }
 
     protected override void Start()
     {
         inventory = GameManager.instance.player.inventoryManager.GetInventoryByName(inventoryName);
-        if(inventory == null)   return;
+        if (inventory == null) return;
         base.Start();
     }
 

@@ -15,3 +15,4 @@ MonoBehaviour:
   itemName: TomatoSeed
   icon: {fileID: -1110057899, guid: c5ad5767aaefecb49bdc5978439fd6e1, type: 3}
   price: 10
+  isSellable: 1

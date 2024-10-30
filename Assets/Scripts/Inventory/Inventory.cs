@@ -17,6 +17,7 @@ public class Inventory
         public int count;
         public int maxAllowed;
         public int price;
+        public bool isSellable;
         public PlantData plantData;
 
         public Slot()
@@ -25,6 +26,7 @@ public class Inventory
             count = 0;
             maxAllowed = 99;
             price = 0;
+            isSellable = false;
             plantData = null;
         }
 
@@ -56,16 +58,18 @@ public class Inventory
             this.icon = item.itemData.icon;
             this.price = item.itemData.price;
             this.plantData = item.plantData;
+            this.isSellable = item.itemData.isSellable;
             count++;
         }
 
-        public void AddItem(string itemName, Sprite icon, int maxAllowed, PlantData plantData, int price)
+        public void AddItem(string itemName, Sprite icon, int maxAllowed, PlantData plantData, int price, bool isSellable)
         {
             this.itemName = itemName;
             this.icon = icon;
             count++;
             this.maxAllowed = maxAllowed;
             this.price = price;
+            this.isSellable = isSellable;
             this.plantData = plantData;
         }
 
@@ -144,7 +148,7 @@ public class Inventory
         {
             for (int i = 0; i < numToMove; i++)
             {
-                toSlot.AddItem(fromSlot.itemName, fromSlot.icon, fromSlot.maxAllowed, fromSlot.plantData, fromSlot.price);
+                toSlot.AddItem(fromSlot.itemName, fromSlot.icon, fromSlot.maxAllowed, fromSlot.plantData, fromSlot.price, fromSlot.isSellable);
                 fromSlot.RemoveItem();
             }
         }

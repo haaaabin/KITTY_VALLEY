@@ -16,7 +16,7 @@ public class ItemBox : MonoBehaviour
     public Button checkBtn;
     public TextMeshProUGUI coinText;
 
-    bool isBoxOpen = false;
+    public bool isBoxOpen = false;
     bool isPlayerInRange = false;
     int itemPrice = 0;
     int itemCount = 0;
@@ -87,11 +87,13 @@ public class ItemBox : MonoBehaviour
     {
         if (selectedSlot != null)
         {
-            sellingIcon.sprite = selectedSlot.count > 0 ? selectedSlot.icon : null;
-            sellingIcon.color = selectedSlot.count > 0 ? new Color(1, 1, 1, 1) : new Color(1, 1, 1, 0);
+            sellingIcon.sprite = selectedSlot.count > 0 && selectedSlot.isSellable ? selectedSlot.icon : null;
+            sellingIcon.color = selectedSlot.count > 0 && selectedSlot.isSellable ? new Color(1, 1, 1, 1) : new Color(1, 1, 1, 0);
             priceText.text = itemPrice.ToString();
             countText.text = itemCount.ToString();
+            GameManager.instance.uiManager.RefreshInventoryUI("Toolbar");
         }
+
     }
 
     void InitializePanel()
@@ -105,10 +107,17 @@ public class ItemBox : MonoBehaviour
     {
         if (selectedSlot != null && selectedSlot.count > 0 && itemCount < selectedSlot.count)
         {
-            itemCount++;
-            itemPrice = itemCount * selectedSlot.price;
-            Debug.Log("selectedSlot" + selectedSlot.itemName + " : " + itemPrice);
-            UpdatePanel();
+            if (selectedSlot.isSellable)
+            {
+                itemCount++;
+                itemPrice = itemCount * selectedSlot.price;
+                Debug.Log("selectedSlot" + selectedSlot.itemName + " : " + itemPrice);
+                UpdatePanel();
+            }
+            else
+            {
+                Debug.Log("판매 불가능한 상품");
+            }
         }
         else
         {
@@ -120,10 +129,17 @@ public class ItemBox : MonoBehaviour
     {
         if (selectedSlot != null && selectedSlot.count > 0 && itemCount > 0)
         {
-            itemCount--;
-            itemPrice = itemCount * selectedSlot.price;
-            Debug.Log("selectedSlot" + selectedSlot.itemName + " : " + itemPrice);
-            UpdatePanel();
+            if (selectedSlot.isSellable)
+            {
+                itemCount--;
+                itemPrice = itemCount * selectedSlot.price;
+                Debug.Log("selectedSlot" + selectedSlot.itemName + " : " + itemPrice);
+                UpdatePanel();
+            }
+            else
+            {
+                Debug.Log("판매 불가능한 상품");
+            }
         }
         else
         {
@@ -135,12 +151,19 @@ public class ItemBox : MonoBehaviour
     {
         if (selectedSlot != null && selectedSlot.count >= 0 && itemCount > 0)
         {
-            sellingPrice += itemPrice;
-            Debug.Log("sellingPrice" + selectedSlot.itemName + " : " + sellingPrice);
-            selectedSlot.count -= itemCount;
-            coinText.text = sellingPrice.ToString();
-            GameManager.instance.uiManager.RefreshInventoryUI("Toolbar");
-            InitializePanel();
+            if (selectedSlot.isSellable)
+            {
+                sellingPrice += itemPrice;
+                Debug.Log("sellingPrice" + selectedSlot.itemName + " : " + sellingPrice);
+                selectedSlot.count -= itemCount;
+                coinText.text = sellingPrice.ToString();
+                GameManager.instance.uiManager.RefreshInventoryUI("Toolbar");
+                InitializePanel();
+            }
+            else
+            {
+                Debug.Log("판매 불가능한 상품");
+            }
         }
         else
         {

@@ -15,3 +15,4 @@ MonoBehaviour:
   itemName: Fruit
   icon: {fileID: -316339343, guid: 4bffa5d6383e7e547b492283063ff1eb, type: 3}
   price: 50
+  isSellable: 1
