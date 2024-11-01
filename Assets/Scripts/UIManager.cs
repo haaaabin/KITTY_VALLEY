@@ -6,15 +6,12 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
-/* 인벤토리 UI 관리
-    다양한 인벤토리 UI 관리, 상태 갱신, 토글*/
-
 public class UIManager : MonoBehaviour
 {
     public Dictionary<string, InventoryBase> inventoryUIByName = new Dictionary<string, InventoryBase>();
-    public RectTransform inventoryPanel;
     public List<InventoryBase> inventoryUIs;
     public static Slot_UI draggedSlot;
+    public RectTransform inventoryPanel;
     public static Image draggedIcon;
     public static bool dragSingle;
 
@@ -27,6 +24,11 @@ public class UIManager : MonoBehaviour
     Vector2 closePosition;
     Vector2 openPosition;
 
+    public GameObject DayEndPanel;
+    public Button yesBtn;
+    public Button noBtn;
+
+
     void Awake()
     {
         Initialize();
@@ -34,15 +36,18 @@ public class UIManager : MonoBehaviour
         openPosition = closePosition + new Vector2(0, moveDistance);
     }
 
-    public InventoryBase GetInventoryUI(string inventoryName)
+    void Start()
     {
-        if (inventoryUIByName.ContainsKey(inventoryName))
+        yesBtn.onClick.AddListener(() =>
         {
-            return inventoryUIByName[inventoryName];
-        }
+            GameManager.instance.timeManager.StartCoroutine(GameManager.instance.timeManager.EndDay());
+            DayEndPanel.SetActive(false);
+        });
 
-        Debug.LogWarning("There is not inventory ui for" + inventoryName);
-        return null;
+        noBtn.onClick.AddListener(() =>
+        {
+            DayEndPanel.SetActive(false);
+        });
     }
 
     void Update()
@@ -60,6 +65,17 @@ public class UIManager : MonoBehaviour
         {
             dragSingle = false;
         }
+    }
+
+    public InventoryBase GetInventoryUI(string inventoryName)
+    {
+        if (inventoryUIByName.ContainsKey(inventoryName))
+        {
+            return inventoryUIByName[inventoryName];
+        }
+
+        Debug.LogWarning("There is not inventory ui for" + inventoryName);
+        return null;
     }
 
     public void ToggleInventoryUI()

@@ -54,8 +54,8 @@ public class TimeManager : MonoBehaviour
             UpdateTimeUI();
         }
     }
-
-    IEnumerator EndDay()
+ 
+    public IEnumerator EndDay()
     {
         isDayEnding = true;
         yield return StartCoroutine(FadeScreen(1f));

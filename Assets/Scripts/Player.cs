@@ -116,11 +116,11 @@ public class Player : MonoBehaviour
         }
         else
         {
-            Debug.Log("no Door");
             isOpenDoor = false;
             doorAnim.SetBool("isOpen", isOpenDoor);
         }
     }
+
 
     void Plow()
     {
@@ -245,6 +245,19 @@ public class Player : MonoBehaviour
         for (int i = 0; i < numToDrop; i++)
         {
             DropItem(item);
+        }
+    }
+
+    void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.gameObject.CompareTag("DayEndCheckPoint"))
+        {
+            Debug.Log("침대 닿음");
+            GameManager.instance.uiManager.DayEndPanel.SetActive(true);
+        }
+        else
+        {
+            GameManager.instance.uiManager.DayEndPanel.SetActive(false);   
         }
     }
 }
