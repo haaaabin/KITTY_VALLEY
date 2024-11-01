@@ -3363,6 +3363,7 @@ MonoBehaviour:
   dayText: {fileID: 972040319}
   timeText: {fileID: 2100343408}
   fadeImg: {fileID: 1133271124}
+  isDayEnding: 0
 --- !u!114 &587211918
 MonoBehaviour:
   m_ObjectHideFlags: 0

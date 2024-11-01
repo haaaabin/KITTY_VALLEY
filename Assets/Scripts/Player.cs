@@ -23,7 +23,7 @@ public class Player : MonoBehaviour
     void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
-        anim = GetComponent<Animator>();
+        anim = GetComponent<Animator>(); ;
 
         inventoryManager = GetComponent<InventoryManager>();
         tileManager = GameManager.instance.tileManager;
@@ -32,6 +32,9 @@ public class Player : MonoBehaviour
     void Update()
     {
         Debug.DrawRay(rb.position + Vector2.up * 0.1f, lastMoveDirection * 1f, new Color(0, 1, 0));
+
+        if (GameManager.instance.timeManager.isDayEnding)
+            return;
 
         GetInput();
         UpdateAnimation();
@@ -42,7 +45,7 @@ public class Player : MonoBehaviour
 
     void FixedUpdate()
     {
-        if (!isHoeing && !isWatering && !isAxing)
+        if (!GameManager.instance.timeManager.isDayEnding && !isHoeing && !isWatering && !isAxing)
             Move();
     }
 
@@ -257,7 +260,18 @@ public class Player : MonoBehaviour
         }
         else
         {
-            GameManager.instance.uiManager.DayEndPanel.SetActive(false);   
+            GameManager.instance.uiManager.DayEndPanel.SetActive(false);
         }
+    }
+
+    public void SetPosition()
+    {
+        transform.position = new Vector2(0.4f, 2.7f);
+
+        lastMoveDirection = new Vector2(0, -1);
+
+        // 애니메이션의 idle 방향 업데이트
+        anim.SetFloat("LastHorizontal", lastMoveDirection.x);
+        anim.SetFloat("LastVertical", lastMoveDirection.y);
     }
 }

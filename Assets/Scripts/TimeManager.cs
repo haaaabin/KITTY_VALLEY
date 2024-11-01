@@ -12,14 +12,14 @@ public class TimeManager : MonoBehaviour
     public TextMeshProUGUI timeText;
     public Image fadeImg;
 
-    private float timePerGameMinute = 1f;
+    private float timePerGameMinute = 10f;
     private float currentTime = 0f;
     private int gameHour = 9;
     private int gameMinute = 0;
     private string[] daysOfWeek = { "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun" };
     private int currentDayIndex = 0;
     private float fadeDuration = 4f;
-    private bool isDayEnding = false;
+    public bool isDayEnding = false;
     private int day = 1;
 
     public event Action OnDayEnd;
@@ -46,7 +46,7 @@ public class TimeManager : MonoBehaviour
                 gameHour++;
             }
 
-            if (gameHour >= 10)
+            if (gameHour >= 24)
             {
                 StartCoroutine(EndDay());
             }
@@ -54,7 +54,7 @@ public class TimeManager : MonoBehaviour
             UpdateTimeUI();
         }
     }
- 
+
     public IEnumerator EndDay()
     {
         isDayEnding = true;
@@ -89,9 +89,11 @@ public class TimeManager : MonoBehaviour
         gameMinute = 0;
         currentDayIndex = (currentDayIndex + 1) % daysOfWeek.Length;
         day++;
+        isDayEnding = false;
 
         OnDayEnd?.Invoke();
         UpdateTimeUI();
+        GameManager.instance.player.SetPosition();
 
         Debug.Log("하루가 끝났습니다. 다음 날 시작");
     }
