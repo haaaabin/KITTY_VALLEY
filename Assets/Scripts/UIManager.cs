@@ -8,12 +8,14 @@ using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour
 {
+    public static UIManager instance;
+
     public Dictionary<string, InventoryBase> inventoryUIByName = new Dictionary<string, InventoryBase>();
     public List<InventoryBase> inventoryUIs;
-    public static Slot_UI draggedSlot;
+    public Slot_UI draggedSlot;
     public RectTransform inventoryPanel;
-    public static Image draggedIcon;
-    public static bool dragSingle;
+    public Image draggedIcon;
+    public bool dragSingle;
 
     public TextMeshProUGUI timeText;
     public float moveDistance = 270f;
@@ -28,9 +30,9 @@ public class UIManager : MonoBehaviour
     public Button yesBtn;
     public Button noBtn;
 
-
     void Awake()
     {
+        instance = this;
         Initialize();
         closePosition = inventoryPanel.anchoredPosition;
         openPosition = closePosition + new Vector2(0, moveDistance);

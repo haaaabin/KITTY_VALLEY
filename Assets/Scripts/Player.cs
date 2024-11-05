@@ -256,11 +256,11 @@ public class Player : MonoBehaviour
         if (other.gameObject.CompareTag("DayEndCheckPoint"))
         {
             Debug.Log("침대 닿음");
-            GameManager.instance.uiManager.DayEndPanel.SetActive(true);
+            UIManager.instance.DayEndPanel.SetActive(true);
         }
         else
         {
-            GameManager.instance.uiManager.DayEndPanel.SetActive(false);
+            UIManager.instance.DayEndPanel.SetActive(false);
         }
     }
 

@@ -64,9 +64,9 @@ public class ItemBox : MonoBehaviour
 
         InitializePanel();
 
-        if (GameManager.instance.uiManager != null && !GameManager.instance.uiManager.isInventoryOpen)
+        if (UIManager.instance != null && !UIManager.instance.isInventoryOpen)
         {
-            GameManager.instance.uiManager.ToggleInventoryUI();
+            UIManager.instance.ToggleInventoryUI();
         }
     }
 
@@ -77,9 +77,9 @@ public class ItemBox : MonoBehaviour
         anim.SetBool("isOpen", isBoxOpen);
         sellingPanel.SetActive(false);
 
-        if (GameManager.instance.uiManager != null && GameManager.instance.uiManager.isInventoryOpen)
+        if (UIManager.instance != null && UIManager.instance.isInventoryOpen)
         {
-            GameManager.instance.uiManager.ToggleInventoryUI();
+            UIManager.instance.ToggleInventoryUI();
         }
     }
 
@@ -91,9 +91,7 @@ public class ItemBox : MonoBehaviour
             sellingIcon.color = selectedSlot.count > 0 && selectedSlot.isSellable ? new Color(1, 1, 1, 1) : new Color(1, 1, 1, 0);
             priceText.text = itemPrice.ToString();
             countText.text = itemCount.ToString();
-            GameManager.instance.uiManager.RefreshInventoryUI("Toolbar");
         }
-
     }
 
     void InitializePanel()
@@ -157,7 +155,7 @@ public class ItemBox : MonoBehaviour
                 Debug.Log("sellingPrice" + selectedSlot.itemName + " : " + sellingPrice);
                 selectedSlot.count -= itemCount;
                 coinText.text = sellingPrice.ToString();
-                GameManager.instance.uiManager.RefreshInventoryUI("Toolbar");
+                UIManager.instance.RefreshInventoryUI("Toolbar");
                 InitializePanel();
             }
             else
