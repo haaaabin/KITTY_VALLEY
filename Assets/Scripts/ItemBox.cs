@@ -1,4 +1,5 @@
 using System;
+using System.Security;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -14,13 +15,13 @@ public class ItemBox : MonoBehaviour
     public Button minusBtn;
     public Button plusBtn;
     public Button checkBtn;
-    public TextMeshProUGUI coinText;
 
     public bool isBoxOpen = false;
     bool isPlayerInRange = false;
     int itemPrice = 0;
     int itemCount = 0;
-    int sellingPrice = 0;
+    public int sellingPrice = 0;
+
 
     Inventory.Slot selectedSlot;
 
@@ -154,9 +155,14 @@ public class ItemBox : MonoBehaviour
                 sellingPrice += itemPrice;
                 Debug.Log("sellingPrice" + selectedSlot.itemName + " : " + sellingPrice);
                 selectedSlot.count -= itemCount;
-                coinText.text = sellingPrice.ToString();
+
+                PlayerPrefsManager.instance.AddMoney(sellingPrice);
+                UIManager.instance.UpdateMoneyUI();
+
                 UIManager.instance.RefreshInventoryUI("Toolbar");
                 InitializePanel();
+
+                sellingPrice = 0;
             }
             else
             {
