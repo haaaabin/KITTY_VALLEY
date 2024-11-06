@@ -1,4 +1,5 @@
 using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Player : MonoBehaviour
@@ -31,8 +32,6 @@ public class Player : MonoBehaviour
 
     void Update()
     {
-        Debug.DrawRay(rb.position + Vector2.up * 0.1f, lastMoveDirection * 1f, new Color(0, 1, 0));
-
         if (GameManager.instance.timeManager.isDayEnding)
             return;
 
@@ -41,6 +40,8 @@ public class Player : MonoBehaviour
         Plow();
         Hit();
         OpenDoor();
+
+        Debug.DrawRay(rb.position + Vector2.up * 0.1f, lastMoveDirection * 1f, new Color(0, 1, 0));
     }
 
     void FixedUpdate()
@@ -69,6 +70,12 @@ public class Player : MonoBehaviour
         if (movement != Vector2.zero)
         {
             lastMoveDirection = movement;
+        }
+
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            if (UIManager.instance.settingPanel.activeSelf)
+                UIManager.instance.settingPanel.SetActive(false);
         }
     }
 
@@ -256,11 +263,11 @@ public class Player : MonoBehaviour
         if (other.gameObject.CompareTag("DayEndCheckPoint"))
         {
             Debug.Log("침대 닿음");
-            UIManager.instance.DayEndPanel.SetActive(true);
+            UIManager.instance.dayEndPanel.SetActive(true);
         }
         else
         {
-            UIManager.instance.DayEndPanel.SetActive(false);
+            UIManager.instance.dayEndPanel.SetActive(false);
         }
     }
 
