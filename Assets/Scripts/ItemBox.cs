@@ -157,7 +157,7 @@ public class ItemBox : MonoBehaviour
                 selectedSlot.count -= itemCount;
 
                 PlayerPrefsManager.instance.AddMoney(sellingPrice);
-                UIManager.instance.UpdateMoneyUI();
+                // UIManager.instance.UpdateMoneyUI();
 
                 UIManager.instance.RefreshInventoryUI("Toolbar");
                 InitializePanel();

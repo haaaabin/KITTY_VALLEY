@@ -93,6 +93,7 @@ public class TimeManager : MonoBehaviour
 
         OnDayEnd?.Invoke();
         UpdateTimeUI();
+        UIManager.instance.UpdateMoneyUI();
         GameManager.instance.player.SetPosition();
 
         Debug.Log("하루가 끝났습니다. 다음 날 시작");
@@ -103,4 +104,5 @@ public class TimeManager : MonoBehaviour
         dayText.text = $"{daysOfWeek[currentDayIndex]}\n{day}";
         timeText.text = $"{gameHour:D2} : {gameMinute:D2}";
     }
+
 }
