@@ -106,4 +106,17 @@ public class TileManager : MonoBehaviour
         return new List<Vector3Int>(wateredTiles.Keys);
     }
 
+    public List<Vector3Int> GetAllTilePositions()
+    {
+        List<Vector3Int> tilePositions = new List<Vector3Int>();
+        foreach (var position in interactableMap.cellBounds.allPositionsWithin)
+        {
+            if( interactableMap.HasTile(position))
+            {
+                tilePositions.Add(position);
+            }
+        }
+        return tilePositions;
+    }
+
 }

@@ -60,6 +60,11 @@ public class UIManager : MonoBehaviour
             dayEndPanel.SetActive(false);
         });
 
+        gameExitBtn.onClick.AddListener(()=>
+        {
+            Application.Quit();
+        });
+
         UpdateMoneyUI();
     }
 
@@ -145,5 +150,22 @@ public class UIManager : MonoBehaviour
                 inventoryUIByName.Add(ui.inventoryName, ui);
             }
         }
+    }
+
+    public void SaveData()
+    {
+        int playerMoney = GameManager.instance.player.money;
+        Inventory inventory = InventoryManager.instance.backpack;
+        Inventory toolbar = InventoryManager.instance.toolbar;
+
+        PlayerPrefsManager.instance.SavePlayerMoney(playerMoney);
+        PlayerPrefsManager.instance.SaveInventory(inventory);
+        PlayerPrefsManager.instance.SaveToolbar(toolbar);
+        PlayerPrefsManager.instance.SavePlantGrowthData();
+
+        Debug.Log("Player Money Saved: " + playerMoney);
+        Debug.Log("Backpack Inventory Saved: " + JsonUtility.ToJson(inventory));
+        Debug.Log("Toolbar Inventory Saved: " + JsonUtility.ToJson(toolbar));
+
     }
 }

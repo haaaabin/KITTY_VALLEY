@@ -14,6 +14,7 @@ public class Toolbar_UI : InventoryBase
         if(inventory == null)   return;
         
         SelectSlot(0);
+        PlayerPrefsManager.instance.LoadToolbar();
         base.Start();
     }
 

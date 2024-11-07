@@ -17,6 +17,7 @@ public class Player : MonoBehaviour
     private bool isWatering = false;
     public bool isAxing = false;
     bool isOpenDoor = false;
+    public int money = 0;
 
     RaycastHit2D rayHit;
 

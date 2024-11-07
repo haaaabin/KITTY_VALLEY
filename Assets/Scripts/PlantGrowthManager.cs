@@ -22,6 +22,7 @@ public class PlantGrowthManager : MonoBehaviour
         {
             timeManager.OnDayEnd += OnDayEnd;
         }
+        PlayerPrefsManager.instance.LoadPlantGrowthData();
     }
     
     void OnDestroy()
@@ -30,6 +31,7 @@ public class PlantGrowthManager : MonoBehaviour
         {
             timeManager.OnDayEnd -= OnDayEnd;
         }
+        // PlayerPrefsManager.instance.SavePlantGrowthData(plantGrowthDays, currentGrowthStages);
     }
 
     public void PlantSeed(Vector3Int position, PlantData plantData)
@@ -178,4 +180,18 @@ public class PlantGrowthManager : MonoBehaviour
         currentGrowthStages.Remove(position);
         plantGrowthDays.Remove(position);
     }
+
+    public Dictionary<Vector3Int, int> GetGrowthDays()
+    {
+        return plantGrowthDays;
+    }
+
+    public Dictionary<Vector3Int, int> GetGrowthStages()
+    {
+        return currentGrowthStages;
+    }
+
+
 }
+
+

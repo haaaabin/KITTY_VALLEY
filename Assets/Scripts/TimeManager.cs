@@ -12,7 +12,7 @@ public class TimeManager : MonoBehaviour
     public TextMeshProUGUI timeText;
     public Image fadeImg;
 
-    private float timePerGameMinute = 10f;
+    private float timePerGameMinute = 1f;
     private float currentTime = 0f;
     private int gameHour = 9;
     private int gameMinute = 0;
@@ -46,7 +46,7 @@ public class TimeManager : MonoBehaviour
                 gameHour++;
             }
 
-            if (gameHour >= 24)
+            if (gameHour >= 11)
             {
                 StartCoroutine(EndDay());
             }

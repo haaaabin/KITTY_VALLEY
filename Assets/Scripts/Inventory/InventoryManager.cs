@@ -7,6 +7,7 @@ using UnityEngine;
 
 public class InventoryManager : MonoBehaviour
 {
+    public static InventoryManager instance;
     public Dictionary<string, Inventory> inventoryByName = new Dictionary<string, Inventory>();
 
     [Header("BackPack")]
@@ -19,6 +20,9 @@ public class InventoryManager : MonoBehaviour
 
     void Awake()
     {
+        if (!instance)
+            instance = this;
+
         backpack = new Inventory(backpackSlotCount);
         toolbar = new Inventory(toolbarSlotCount);
 
