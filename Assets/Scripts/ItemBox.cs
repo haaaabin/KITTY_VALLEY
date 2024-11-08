@@ -156,7 +156,7 @@ public class ItemBox : MonoBehaviour
                 Debug.Log("sellingPrice" + selectedSlot.itemName + " : " + sellingPrice);
                 selectedSlot.count -= itemCount;
                 GameManager.instance.player.money += sellingPrice;
-                PlayerPrefsManager.instance.AddMoney(GameManager.instance.player.money);
+                DataManager.instance.AddMoney(GameManager.instance.player.money);
                 // UIManager.instance.UpdateMoneyUI();
 
                 UIManager.instance.RefreshInventoryUI("Toolbar");

@@ -22,7 +22,7 @@ public class PlantGrowthManager : MonoBehaviour
         {
             timeManager.OnDayEnd += OnDayEnd;
         }
-        PlayerPrefsManager.instance.LoadPlantGrowthData();
+        // PlayerPrefsManager.instance.LoadPlantGrowthData();
     }
     
     void OnDestroy()
@@ -31,7 +31,6 @@ public class PlantGrowthManager : MonoBehaviour
         {
             timeManager.OnDayEnd -= OnDayEnd;
         }
-        // PlayerPrefsManager.instance.SavePlantGrowthData(plantGrowthDays, currentGrowthStages);
     }
 
     public void PlantSeed(Vector3Int position, PlantData plantData)

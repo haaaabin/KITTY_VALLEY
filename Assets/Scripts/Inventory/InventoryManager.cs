@@ -46,9 +46,4 @@ public class InventoryManager : MonoBehaviour
         }
         return null;
     }
-
-    public void SaveAllInventories()
-    {
-        
-    }
 }

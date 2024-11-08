@@ -17,7 +17,6 @@ public class Inventory_UI : InventoryBase
     {
         inventory = GameManager.instance.player.inventoryManager.GetInventoryByName(inventoryName);
         if (inventory == null) return;
-        PlayerPrefsManager.instance.LoadInventory();
         base.Start();
     }
 

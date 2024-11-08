@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -35,6 +36,7 @@ public class UIManager : MonoBehaviour
     public Slider effectSlider;
 
     public TextMeshProUGUI moneyText;
+    public TextMeshProUGUI saveText;
 
 
     void Awake()
@@ -49,6 +51,7 @@ public class UIManager : MonoBehaviour
 
     void Start()
     {
+        saveText.enabled = false;
         yesBtn.onClick.AddListener(() =>
         {
             GameManager.instance.timeManager.StartCoroutine(GameManager.instance.timeManager.EndDay());
@@ -87,7 +90,7 @@ public class UIManager : MonoBehaviour
 
     public void UpdateMoneyUI()
     {
-        int currentMoney = PlayerPrefsManager.instance.LoadPlayerMoney();
+        int currentMoney = DataManager.instance.LoadPlayerMoney();
         moneyText.text = currentMoney.ToString();
         Debug.Log(currentMoney);
     }
@@ -154,18 +157,19 @@ public class UIManager : MonoBehaviour
 
     public void SaveData()
     {
-        int playerMoney = GameManager.instance.player.money;
-        Inventory inventory = InventoryManager.instance.backpack;
-        Inventory toolbar = InventoryManager.instance.toolbar;
+        DataManager.instance.SaveGameData();
+        ShowSaveNotification();
+    }
 
-        PlayerPrefsManager.instance.SavePlayerMoney(playerMoney);
-        PlayerPrefsManager.instance.SaveInventory(inventory);
-        PlayerPrefsManager.instance.SaveToolbar(toolbar);
-        PlayerPrefsManager.instance.SavePlantGrowthData();
+    public void ShowSaveNotification()
+    {
+        StartCoroutine(DisplaySaveText());
+    }
 
-        Debug.Log("Player Money Saved: " + playerMoney);
-        Debug.Log("Backpack Inventory Saved: " + JsonUtility.ToJson(inventory));
-        Debug.Log("Toolbar Inventory Saved: " + JsonUtility.ToJson(toolbar));
-
+    private IEnumerator DisplaySaveText()
+    {
+        saveText.enabled = true;
+        yield return new WaitForSeconds(2);
+        saveText.enabled = false;
     }
 }
