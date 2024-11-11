@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 // Inventory 클래스는 게임 내 슬롯 기반 인벤토리 시스템을 구현합니다.
 // 각 슬롯은 아이템 정보를 저장하며, 아이템의 추가, 제거, 이동을 관리합니다.
@@ -18,6 +19,7 @@ public class Inventory
         public int maxAllowed;
         public int price;
         public bool isSellable;
+        public Item item;
         public PlantData plantData;
 
         public Slot()
@@ -28,6 +30,7 @@ public class Inventory
             price = 0;
             isSellable = false;
             plantData = null;
+            item = null;
         }
 
         public bool isEmpty
@@ -57,20 +60,11 @@ public class Inventory
             this.itemName = item.itemData.itemName;
             this.icon = item.itemData.icon;
             this.price = item.itemData.price;
+            this.maxAllowed = item.itemData.maxAllowed;
             this.plantData = item.plantData;
             this.isSellable = item.itemData.isSellable;
+            this.item = item;
             count++;
-        }
-
-        public void AddItem(string itemName, Sprite icon, int maxAllowed, PlantData plantData, int price, bool isSellable)
-        {
-            this.itemName = itemName;
-            this.icon = icon;
-            count++;
-            this.maxAllowed = maxAllowed;
-            this.price = price;
-            this.isSellable = isSellable;
-            this.plantData = plantData;
         }
 
         public void RemoveItem()
@@ -99,6 +93,10 @@ public class Inventory
             slots.Add(slot);
         }
     }
+
+    // 읽기 전용 리스트를 반환하는 속성
+    // IReadOnlyList<Slot> 읽을 수는 있지만 수정할 수는 없는 
+    public IReadOnlyList<Slot> GetSlots => slots.AsReadOnly();
 
     public void Add(Item item)
     {
@@ -139,7 +137,7 @@ public class Inventory
         }
     }
 
-    public void MoveSlot(int fromIndex, int toIndex, Inventory toInventory, int numToMove = 1)
+    public void MoveSlot(int fromIndex, int toIndex, Inventory toInventory, int numToMove = 1, string fromInventoryName = "")
     {
         Slot fromSlot = slots[fromIndex];
         Slot toSlot = toInventory.slots[toIndex];
@@ -148,7 +146,8 @@ public class Inventory
         {
             for (int i = 0; i < numToMove; i++)
             {
-                toSlot.AddItem(fromSlot.itemName, fromSlot.icon, fromSlot.maxAllowed, fromSlot.plantData, fromSlot.price, fromSlot.isSellable);
+                toSlot.AddItem(fromSlot.item);
+                // GameManager.instance.player.inventoryManager.Add(fromInventoryName, fromSlot.item);
                 fromSlot.RemoveItem();
             }
         }

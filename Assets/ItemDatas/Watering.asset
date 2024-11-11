@@ -14,3 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemName: Watering
   icon: {fileID: -825561318, guid: 03648fe178bac684b8a40092447acfde, type: 3}
+  spriteName: Basic_tools_and_meterials_0
+  price: 0
+  isSellable: 0

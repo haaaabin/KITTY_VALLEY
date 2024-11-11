@@ -46,4 +46,28 @@ public class InventoryManager : MonoBehaviour
         }
         return null;
     }
+
+    public string GetInventoryName(Inventory inventory)
+    {
+        foreach (var entry in inventoryByName)
+        {
+            if (entry.Value == inventory)
+            {
+                return entry.Key;
+            }
+        }
+        return null;
+    }
+
+    public void SaveInventory()
+    {
+        InventorySave.instance.SaveInventory("Backpack", backpack);
+        InventorySave.instance.SaveInventory("Toolbar", toolbar);
+    }
+
+    public void LoadInventory()
+    {
+        InventorySave.instance.LoadInventory("Backpack");
+        InventorySave.instance.LoadInventory("Toolbar");
+    }
 }

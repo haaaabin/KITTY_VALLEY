@@ -1,9 +1,6 @@
-using System.Collections;
 using System.Collections.Generic;
-using System.Data.Common;
-using UnityEditor.VersionControl;
 using UnityEngine;
-using UnityEngine.Pool;
+
 
 public class InventoryBase : MonoBehaviour
 {
@@ -53,8 +50,8 @@ public class InventoryBase : MonoBehaviour
 
         int slotID = UIManager.instance.draggedSlot.slotID;
         var slotData = inventory.slots[slotID];
-        
-        if(string.IsNullOrEmpty(slotData.itemName)) return;
+
+        if (string.IsNullOrEmpty(slotData.itemName)) return;
 
         Item itemToDrop = GameManager.instance.itemManager.GetItemByName(slotData.itemName);
         if (itemToDrop != null)
@@ -113,7 +110,9 @@ public class InventoryBase : MonoBehaviour
         else
         {
             draggedSlot.inventory.MoveSlot(draggedSlot.slotID, slot.slotID, slot.inventory, draggedSlot.inventory.slots[draggedSlot.slotID].count);
+
         }
+
         UIManager.instance.RefreshAll();
     }
 

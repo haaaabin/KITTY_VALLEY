@@ -32,6 +32,8 @@ public class UIManager : MonoBehaviour
     public GameObject settingPanel;
     public Button saveBtn;
     public Button gameExitBtn;
+    public Button loadBtn;
+
     public Slider bgmSlider;
     public Slider effectSlider;
 
@@ -42,7 +44,14 @@ public class UIManager : MonoBehaviour
     void Awake()
     {
         if (!instance)
+        {
             instance = this;
+            DontDestroyOnLoad(this.gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
 
         Initialize();
         closePosition = inventoryPanel.anchoredPosition;
@@ -51,6 +60,7 @@ public class UIManager : MonoBehaviour
 
     void Start()
     {
+
         saveText.enabled = false;
         yesBtn.onClick.AddListener(() =>
         {
@@ -63,12 +73,22 @@ public class UIManager : MonoBehaviour
             dayEndPanel.SetActive(false);
         });
 
-        gameExitBtn.onClick.AddListener(()=>
+        gameExitBtn.onClick.AddListener(() =>
         {
             Application.Quit();
         });
 
-        UpdateMoneyUI();
+        loadBtn.onClick.AddListener(() =>
+        {
+            if (GameManager.instance.isSave)
+            {
+                LoadAll();
+            }
+            else
+                Debug.Log("저장한 기록 없음");
+        });
+
+        // UpdateMoneyUI();
     }
 
     void Update()
@@ -88,12 +108,12 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    public void UpdateMoneyUI()
-    {
-        int currentMoney = DataManager.instance.LoadPlayerMoney();
-        moneyText.text = currentMoney.ToString();
-        Debug.Log(currentMoney);
-    }
+    // public void UpdateMoneyUI()
+    // {
+    //     int currentMoney = DataManager.instance.LoadPlayerMoney();
+    //     moneyText.text = currentMoney.ToString();
+    //     Debug.Log(currentMoney);
+    // }
 
     /*** 인벤토리 UI ***/
     public void ToggleInventoryUI()
@@ -144,6 +164,17 @@ public class UIManager : MonoBehaviour
         }
     }
 
+    public void SaveAll()
+    {
+        GameManager.instance.player.inventoryManager.SaveInventory();
+    }
+
+    public void LoadAll()
+    {
+        GameManager.instance.player.inventoryManager.LoadInventory();
+        RefreshAll();
+    }
+
     void Initialize()
     {
         foreach (InventoryBase ui in inventoryUIs)
@@ -157,7 +188,8 @@ public class UIManager : MonoBehaviour
 
     public void SaveData()
     {
-        DataManager.instance.SaveGameData();
+        GameManager.instance.isSave = true;
+        SaveAll();
         ShowSaveNotification();
     }
 

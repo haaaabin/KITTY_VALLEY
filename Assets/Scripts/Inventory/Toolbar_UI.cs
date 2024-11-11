@@ -11,8 +11,8 @@ public class Toolbar_UI : InventoryBase
     protected override void Start()
     {
         inventory = GameManager.instance.player.inventoryManager.GetInventoryByName(inventoryName);
-        if(inventory == null)   return;
-        
+        if (inventory == null) return;
+
         SelectSlot(0);
         base.Start();
     }
@@ -83,5 +83,6 @@ public class Toolbar_UI : InventoryBase
             SelectSlot(8);
         }
     }
+
 
 }

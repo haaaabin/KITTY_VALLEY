@@ -14,3 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemName: Axe
   icon: {fileID: -742294562, guid: 03648fe178bac684b8a40092447acfde, type: 3}
+  spriteName: Basic_tools_and_meterials_1
+  price: 0
+  isSellable: 0

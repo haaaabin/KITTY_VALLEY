@@ -14,3 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemName: Hoe
   icon: {fileID: -1878461214, guid: 03648fe178bac684b8a40092447acfde, type: 3}
+  spriteName: Basic_tools_and_meterials_2
+  price: 0
+  isSellable: 0
