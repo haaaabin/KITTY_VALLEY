@@ -5,7 +5,6 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
     public ItemManager itemManager;
-    public TileManager tileManager;
     public Player player;
     public TimeManager timeManager;
     public PlantGrowthManager plantGrowthManager;
@@ -28,17 +27,34 @@ public class GameManager : MonoBehaviour
         DontDestroyOnLoad(this.gameObject);
 
         itemManager = GetComponent<ItemManager>();
-        tileManager = GetComponent<TileManager>();
         timeManager = GetComponent<TimeManager>();
         inventorySave = GetComponent<InventorySave>();
         plantGrowthManager = GetComponent<PlantGrowthManager>();
+
         itemBox = FindObjectOfType<ItemBox>();
         player = FindObjectOfType<Player>();
+
+        SceneManager.sceneLoaded += OnSceneLoaded;
     }
 
-    void Start()
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        InventorySave.instance.LoadInventory("Backpack");
-        InventorySave.instance.LoadInventory("Toolbar");
+        if (scene.name == "InGameScene")
+        {
+            if (TitleUIManager.instance.isNewGame)
+            {
+                player.inventoryManager.ClearInventory();
+                inventorySave.DeleteSavedFiles();
+            }
+            else
+            {
+                player.inventoryManager.LoadInventory();
+            }
+        }
+    }
+
+    void OnDestroy()
+    {
+        SceneManager.sceneLoaded -= OnSceneLoaded;
     }
 }

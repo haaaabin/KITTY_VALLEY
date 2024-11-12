@@ -13,7 +13,9 @@ public class InventorySave : MonoBehaviour
     void Awake()
     {
         if (!instance)
+        {
             instance = this;
+        }
         CreateItemDictionary();
     }
 
@@ -28,6 +30,29 @@ public class InventorySave : MonoBehaviour
 
             if (!allItem.ContainsKey(key))
                 allItem.Add(key, i);
+        }
+    }
+
+    public void DeleteSavedFiles()
+    {
+        string[] filePaths = Directory.GetFiles(Application.persistentDataPath, "*.txt");
+        foreach (string filePath in filePaths)
+        {
+            File.Delete(filePath);
+        }
+        Debug.Log("All inventory files deleted at game start.");
+    }
+
+    public void ResetInventoryFiles(List<string> inventoryNames)
+    {
+        foreach (string inventoryName in inventoryNames)
+        {
+            string filePath = Application.persistentDataPath + $"/{inventoryName}.txt";
+            if (File.Exists(filePath))
+            {
+                File.Delete(filePath);
+                Debug.Log($"{inventoryName} inventory file deleted.");
+            }
         }
     }
 
@@ -59,28 +84,36 @@ public class InventorySave : MonoBehaviour
             Debug.LogWarning("Inventory file not found!");
             return;
         }
+
+        Inventory currentInventory = null;
+        if (inventoryName == "Backpack")
+        {
+            currentInventory = InventoryManager.instance.backpack;
+            Debug.Log("Loading Backpack inventory...");
+        }
+        else if (inventoryName == "Toolbar")
+        {
+            currentInventory = InventoryManager.instance.toolbar;
+            Debug.Log("Loading toolbar inventory...");
+        }
+
+        if (currentInventory != null)
+        {
+            currentInventory.Clear();
+            Debug.Log("Clear inventory...");
+        }
+
         // StreamWriter : 파일에서 텍스트 데이터를 읽기 위한 클래스
         using (StreamReader sr = new StreamReader(filePath))
         {
             string line;
-            Inventory currentInventory = null;
             while ((line = sr.ReadLine()) != null)
             {
-                Debug.Log($"Reading line: {line}");
 
                 // load할 인벤토리 구분
                 if (line.StartsWith("--"))
                 {
-                    if (line.Contains("Backpack"))
-                    {
-                        currentInventory = InventoryManager.instance.backpack;
-                        Debug.Log("Loading Backpack inventory...");
-                    }
-                    else if (line.Contains("Toolbar"))
-                    {
-                        currentInventory = InventoryManager.instance.toolbar;
-                        Debug.Log("Loading toolbar inventory...");
-                    }
+                    continue;
                 }
                 else if (currentInventory != null)
                 {
@@ -105,6 +138,14 @@ public class InventorySave : MonoBehaviour
                 }
             }
         }
+    }
+
+    public bool HasSavedInventory()
+    {
+        string backpackPath = Application.persistentDataPath + "/Backpack.txt";
+        string toolbarPath = Application.persistentDataPath + "/Toolbar.txt";
+
+        return File.Exists(backpackPath) || File.Exists(toolbarPath);
     }
 }
 
