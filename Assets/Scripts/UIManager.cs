@@ -78,16 +78,6 @@ public class UIManager : MonoBehaviour
             Application.Quit();
         });
 
-        loadBtn.onClick.AddListener(() =>
-        {
-            if (GameManager.instance.isSave)
-            {
-                LoadAll();
-            }
-            else
-                Debug.Log("저장한 기록 없음");
-        });
-
         // UpdateMoneyUI();
     }
 
@@ -188,7 +178,6 @@ public class UIManager : MonoBehaviour
 
     public void SaveData()
     {
-        GameManager.instance.isSave = true;
         SaveAll();
         ShowSaveNotification();
     }

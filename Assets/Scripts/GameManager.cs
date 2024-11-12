@@ -11,8 +11,6 @@ public class GameManager : MonoBehaviour
     public ItemBox itemBox;
     public InventorySave inventorySave;
 
-    public bool isSave = false;
-
     void Awake()
     {
         if (!instance)

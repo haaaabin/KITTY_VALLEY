@@ -42,20 +42,7 @@ public class InventorySave : MonoBehaviour
         }
         Debug.Log("All inventory files deleted at game start.");
     }
-
-    public void ResetInventoryFiles(List<string> inventoryNames)
-    {
-        foreach (string inventoryName in inventoryNames)
-        {
-            string filePath = Application.persistentDataPath + $"/{inventoryName}.txt";
-            if (File.Exists(filePath))
-            {
-                File.Delete(filePath);
-                Debug.Log($"{inventoryName} inventory file deleted.");
-            }
-        }
-    }
-
+    
     public void SaveInventory(string inventoryName, Inventory inventoryToSave)
     {
         string filePath = Application.persistentDataPath + $"/{inventoryName}.txt";
