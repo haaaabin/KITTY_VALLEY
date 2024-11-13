@@ -63,14 +63,14 @@ public class InventoryManager : MonoBehaviour
 
     public void SaveInventory()
     {
-        InventorySave.instance.SaveInventory("Backpack", backpack);
-        InventorySave.instance.SaveInventory("Toolbar", toolbar);
+        SaveData.instance.SaveInventory("Backpack", backpack);
+        SaveData.instance.SaveInventory("Toolbar", toolbar);
     }
 
     public void LoadInventory()
     {
-        InventorySave.instance.LoadInventory("Backpack");
-        InventorySave.instance.LoadInventory("Toolbar");
+        SaveData.instance.LoadInventory("Backpack");
+        SaveData.instance.LoadInventory("Toolbar");
     }
 
     public void ClearInventory()
