@@ -19,8 +19,6 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 17df67afc1e9e454baf2c7167e4c179b, type: 2}
   - {fileID: 11400000, guid: a86b46446c301314b8e1520c1d46d315, type: 2}
   - {fileID: 11400000, guid: d9f44bf7197cc2a49b3850a19e347a6e, type: 2}
-  growthTimes:
-  - 1
-  - 2
-  - 3
-  - 4
+  growthTimes: 01000000020000000300000004000000
+  growthDay: 0
+  growthStage: 0

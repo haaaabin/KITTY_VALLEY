@@ -157,6 +157,7 @@ public class UIManager : MonoBehaviour
     public void SaveAll()
     {
         GameManager.instance.player.inventoryManager.SaveInventory();
+        GameManager.instance.plantGrowthManager.SavePlantDataList();
     }
 
     public void LoadAll()

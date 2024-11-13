@@ -1,5 +1,7 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.Tilemaps;
 
 public class GameManager : MonoBehaviour
 {
@@ -7,9 +9,10 @@ public class GameManager : MonoBehaviour
     public ItemManager itemManager;
     public Player player;
     public TimeManager timeManager;
+    public TileManager tileManager;
     public PlantGrowthManager plantGrowthManager;
     public ItemBox itemBox;
-    public InventorySave inventorySave;
+    public SaveData inventorySave;
 
     void Awake()
     {
@@ -26,9 +29,9 @@ public class GameManager : MonoBehaviour
 
         itemManager = GetComponent<ItemManager>();
         timeManager = GetComponent<TimeManager>();
-        inventorySave = GetComponent<InventorySave>();
+        inventorySave = GetComponent<SaveData>();
         plantGrowthManager = GetComponent<PlantGrowthManager>();
-
+        tileManager = GetComponent<TileManager>();
         itemBox = FindObjectOfType<ItemBox>();
         player = FindObjectOfType<Player>();
 
@@ -47,6 +50,7 @@ public class GameManager : MonoBehaviour
             else
             {
                 player.inventoryManager.LoadInventory();
+                plantGrowthManager.LoadPlantsData();
             }
         }
     }

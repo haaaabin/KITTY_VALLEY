@@ -3981,6 +3981,7 @@ GameObject:
   - component: {fileID: 587211912}
   - component: {fileID: 587211917}
   - component: {fileID: 587211920}
+  - component: {fileID: 587211922}
   - component: {fileID: 587211921}
   m_Layer: 0
   m_Name: GameManager
@@ -4026,10 +4027,10 @@ MonoBehaviour:
   itemManager: {fileID: 0}
   player: {fileID: 0}
   timeManager: {fileID: 0}
+  tileManager: {fileID: 0}
   plantGrowthManager: {fileID: 0}
   itemBox: {fileID: 0}
   inventorySave: {fileID: 0}
-  isSave: 0
 --- !u!4 &587211914
 Transform:
   m_ObjectHideFlags: 0
@@ -4096,6 +4097,23 @@ MonoBehaviour:
       isSellable: 0
       item: {fileID: 0}
       plantData: {fileID: 0}
+--- !u!114 &587211922
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 587211911}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0a5daac53e09ea94d927d724ba774d47, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  interactableMap: {fileID: 361904080}
+  seedMap: {fileID: 419916457}
+  hiddenInteractableTile: {fileID: 11400000, guid: 69868dba9d6f8284288ce99c791e8112, type: 2}
+  interactedTile: {fileID: 11400000, guid: 54aab6c5f5235ee4d9150b73a03d662f, type: 2}
+  plantedTile: {fileID: 11400000, guid: 0cb0d8eec78a27940b4e2d6e990ae675, type: 2}
 --- !u!1 &661107315
 GameObject:
   m_ObjectHideFlags: 0
@@ -26255,7 +26273,6 @@ GameObject:
   - component: {fileID: 2021195483}
   - component: {fileID: 2021195482}
   - component: {fileID: 2021195484}
-  - component: {fileID: 2021195486}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -26371,7 +26388,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   doorAnim: {fileID: 40755685}
   inventoryManager: {fileID: 0}
-  tileManager: {fileID: 0}
   moveSpeed: 3
   isAxing: 0
 --- !u!95 &2021195483
@@ -26476,23 +26492,6 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.65107846, y: 0.5958545}
   m_EdgeRadius: 0
---- !u!114 &2021195486
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2021195477}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0a5daac53e09ea94d927d724ba774d47, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  interactableMap: {fileID: 361904080}
-  seedMap: {fileID: 419916457}
-  hiddenInteractableTile: {fileID: 11400000, guid: 69868dba9d6f8284288ce99c791e8112, type: 2}
-  interactedTile: {fileID: 11400000, guid: 54aab6c5f5235ee4d9150b73a03d662f, type: 2}
-  plantedTile: {fileID: 11400000, guid: 0cb0d8eec78a27940b4e2d6e990ae675, type: 2}
 --- !u!1 &2028708020
 GameObject:
   m_ObjectHideFlags: 0

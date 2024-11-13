@@ -1,10 +1,7 @@
-using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
-using UnityEditor.Rendering;
-using UnityEditor.U2D.Aseprite;
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using UnityEngine.Video;
 
 public class TileManager : MonoBehaviour
 {
@@ -26,8 +23,14 @@ public class TileManager : MonoBehaviour
             {
                 interactableMap.SetTile(position, hiddenInteractableTile);
                 seedMap.SetTile(position, hiddenInteractableTile);
+
+                if (SaveData.instance.HasSavedPlant())
+                {
+                    GameManager.instance.plantGrowthManager.LoadPlantsData();
+                }
             }
         }
+
     }
 
     public void SetInteracted(Vector3Int position)
@@ -90,7 +93,7 @@ public class TileManager : MonoBehaviour
     public void WaterTile(Vector3Int position)
     {
         wateredTiles[position] = true;
-        Debug.Log("wateredTiles : " + wateredTiles[position]);
+        Debug.Log("wateredTiles : " + position + wateredTiles[position]);
 
         TileBase tile = interactableMap.GetTile(position);
         if (tile != null)
@@ -111,12 +114,14 @@ public class TileManager : MonoBehaviour
         List<Vector3Int> tilePositions = new List<Vector3Int>();
         foreach (var position in interactableMap.cellBounds.allPositionsWithin)
         {
-            if( interactableMap.HasTile(position))
+            if (interactableMap.HasTile(position))
             {
                 tilePositions.Add(position);
             }
         }
         return tilePositions;
     }
+
+
 
 }

@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -10,21 +11,17 @@ public class PlantGrowthManager : MonoBehaviour
     private Dictionary<Vector3Int, int> plantGrowthDays = new Dictionary<Vector3Int, int>(); // 씨앗 심은 날 저장
     private Dictionary<Vector3Int, int> currentGrowthStages = new Dictionary<Vector3Int, int>(); // 현재 성장 단계 저장
 
-    private TileManager tileManager;
     private TimeManager timeManager;
 
-    private void Start() 
+    private void Start()
     {
-        tileManager = GameManager.instance.tileManager;
         timeManager = GameManager.instance.timeManager;
-
         if (timeManager != null)
         {
             timeManager.OnDayEnd += OnDayEnd;
         }
-        // PlayerPrefsManager.instance.LoadPlantGrowthData();
     }
-    
+
     void OnDestroy()
     {
         if (timeManager != null)
@@ -35,20 +32,20 @@ public class PlantGrowthManager : MonoBehaviour
 
     public void PlantSeed(Vector3Int position, PlantData plantData)
     {
-        if (tileManager.DoesTileExist(position) && tileManager.GetTileName(position) == "Plowed")
+        if (GameManager.instance.tileManager.DoesTileExist(position) && GameManager.instance.tileManager.GetTileName(position) == "Plowed")
         {
-            tileManager.SetTileState(position,"Seeded");
-            tileManager.seedMap.SetTile(position, tileManager.plantedTile);
+            GameManager.instance.tileManager.SetTileState(position, "Seeded");
+            GameManager.instance.tileManager.seedMap.SetTile(position, GameManager.instance.tileManager.plantedTile);
 
             plantDataDict[position] = plantData;
             plantGrowthDays[position] = 0;
             currentGrowthStages[position] = 0;
         }
     }
-    
+
     IEnumerator GrowPlant(Vector3Int position)
     {
-        if (!tileManager.DoesTileExist(position) || tileManager.GetTileState(position) == "Grown")
+        if (!GameManager.instance.tileManager.DoesTileExist(position) || GameManager.instance.tileManager.GetTileState(position) == "Grown")
         {
             yield break;
         }
@@ -56,23 +53,23 @@ public class PlantGrowthManager : MonoBehaviour
         PlantData plantData = plantDataDict[position];
         int currentStage = currentGrowthStages[position];
         int daysSincePlanted = plantGrowthDays[position];
-        
+
         // 각 성장 단계별로 경과된 시간이 맞는지 확인
         if (currentStage < plantData.growthStagesTiles.Length && daysSincePlanted >= plantData.growthTimes[currentStage])
         {
-            tileManager.seedMap.SetTile(position, plantData.growthStagesTiles[currentStage]);
+            GameManager.instance.tileManager.seedMap.SetTile(position, plantData.growthStagesTiles[currentStage]);
             plantData.growthStagesTiles[currentStage].colliderType = Tile.ColliderType.Sprite;
 
             currentGrowthStages[position] = currentStage + 1;  // 성장 단계 1 증가
 
             // 모든 성장 단계를 완료했으면 "Grown" 상태로 변경
-            if (currentGrowthStages[position] >=  plantData.growthStagesTiles.Length)
+            if (currentGrowthStages[position] >= plantData.growthStagesTiles.Length)
             {
-                tileManager.SetTileState(position,"Grown");
+                GameManager.instance.tileManager.SetTileState(position, "Grown");
             }
             else
             {
-                tileManager.SetTileState(position,"Growing");
+                GameManager.instance.tileManager.SetTileState(position, "Growing");
             }
         }
         yield return null;
@@ -82,9 +79,9 @@ public class PlantGrowthManager : MonoBehaviour
     {
         PlantData plantData = GetPlantData(position);
 
-        if(plantData != null)
+        if (plantData != null)
         {
-            Vector3 spawnPosition = tileManager.interactableMap.GetCellCenterWorld(position);
+            Vector3 spawnPosition = GameManager.instance.tileManager.interactableMap.GetCellCenterWorld(position);
             GameObject plant = Instantiate(plantData.plantPrefab, spawnPosition, Quaternion.identity);
             Debug.Log("Spawning plant prefab: " + plantData.plantName + " at " + spawnPosition);
 
@@ -148,27 +145,28 @@ public class PlantGrowthManager : MonoBehaviour
     void OnDayEnd()
     {
         // wateredTiles의 키를 미리 복사하여 List에 저장
-        List<Vector3Int> wateredTilesKey = tileManager.GetWateredTilesKeys();
-
+        List<Vector3Int> wateredTilesKey = GameManager.instance.tileManager.GetWateredTilesKeys();
+        
         foreach (var position in wateredTilesKey)
         {
-            if (tileManager.GetWateringTile(position) && plantGrowthDays.ContainsKey(position))
+            if (GameManager.instance.tileManager.GetWateringTile(position) && plantGrowthDays.ContainsKey(position))
             {
                 plantGrowthDays[position]++;
 
                 StartCoroutine(GrowPlant(position));
-                tileManager.SetWateringTile(position, false);
+                GameManager.instance.tileManager.SetWateringTile(position, false);
+                Debug.Log("plantGrowthDays[position] : " + plantGrowthDays[position]);
             }
 
-            TileBase tile = tileManager.interactableMap.GetTile(position);
+            TileBase tile = GameManager.instance.tileManager.interactableMap.GetTile(position);
             if (tile != null)
-                tileManager.interactableMap.SetColor(position, Color.white);
+                GameManager.instance.tileManager.interactableMap.SetColor(position, Color.white);
         }
     }
 
     public PlantData GetPlantData(Vector3Int position)
     {
-        if(plantDataDict.ContainsKey(position))
+        if (plantDataDict.ContainsKey(position))
             return plantDataDict[position];
         return null;
     }
@@ -190,7 +188,62 @@ public class PlantGrowthManager : MonoBehaviour
         return currentGrowthStages;
     }
 
+    public void SavePlantDataList()
+    {
+        List<PlantSaveData> plantSaveDataList = new List<PlantSaveData>();
+        foreach (var position in plantDataDict.Keys)
+        {
+            PlantData plantData = plantDataDict[position];
+            int growthStage = currentGrowthStages[position];
+            int growthDay = plantGrowthDays[position];
+            string currentState = GameManager.instance.tileManager.GetTileState(position);
+            bool isWatered = GameManager.instance.tileManager.GetWateringTile(position);
+            
+            plantSaveDataList.Add(new PlantSaveData(plantData, position, growthStage, growthDay, currentState, isWatered));
+        }
 
+        SaveData.instance.SavePlants(plantSaveDataList);
+    }
+
+    public void LoadPlantsData()
+    {
+        List<PlantSaveData> plantSaveDataList = SaveData.instance.LoadPlants();
+        SetTilePlantSaveData(plantSaveDataList);
+    }
+
+    public void SetTilePlantSaveData(List<PlantSaveData> plantSaveDataList)
+    {
+        foreach (var saveData in plantSaveDataList)
+        {
+            Vector3Int position = saveData.position;
+            PlantData plantData = saveData.plantData;
+            int currentGrowthStage = saveData.growthStage;
+            int currentGrowthDay = saveData.growthDay;
+            string currentState = saveData.currentState;
+            bool isWatered = saveData.isWatered;
+
+            if (GameManager.instance.tileManager == null)
+                Debug.Log("no tileManager ");
+            if (GameManager.instance.tileManager.seedMap == null)
+                Debug.Log(" no seedMap: ");
+
+            GameManager.instance.tileManager.SetTileState(position, currentState);
+            GameManager.instance.tileManager.interactableMap.SetTile(position, GameManager.instance.tileManager.interactedTile);
+            GameManager.instance.tileManager.seedMap.SetTile(position, plantData.growthStagesTiles[currentGrowthStage]);
+
+            plantDataDict[position] = plantData;
+            plantGrowthDays[position] = currentGrowthDay;
+            currentGrowthStages[position] = currentGrowthStage;
+
+            Debug.Log("현재 currentGrowthStage : " + currentGrowthStage);
+            Debug.Log("현재 plantData.growthStagesTiles[currentGrowthStage] : " + plantData.growthStagesTiles[currentGrowthStage]);
+            Debug.Log("plantGrowthDays[position] : " + plantGrowthDays[position]);
+            Debug.Log("currentGrowthStages[position] : " + currentGrowthStages[position]);
+
+            GameManager.instance.tileManager.SetWateringTile(position, isWatered);
+
+        }
+    }
 }
 
 

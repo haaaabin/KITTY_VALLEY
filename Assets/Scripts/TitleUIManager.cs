@@ -31,7 +31,7 @@ public class TitleUIManager : MonoBehaviour
     void Start()
     {
         GameObject inventoryObj = new GameObject("InventorySave");
-        InventorySave inventorySave = inventoryObj.AddComponent<InventorySave>();
+        SaveData inventorySave = inventoryObj.AddComponent<SaveData>();
 
         if (!inventorySave.HasSavedInventory())
         {
@@ -64,7 +64,7 @@ public class TitleUIManager : MonoBehaviour
             });
         }
 
-        exitGameBtn.onClick.AddListener(()=>
+        exitGameBtn.onClick.AddListener(() =>
         {
             Application.Quit();
         });
