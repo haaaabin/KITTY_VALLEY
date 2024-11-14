@@ -45,6 +45,7 @@ public class GameManager : MonoBehaviour
             if (TitleUIManager.instance.isNewGame)
             {
                 player.inventoryManager.ClearInventory();
+                plantGrowthManager.ClearPlantSaveData();
                 inventorySave.DeleteSavedFiles();
             }
             else

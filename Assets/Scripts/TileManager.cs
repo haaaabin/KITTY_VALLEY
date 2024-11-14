@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using UnityEditor.U2D.Aseprite;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 using UnityEngine.Video;
@@ -58,10 +59,16 @@ public class TileManager : MonoBehaviour
         return "";
     }
 
-    public void SetTileState(Vector3Int position, string state)
+   public void SetTileState(Vector3Int position, string state)
     {
         if (tileStates.ContainsKey(position))
+        {
             tileStates[position] = state;
+        }
+        else
+        {
+            tileStates.Add(position, state);
+        }
     }
 
     public bool GetWateringTile(Vector3Int position)

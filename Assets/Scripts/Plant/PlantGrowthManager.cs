@@ -10,6 +10,7 @@ public class PlantGrowthManager : MonoBehaviour
     private Dictionary<Vector3Int, PlantData> plantDataDict = new Dictionary<Vector3Int, PlantData>();
     private Dictionary<Vector3Int, int> plantGrowthDays = new Dictionary<Vector3Int, int>(); // 씨앗 심은 날 저장
     private Dictionary<Vector3Int, int> currentGrowthStages = new Dictionary<Vector3Int, int>(); // 현재 성장 단계 저장
+    private List<PlantSaveData> plantSaveDataList = new List<PlantSaveData>();
 
     private TimeManager timeManager;
 
@@ -47,20 +48,22 @@ public class PlantGrowthManager : MonoBehaviour
     {
         if (!GameManager.instance.tileManager.DoesTileExist(position) || GameManager.instance.tileManager.GetTileState(position) == "Grown")
         {
+            Debug.Log("no tile");
             yield break;
         }
 
         PlantData plantData = plantDataDict[position];
         int currentStage = currentGrowthStages[position];
-        int daysSincePlanted = plantGrowthDays[position];
+        int currentGrowthDay = plantGrowthDays[position];
 
         // 각 성장 단계별로 경과된 시간이 맞는지 확인
-        if (currentStage < plantData.growthStagesTiles.Length && daysSincePlanted >= plantData.growthTimes[currentStage])
+        if (currentStage - 1 >= 0 && currentStage < plantData.growthStagesTiles.Length)
         {
-            GameManager.instance.tileManager.seedMap.SetTile(position, plantData.growthStagesTiles[currentStage]);
-            plantData.growthStagesTiles[currentStage].colliderType = Tile.ColliderType.Sprite;
+            currentStage++;
+            currentGrowthDay++;
 
-            currentGrowthStages[position] = currentStage + 1;  // 성장 단계 1 증가
+            GameManager.instance.tileManager.seedMap.SetTile(position, plantData.growthStagesTiles[currentStage - 1]);
+            plantData.growthStagesTiles[currentStage - 1].colliderType = Tile.ColliderType.Sprite;
 
             // 모든 성장 단계를 완료했으면 "Grown" 상태로 변경
             if (currentGrowthStages[position] >= plantData.growthStagesTiles.Length)
@@ -72,6 +75,10 @@ public class PlantGrowthManager : MonoBehaviour
                 GameManager.instance.tileManager.SetTileState(position, "Growing");
             }
         }
+
+        currentGrowthStages[position] = currentStage;
+        plantGrowthDays[position] = currentGrowthDay;
+
         yield return null;
     }
 
@@ -83,7 +90,6 @@ public class PlantGrowthManager : MonoBehaviour
         {
             Vector3 spawnPosition = GameManager.instance.tileManager.interactableMap.GetCellCenterWorld(position);
             GameObject plant = Instantiate(plantData.plantPrefab, spawnPosition, Quaternion.identity);
-            Debug.Log("Spawning plant prefab: " + plantData.plantName + " at " + spawnPosition);
 
             Rigidbody2D rb = plant.GetComponent<Rigidbody2D>();
             if (rb != null)
@@ -146,16 +152,12 @@ public class PlantGrowthManager : MonoBehaviour
     {
         // wateredTiles의 키를 미리 복사하여 List에 저장
         List<Vector3Int> wateredTilesKey = GameManager.instance.tileManager.GetWateredTilesKeys();
-        
         foreach (var position in wateredTilesKey)
         {
             if (GameManager.instance.tileManager.GetWateringTile(position) && plantGrowthDays.ContainsKey(position))
             {
-                plantGrowthDays[position]++;
-
                 StartCoroutine(GrowPlant(position));
                 GameManager.instance.tileManager.SetWateringTile(position, false);
-                Debug.Log("plantGrowthDays[position] : " + plantGrowthDays[position]);
             }
 
             TileBase tile = GameManager.instance.tileManager.interactableMap.GetTile(position);
@@ -178,19 +180,9 @@ public class PlantGrowthManager : MonoBehaviour
         plantGrowthDays.Remove(position);
     }
 
-    public Dictionary<Vector3Int, int> GetGrowthDays()
-    {
-        return plantGrowthDays;
-    }
-
-    public Dictionary<Vector3Int, int> GetGrowthStages()
-    {
-        return currentGrowthStages;
-    }
-
     public void SavePlantDataList()
     {
-        List<PlantSaveData> plantSaveDataList = new List<PlantSaveData>();
+
         foreach (var position in plantDataDict.Keys)
         {
             PlantData plantData = plantDataDict[position];
@@ -198,7 +190,7 @@ public class PlantGrowthManager : MonoBehaviour
             int growthDay = plantGrowthDays[position];
             string currentState = GameManager.instance.tileManager.GetTileState(position);
             bool isWatered = GameManager.instance.tileManager.GetWateringTile(position);
-            
+
             plantSaveDataList.Add(new PlantSaveData(plantData, position, growthStage, growthDay, currentState, isWatered));
         }
 
@@ -229,21 +221,24 @@ public class PlantGrowthManager : MonoBehaviour
 
             GameManager.instance.tileManager.SetTileState(position, currentState);
             GameManager.instance.tileManager.interactableMap.SetTile(position, GameManager.instance.tileManager.interactedTile);
-            GameManager.instance.tileManager.seedMap.SetTile(position, plantData.growthStagesTiles[currentGrowthStage]);
+            if (currentGrowthStage - 1 >= 0 && currentGrowthStage < plantData.growthStagesTiles.Length)
+            {
+                GameManager.instance.tileManager.seedMap.SetTile(position, plantData.growthStagesTiles[currentGrowthStage - 1]);
+            }
 
             plantDataDict[position] = plantData;
             plantGrowthDays[position] = currentGrowthDay;
             currentGrowthStages[position] = currentGrowthStage;
 
-            Debug.Log("현재 currentGrowthStage : " + currentGrowthStage);
-            Debug.Log("현재 plantData.growthStagesTiles[currentGrowthStage] : " + plantData.growthStagesTiles[currentGrowthStage]);
-            Debug.Log("plantGrowthDays[position] : " + plantGrowthDays[position]);
-            Debug.Log("currentGrowthStages[position] : " + currentGrowthStages[position]);
-
             GameManager.instance.tileManager.SetWateringTile(position, isWatered);
-
         }
     }
+
+    public void ClearPlantSaveData()
+    {
+        plantSaveDataList.Clear();
+    }
 }
+
 
 
