@@ -47,6 +47,7 @@ public class GameManager : MonoBehaviour
                 player.inventoryManager.ClearInventory();
                 plantGrowthManager.ClearPlantSaveData();
                 inventorySave.DeleteSavedFiles();
+                player.inventoryManager.startItemAdd("Toolbar");
             }
             else
             {

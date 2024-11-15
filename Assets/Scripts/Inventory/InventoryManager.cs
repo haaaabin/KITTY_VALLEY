@@ -19,6 +19,7 @@ public class InventoryManager : MonoBehaviour
     [Header("Toolbar")]
     public Inventory toolbar;
     public int toolbarSlotCount;
+    public List<Item> startItems;
 
     void Awake()
     {
@@ -30,6 +31,15 @@ public class InventoryManager : MonoBehaviour
 
         inventoryByName.Add("Backpack", backpack);
         inventoryByName.Add("Toolbar", toolbar);
+        
+    }
+
+    public void startItemAdd(string inventoryName)
+    {
+        foreach (var item in startItems)
+        {
+            inventoryByName[inventoryName].Add(item);
+        }
     }
 
     public void Add(string inventoryName, Item item)
