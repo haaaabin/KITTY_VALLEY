@@ -153,19 +153,7 @@ public class UIManager : MonoBehaviour
             keyValuePair.Value.Refresh();
         }
     }
-
-    public void SaveAll()
-    {
-        GameManager.instance.player.inventoryManager.SaveInventory();
-        GameManager.instance.plantGrowthManager.SavePlantDataList();
-    }
-
-    public void LoadAll()
-    {
-        GameManager.instance.player.inventoryManager.LoadInventory();
-        RefreshAll();
-    }
-
+    
     void Initialize()
     {
         foreach (InventoryBase ui in inventoryUIs)
@@ -179,7 +167,8 @@ public class UIManager : MonoBehaviour
 
     public void SaveData()
     {
-        SaveAll();
+        GameManager.instance.player.inventoryManager.SaveInventory();
+        GameManager.instance.plantGrowthManager.SavePlantDataList();
         ShowSaveNotification();
     }
 
@@ -194,4 +183,5 @@ public class UIManager : MonoBehaviour
         yield return new WaitForSeconds(2);
         saveText.enabled = false;
     }
+
 }
