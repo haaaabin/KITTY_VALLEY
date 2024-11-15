@@ -154,7 +154,8 @@ public class SaveData : MonoBehaviour
                         {
                             for (int i = 0; i < count; i++)
                             {
-                                Item item = new Item { itemData = itemData };
+                                Item item = new GameObject("Item").AddComponent<Item>();
+                                item.itemData = itemData;
                                 currentInventory.Add(item);
                             }
                         }
