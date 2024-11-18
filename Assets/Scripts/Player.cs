@@ -1,14 +1,16 @@
 using System.Collections;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Tilemaps;
 
 public class Player : MonoBehaviour
 {
     private Rigidbody2D rb;
     private Vector2 movement;
     private Vector2 lastMoveDirection;
-    private Animator anim;
+    public Animator anim;
     public Animator doorAnim;
+    public Tilemap houseRoofTileMap;
 
     public InventoryManager inventoryManager;
     private TileManager tileManager;
@@ -17,7 +19,6 @@ public class Player : MonoBehaviour
     private bool isWatering = false;
     public bool isAxing = false;
     bool isOpenDoor = false;
-    public int money = 0;
 
     RaycastHit2D rayHit;
 
@@ -210,7 +211,6 @@ public class Player : MonoBehaviour
                             tileManager.WaterTile(targetPosition);
 
                             StartCoroutine(WaitForAnimation());
-                            Debug.Log(tileState);
                         }
                     }
                 }
@@ -261,7 +261,7 @@ public class Player : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.gameObject.CompareTag("DayEndCheckPoint"))
+        if (other.CompareTag("DayEndCheckPoint"))
         {
             Debug.Log("침대 닿음");
             UIManager.instance.dayEndPanel.SetActive(true);
@@ -270,14 +270,27 @@ public class Player : MonoBehaviour
         {
             UIManager.instance.dayEndPanel.SetActive(false);
         }
+
+        if (other.CompareTag("HouseRoof"))
+        {
+            houseRoofTileMap.color = new Color(1f, 1f, 1f, 0f);
+        }
+    }
+
+    void OnTriggerExit2D(Collider2D other)
+    {
+        if (other.CompareTag("HouseRoof"))
+        {
+            houseRoofTileMap.color = new Color(1f, 1f, 1f, 1f);
+        }
     }
 
     public void SetPosition()
     {
-        transform.position = new Vector2(0.4f, 2.7f);
-
+        transform.position = Vector2.zero;
         lastMoveDirection = new Vector2(0, -1);
 
+        anim.enabled = true;
         // 애니메이션의 idle 방향 업데이트
         anim.SetFloat("LastHorizontal", lastMoveDirection.x);
         anim.SetFloat("LastVertical", lastMoveDirection.y);
