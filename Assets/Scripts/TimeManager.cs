@@ -10,7 +10,7 @@ public class TimeManager : MonoBehaviour
 {
     public TextMeshProUGUI dayText;
     public TextMeshProUGUI timeText;
-    public Image fadeImg;
+    public Image fadePanel;
 
     private float timePerGameMinute = 1f;
     private float currentTime = 0f;
@@ -18,7 +18,7 @@ public class TimeManager : MonoBehaviour
     private int gameMinute = 0;
     private string[] daysOfWeek = { "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun" };
     private int currentDayIndex = 0;
-    private float fadeDuration = 4f;
+
     public bool isDayEnding = false;
     private int day = 1;
 
@@ -58,30 +58,15 @@ public class TimeManager : MonoBehaviour
     public IEnumerator EndDay()
     {
         isDayEnding = true;
-        yield return StartCoroutine(FadeScreen(1f));
+        GameManager.instance.player.anim.enabled = false;
+        yield return StartCoroutine(FadeEffect.instance.FadeScreen(fadePanel, 1f));
 
         NextDay();
 
-        yield return StartCoroutine(FadeScreen(0f));
+        yield return StartCoroutine(FadeEffect.instance.FadeScreen(fadePanel, 0f));
         isDayEnding = false;
     }
 
-    IEnumerator FadeScreen(float targetAlpha)
-    {
-        float startAlpha = fadeImg.color.a;
-        float elapsedTime = 0f;
-
-        while (elapsedTime < fadeDuration)
-        {
-            elapsedTime += Time.deltaTime;
-            float newAlpha = Mathf.Lerp(startAlpha, targetAlpha, elapsedTime / fadeDuration);
-            fadeImg.color = new Color(0, 0, 0, newAlpha);
-            yield return null;
-        }
-
-        fadeImg.color = new Color(0, 0, 0, targetAlpha);
-        yield return new WaitForSeconds(1f);
-    }
 
     void NextDay()
     {
@@ -93,7 +78,7 @@ public class TimeManager : MonoBehaviour
 
         OnDayEnd?.Invoke();
         UpdateTimeUI();
-        UIManager.instance.UpdateMoneyUI();
+        // UIManager.instance.UpdateMoneyUI();
         GameManager.instance.player.SetPosition();
 
         Debug.Log("하루가 끝났습니다. 다음 날 시작");
