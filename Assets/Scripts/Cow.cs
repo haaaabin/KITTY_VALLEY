@@ -7,18 +7,17 @@ using UnityEngine.UIElements;
 
 public class Cow : MonoBehaviour
 {
-    private Rigidbody2D rigid;
-    private Animator anim;
-    private SpriteRenderer sprite;
-
     public float walkSpeed = 1.2f;
     public float walkTime = 3f;
     public float idleTime = 2f;
-    Vector2 direction;
-    float timer;
-    bool isWalking;
 
-    // Start is called before the first frame update
+    private Rigidbody2D rigid;
+    private Animator anim;
+    private SpriteRenderer sprite;
+    private Vector2 direction;
+    private float timer;
+    private bool isWalking;
+
     void Start()
     {
         anim = GetComponent<Animator>();
@@ -31,7 +30,6 @@ public class Cow : MonoBehaviour
 
     }
 
-    // Update is called once per frame
     void Update()
     {
         Debug.DrawRay(rigid.position, direction, Color.red);

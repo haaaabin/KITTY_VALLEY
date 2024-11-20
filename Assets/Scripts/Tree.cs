@@ -3,15 +3,16 @@ using UnityEngine;
 
 public class Tree : MonoBehaviour
 {
-    public int hitCount;
-    public GameObject WoodPrefab;
-    Animator anim;
-    public bool isFruitTree;
-    public Sprite newSprite;
-    public GameObject fruitPrefab;
-    private SpriteRenderer spriteRenderer;
     public Transform fruitSpawnPos;
     public Transform fallPos;
+    public GameObject WoodPrefab;
+    public GameObject fruitPrefab;
+    public Sprite newSprite;
+    public int hitCount;
+    public bool isFruitTree;
+
+    private Animator anim;
+    private SpriteRenderer spriteRenderer;
     private bool isFruitDrop = false;
     private float fruitOffset = 0.5f;
 
@@ -29,7 +30,7 @@ public class Tree : MonoBehaviour
             hitCount = 0;
         }
 
-        if (!isFruitDrop && isFruitTree && hitCount == 1 && !GameManager.instance.player.isAxing)
+        if (!isFruitDrop && isFruitTree && hitCount == 1 && !GameManager.instance.player.IsAxing())
         {
             anim.enabled = false;
             ChangeSprite();

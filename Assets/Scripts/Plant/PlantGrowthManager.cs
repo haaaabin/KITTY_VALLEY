@@ -11,7 +11,6 @@ public class PlantGrowthManager : MonoBehaviour
     private Dictionary<Vector3Int, int> plantGrowthDays = new Dictionary<Vector3Int, int>(); // 씨앗 심은 날 저장
     private Dictionary<Vector3Int, int> currentGrowthStages = new Dictionary<Vector3Int, int>(); // 현재 성장 단계 저장
     private List<PlantSaveData> plantSaveDataList = new List<PlantSaveData>();
-
     private TimeManager timeManager;
 
     private void Start()

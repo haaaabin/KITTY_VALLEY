@@ -10,6 +10,7 @@ using UnityEngine;
 public class InventoryManager : MonoBehaviour
 {
     public static InventoryManager instance;
+    
     public Dictionary<string, Inventory> inventoryByName = new Dictionary<string, Inventory>();
 
     [Header("BackPack")]

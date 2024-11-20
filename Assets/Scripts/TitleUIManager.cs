@@ -11,7 +11,6 @@ public class TitleUIManager : MonoBehaviour
     public Button exitGameBtn;
     public Button yesBtn;
     public Button noBtn;
-
     public bool isNewGame;
 
     void Awake()

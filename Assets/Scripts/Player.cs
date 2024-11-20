@@ -1,29 +1,28 @@
 using System.Collections;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
 public class Player : MonoBehaviour
 {
-    private Rigidbody2D rb;
-    private Vector2 movement;
-    private Vector2 lastMoveDirection;
     public Animator anim;
     public Animator doorAnim;
     public Tilemap houseRoofTileMap;
-
     public InventoryManager inventoryManager;
+    public int money = 0;
+
+    private Rigidbody2D rb;
+    private RaycastHit2D rayHit;
     private TileManager tileManager;
-    public float moveSpeed = 5;
+    private Vector2 movement;
+    private Vector2 lastMoveDirection;
+    private float moveSpeed = 3;
     private bool isHoeing = false;
     private bool isWatering = false;
-    public bool isAxing = false;
-    bool isOpenDoor = false;
-
-    RaycastHit2D rayHit;
+    private bool isAxing = false;
+    private bool isOpenDoor = false;
 
 
-    void Awake()
+    private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>(); ;
@@ -32,7 +31,7 @@ public class Player : MonoBehaviour
         tileManager = GameManager.instance.tileManager;
     }
 
-    void Update()
+    private void Update()
     {
         if (GameManager.instance.timeManager.isDayEnding)
             return;
@@ -46,18 +45,18 @@ public class Player : MonoBehaviour
         Debug.DrawRay(rb.position + Vector2.up * 0.1f, lastMoveDirection * 1f, new Color(0, 1, 0));
     }
 
-    void FixedUpdate()
+    private void FixedUpdate()
     {
         if (!GameManager.instance.timeManager.isDayEnding && !isHoeing && !isWatering && !isAxing)
             Move();
     }
 
-    void Move()
+    private void Move()
     {
         rb.MovePosition(rb.position + movement * moveSpeed * Time.fixedDeltaTime);
     }
 
-    void GetInput()
+    private void GetInput()
     {
         movement.x = Input.GetAxisRaw("Horizontal");
         movement.y = Input.GetAxisRaw("Vertical");
@@ -81,7 +80,7 @@ public class Player : MonoBehaviour
         }
     }
 
-    void UpdateAnimation()
+    private void UpdateAnimation()
     {
         // walk
         anim.SetFloat("Horizontal", movement.x);
@@ -96,7 +95,7 @@ public class Player : MonoBehaviour
         }
     }
 
-    void Hit()
+    private void Hit()
     {
         rayHit = Physics2D.Raycast(rb.position, lastMoveDirection, 1f, LayerMask.GetMask("Tree"));
         if (rayHit.collider != null)
@@ -115,7 +114,7 @@ public class Player : MonoBehaviour
         }
     }
 
-    void OpenDoor()
+    private void OpenDoor()
     {
         rayHit = Physics2D.Raycast(rb.position, lastMoveDirection, 1f, LayerMask.GetMask("Door"));
         if (rayHit.collider != null)
@@ -133,8 +132,7 @@ public class Player : MonoBehaviour
         }
     }
 
-
-    void Plow()
+    private void Plow()
     {
         if (isHoeing) return;
         if (tileManager == null) return;
@@ -227,7 +225,7 @@ public class Player : MonoBehaviour
         }
     }
 
-    IEnumerator WaitForAnimation()
+    private IEnumerator WaitForAnimation()
     {
         yield return new WaitForSeconds(0.7f);
 
@@ -237,6 +235,40 @@ public class Player : MonoBehaviour
             isWatering = false;
         if (isAxing)
             isAxing = false;
+    }
+
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.CompareTag("DayEndCheckPoint"))
+        {
+            Debug.Log("침대 닿음");
+            UIManager.instance.dayEndPanel.SetActive(true);
+        }
+        else
+        {
+            UIManager.instance.dayEndPanel.SetActive(false);
+        }
+
+        if (other.CompareTag("HouseRoof"))
+        {
+            houseRoofTileMap.color = new Color(1f, 1f, 1f, 0f);
+        }
+
+        if (other.CompareTag("StartTuto"))
+        {
+            Debug.Log("startTuto");
+            lastMoveDirection = new Vector2(1, 0);
+            anim.SetFloat("LastHorizontal", lastMoveDirection.x);
+            anim.SetFloat("LastVertical", lastMoveDirection.y);
+        }
+    }
+
+    private void OnTriggerExit2D(Collider2D other)
+    {
+        if (other.CompareTag("HouseRoof"))
+        {
+            houseRoofTileMap.color = new Color(1f, 1f, 1f, 1f);
+        }
     }
 
     public void DropItem(Item item)
@@ -259,32 +291,6 @@ public class Player : MonoBehaviour
         }
     }
 
-    void OnTriggerEnter2D(Collider2D other)
-    {
-        if (other.CompareTag("DayEndCheckPoint"))
-        {
-            Debug.Log("침대 닿음");
-            UIManager.instance.dayEndPanel.SetActive(true);
-        }
-        else
-        {
-            UIManager.instance.dayEndPanel.SetActive(false);
-        }
-
-        if (other.CompareTag("HouseRoof"))
-        {
-            houseRoofTileMap.color = new Color(1f, 1f, 1f, 0f);
-        }
-    }
-
-    void OnTriggerExit2D(Collider2D other)
-    {
-        if (other.CompareTag("HouseRoof"))
-        {
-            houseRoofTileMap.color = new Color(1f, 1f, 1f, 1f);
-        }
-    }
-
     public void SetPosition()
     {
         transform.position = Vector2.zero;
@@ -294,5 +300,10 @@ public class Player : MonoBehaviour
         // 애니메이션의 idle 방향 업데이트
         anim.SetFloat("LastHorizontal", lastMoveDirection.x);
         anim.SetFloat("LastVertical", lastMoveDirection.y);
+    }
+
+    public bool IsAxing()
+    {
+        return isAxing;
     }
 }

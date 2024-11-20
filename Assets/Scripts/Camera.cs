@@ -6,7 +6,7 @@ using UnityEngine;
 public class Camera : MonoBehaviour
 {
     public Transform target;
-    float smoothing = 0.2f;
+    private float smoothing = 0.2f;
     // Vector2 minCameraBoundary;
     // Vector2 maxCameraBoundary;
 

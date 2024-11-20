@@ -113,7 +113,7 @@ public class InventoryBase : MonoBehaviour
 
         }
 
-        UIManager.instance.RefreshAll();
+        UIManager.instance.RefreshAllInventory();
     }
 
     public void MoveToMousePosition(GameObject toMove)

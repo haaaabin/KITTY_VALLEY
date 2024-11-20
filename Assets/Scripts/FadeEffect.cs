@@ -8,9 +8,9 @@ public class FadeEffect : MonoBehaviour
 {
     public static FadeEffect instance;
     public Image fadePanel;
-    private float fadeDuration = 4f;
-
     public TextMeshProUGUI loadingText;
+
+    private float fadeDuration = 3f;
 
     private void Awake()
     {
@@ -39,7 +39,7 @@ public class FadeEffect : MonoBehaviour
         }
 
         fadePanel.color = new Color(0, 0, 0, targetAlpha);
-        yield return new WaitForSeconds(1f);
+        // yield return new WaitForSeconds(1f);
     }
 
     public void FadeAndLoadScene(string sceneName)
@@ -66,6 +66,7 @@ public class FadeEffect : MonoBehaviour
             }
             yield return null;
         }
+
         loadingText.text = "로딩 완료!";
         yield return new WaitForSeconds(1f);
         loadingText.gameObject.SetActive(false);

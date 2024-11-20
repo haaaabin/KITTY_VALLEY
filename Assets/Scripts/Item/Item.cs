@@ -8,7 +8,6 @@ public class Item : MonoBehaviour
 {
     public ItemData itemData;
     public PlantData plantData;
-
     public bool canInteract;
 
     [HideInInspector] public Rigidbody2D rigid;
