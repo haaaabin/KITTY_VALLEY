@@ -1,11 +1,10 @@
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.Tilemaps;
 
 public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
+
     public ItemManager itemManager;
     public Player player;
     public TimeManager timeManager;
@@ -48,11 +47,15 @@ public class GameManager : MonoBehaviour
                 plantGrowthManager.ClearPlantSaveData();
                 inventorySave.DeleteSavedFiles();
                 player.inventoryManager.startItemAdd("Toolbar");
+                player.money = 0;
+                timeManager.day = 1;
+                timeManager.currentDayIndex = 0;
             }
             else
             {
                 player.inventoryManager.LoadInventory();
                 plantGrowthManager.LoadPlantsData();
+                SaveData.instance.LoadPlayerData();
             }
         }
     }

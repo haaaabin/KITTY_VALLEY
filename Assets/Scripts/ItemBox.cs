@@ -15,17 +15,15 @@ public class ItemBox : MonoBehaviour
     public Button minusBtn;
     public Button plusBtn;
     public Button checkBtn;
-
     public bool isBoxOpen = false;
-    bool isPlayerInRange = false;
-    int itemPrice = 0;
-    int itemCount = 0;
     public int sellingPrice = 0;
 
+    private bool isPlayerInRange = false;
+    private int itemPrice = 0;
+    private int itemCount = 0;
+    private Inventory.Slot selectedSlot;
 
-    Inventory.Slot selectedSlot;
-
-    void Start()
+    private void Start()
     {
         anim = GetComponent<Animator>();
         if (sellingPanel != null)
@@ -37,9 +35,10 @@ public class ItemBox : MonoBehaviour
         minusBtn.onClick.AddListener(OnMinusButtonClick);
         checkBtn.onClick.AddListener(OnCheckButtonClick);
         InitializePanel();
+
     }
 
-    void Update()
+    private void Update()
     {
         if (isPlayerInRange && Input.GetMouseButtonDown(1) && !isBoxOpen)
         {
@@ -56,9 +55,8 @@ public class ItemBox : MonoBehaviour
         UpdatePanel();
     }
 
-    void OpenItemBox()
+    private void OpenItemBox()
     {
-        Debug.Log("아이템 박스 오픈");
         isBoxOpen = true;
         anim.SetBool("isOpen", isBoxOpen);
         sellingPanel.SetActive(true);
@@ -71,9 +69,8 @@ public class ItemBox : MonoBehaviour
         }
     }
 
-    void CloseItemBox()
+    private void CloseItemBox()
     {
-        Debug.Log("아이템 박스 클로즈");
         isBoxOpen = false;
         anim.SetBool("isOpen", isBoxOpen);
         sellingPanel.SetActive(false);
@@ -84,7 +81,14 @@ public class ItemBox : MonoBehaviour
         }
     }
 
-    void UpdatePanel()
+    private void InitializePanel()
+    {
+        sellingIcon.sprite = null;
+        itemPrice = 0;
+        itemCount = 0;
+    }
+
+    private void UpdatePanel()
     {
         if (selectedSlot != null)
         {
@@ -95,14 +99,7 @@ public class ItemBox : MonoBehaviour
         }
     }
 
-    void InitializePanel()
-    {
-        sellingIcon.sprite = null;
-        itemPrice = 0;
-        itemCount = 0;
-    }
-
-    void OnPlusButtonClick()
+    private void OnPlusButtonClick()
     {
         if (selectedSlot != null && selectedSlot.count > 0 && itemCount < selectedSlot.count)
         {
@@ -110,7 +107,6 @@ public class ItemBox : MonoBehaviour
             {
                 itemCount++;
                 itemPrice = itemCount * selectedSlot.price;
-                Debug.Log("selectedSlot" + selectedSlot.itemName + " : " + itemPrice);
                 UpdatePanel();
             }
             else
@@ -124,7 +120,7 @@ public class ItemBox : MonoBehaviour
         }
     }
 
-    void OnMinusButtonClick()
+    private void OnMinusButtonClick()
     {
         if (selectedSlot != null && selectedSlot.count > 0 && itemCount > 0)
         {
@@ -132,7 +128,6 @@ public class ItemBox : MonoBehaviour
             {
                 itemCount--;
                 itemPrice = itemCount * selectedSlot.price;
-                Debug.Log("selectedSlot" + selectedSlot.itemName + " : " + itemPrice);
                 UpdatePanel();
             }
             else
@@ -146,23 +141,17 @@ public class ItemBox : MonoBehaviour
         }
     }
 
-    void OnCheckButtonClick()
+    private void OnCheckButtonClick()
     {
         if (selectedSlot != null && selectedSlot.count >= 0 && itemCount > 0)
         {
             if (selectedSlot.isSellable)
             {
                 sellingPrice += itemPrice;
-                Debug.Log("sellingPrice" + selectedSlot.itemName + " : " + sellingPrice);
                 selectedSlot.count -= itemCount;
-                GameManager.instance.player.money += sellingPrice;
-                DataManager.instance.AddMoney(GameManager.instance.player.money);
-                // UIManager.instance.UpdateMoneyUI();
 
                 UIManager.instance.RefreshInventoryUI("Toolbar");
                 InitializePanel();
-
-                sellingPrice = 0;
             }
             else
             {
@@ -175,8 +164,7 @@ public class ItemBox : MonoBehaviour
         }
     }
 
-
-    void OnTriggerEnter2D(Collider2D other)
+    private void OnTriggerEnter2D(Collider2D other)
     {
         if (other.gameObject.name == "Player")
         {
@@ -184,7 +172,7 @@ public class ItemBox : MonoBehaviour
         }
     }
 
-    void OnTriggerExit2D(Collider2D other)
+    private void OnTriggerExit2D(Collider2D other)
     {
         if (other.gameObject.name == "Player")
         {
@@ -194,5 +182,26 @@ public class ItemBox : MonoBehaviour
                 CloseItemBox();
             }
         }
+    }
+
+    public void SellItems()
+    {
+        int dailyEarnings = GetSellingPrice();
+        int newTotalMoney = GameManager.instance.player.money + dailyEarnings;
+
+        StartCoroutine(UIManager.instance.UpdateMoneyEffect(GameManager.instance.player.money, newTotalMoney));
+        PlayerPrefs.SetInt("Money", GameManager.instance.player.money);
+        PlayerPrefs.SetInt("Selling", dailyEarnings);
+    }
+
+    public int GetSellingPrice()
+    {
+        return sellingPrice;
+    }
+
+    public void ResetSellingPrice()
+    {
+        sellingPrice = 0;
+        PlayerPrefs.SetInt("SellingPrice", 0);
     }
 }

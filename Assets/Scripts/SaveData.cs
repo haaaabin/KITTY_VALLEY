@@ -1,8 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
-using Unity.VisualScripting.AssemblyQualifiedNameParser;
-using UnityEngine.Tilemaps;
+using System.Data;
 
 public class PlantSaveData
 {
@@ -27,8 +26,8 @@ public class PlantSaveData
 public class SaveData : MonoBehaviour
 {
     public static SaveData instance;
-
     public Inventory inventoryToSave = null;    // 저장할 인벤토리
+
     private static Dictionary<int, ItemData> allItem = new Dictionary<int, ItemData>();
     private static int HashItem(ItemData item) => Animator.StringToHash(item.itemName);    // 아이템의 이름을 해시 값으로 변환해 고유한 키로 사용
     private const char SPLIT_CHAR = '_';
@@ -221,7 +220,6 @@ public class SaveData : MonoBehaviour
         return plantSaveDataList;
     }
 
-
     public bool HasSavedInventory()
     {
         string backpackPath = Application.persistentDataPath + "/Backpack.txt";
@@ -235,6 +233,34 @@ public class SaveData : MonoBehaviour
         string plantPath = Application.persistentDataPath + "/plants.txt";
 
         return File.Exists(plantPath);
+    }
+
+    public void SavePlayerData(int currentMoney, int currentDay, int currentDaysOfWeekIndex, int sellingPrice)
+    {
+        PlayerPrefs.SetInt("Money", currentMoney);
+        PlayerPrefs.SetInt("Day", currentDay);
+        PlayerPrefs.SetInt("DaysOfWeekIndex", currentDaysOfWeekIndex);
+        PlayerPrefs.SetInt("SellingPrice", sellingPrice);
+        PlayerPrefs.Save();
+    }
+
+    public void LoadPlayerData()
+    {
+        int currentMoney = PlayerPrefs.GetInt("Money");
+        int currentDay = PlayerPrefs.GetInt("Day");
+        int currentDayIndex = PlayerPrefs.GetInt("DayIndex");
+        int sellingPrice = PlayerPrefs.GetInt("SellingPrice");
+
+        GameManager.instance.player.money = currentMoney;
+        GameManager.instance.timeManager.day = currentDay;
+        GameManager.instance.timeManager.currentDayIndex = currentDayIndex;
+        GameManager.instance.itemBox.sellingPrice = sellingPrice;
+
+        if (sellingPrice > 0)
+        {
+            GameManager.instance.itemBox.SellItems();
+            GameManager.instance.itemBox.ResetSellingPrice();
+        }
     }
 }
 

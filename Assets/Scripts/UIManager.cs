@@ -1,7 +1,10 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
+using Unity.VisualScripting;
+using UnityEditor.ProjectWindowCallback;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -14,34 +17,29 @@ public class UIManager : MonoBehaviour
     public Slot_UI draggedSlot;
     public RectTransform inventoryPanel;
     public Image draggedIcon;
-    public bool dragSingle;
-
-    private float moveDistance = 270f;
-    private float moveSpeed = 5f;
-
-    public bool isInventoryOpen = false;
-    private bool isInventoryMoving = false;
-    private Vector2 closePosition;
-    private Vector2 openPosition;
-
     public GameObject dayEndPanel;
+    public GameObject settingPanel;
     public Button yesBtn;
     public Button noBtn;
-
     public Button settingBtn;
-    public GameObject settingPanel;
     public Button saveBtn;
     public Button gameExitBtn;
     public Button loadBtn;
-
     public Slider bgmSlider;
     public Slider effectSlider;
-
     public TextMeshProUGUI moneyText;
     public TextMeshProUGUI saveText;
+    public int currentMoney = 0;
+    public bool dragSingle;
+    public bool isInventoryOpen = false;
 
+    private Vector2 closeInventoryPos;
+    private Vector2 openInventoryPos;
+    private float moveDistance = 270f;
+    private float moveSpeed = 5f;
+    private bool isInventoryMoving = false;
 
-    void Awake()
+    private void Awake()
     {
         if (!instance)
         {
@@ -53,14 +51,13 @@ public class UIManager : MonoBehaviour
             Destroy(gameObject);
         }
 
-        Initialize();
-        closePosition = inventoryPanel.anchoredPosition;
-        openPosition = closePosition + new Vector2(0, moveDistance);
+        InitializeInventory();
+        closeInventoryPos = inventoryPanel.anchoredPosition;
+        openInventoryPos = closeInventoryPos + new Vector2(0, moveDistance);
     }
 
-    void Start()
+    private void Start()
     {
-
         saveText.enabled = false;
         yesBtn.onClick.AddListener(() =>
         {
@@ -78,10 +75,10 @@ public class UIManager : MonoBehaviour
             Application.Quit();
         });
 
-        // UpdateMoneyUI();
+        UpdateMoneyUI(GameManager.instance.player.money);
     }
 
-    void Update()
+    private void Update()
     {
         if (Input.GetKeyDown(KeyCode.E) && !isInventoryMoving)
         {
@@ -98,22 +95,27 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    // public void UpdateMoneyUI()
-    // {
-    //     int currentMoney = DataManager.instance.LoadPlayerMoney();
-    //     moneyText.text = currentMoney.ToString();
-    //     Debug.Log(currentMoney);
-    // }
 
-    /*** 인벤토리 UI ***/
+#region 인벤토리 UI 
+    private void InitializeInventory()
+    {
+        foreach (InventoryBase ui in inventoryUIs)
+        {
+            if (!inventoryUIByName.ContainsKey(ui.inventoryName))
+            {
+                inventoryUIByName.Add(ui.inventoryName, ui);
+            }
+        }
+    }
+
     public void ToggleInventoryUI()
     {
         isInventoryOpen = !isInventoryOpen;
-        Vector2 targetPosition = isInventoryOpen ? openPosition : closePosition;
+        Vector2 targetPosition = isInventoryOpen ? openInventoryPos : closeInventoryPos;
         StartCoroutine(MovePanel(targetPosition));
     }
 
-    IEnumerator MovePanel(Vector2 targetPosition)
+    private IEnumerator MovePanel(Vector2 targetPosition)
     {
         isInventoryMoving = true;
         while (Vector2.Distance(inventoryPanel.anchoredPosition, targetPosition) > 0.1f)
@@ -123,17 +125,6 @@ public class UIManager : MonoBehaviour
         }
         inventoryPanel.anchoredPosition = targetPosition;
         isInventoryMoving = false;
-    }
-
-    public InventoryBase GetInventoryUI(string inventoryName)
-    {
-        if (inventoryUIByName.ContainsKey(inventoryName))
-        {
-            return inventoryUIByName[inventoryName];
-        }
-
-        Debug.LogWarning("There is not inventory ui for" + inventoryName);
-        return null;
     }
 
     // inventoryName에 해당하는 인벤토리를 찾아 그 인벤토리 ui만 갱신
@@ -146,29 +137,44 @@ public class UIManager : MonoBehaviour
     }
 
     // inventoryUIByName 딕셔너리에 저장된 모든 인벤토리 ui 갱신
-    public void RefreshAll()
+    public void RefreshAllInventory()
     {
         foreach (KeyValuePair<string, InventoryBase> keyValuePair in inventoryUIByName)
         {
             keyValuePair.Value.Refresh();
         }
     }
-    
-    void Initialize()
+#endregion
+
+    public void UpdateMoneyUI(int money)
     {
-        foreach (InventoryBase ui in inventoryUIs)
-        {
-            if (!inventoryUIByName.ContainsKey(ui.inventoryName))
-            {
-                inventoryUIByName.Add(ui.inventoryName, ui);
-            }
-        }
+        moneyText.text = money.ToString();
     }
 
-    public void SaveData()
+    public IEnumerator UpdateMoneyEffect(int startValue, int endValue)
+    {
+        yield return new WaitForSeconds(0.5f);
+
+        float duration = 1f;
+        float elapsedTime = 0f;
+
+        while (elapsedTime < duration)
+        {
+            currentMoney = Mathf.RoundToInt(Mathf.Lerp(startValue, endValue, elapsedTime / duration));
+            UpdateMoneyUI(currentMoney);
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+
+        GameManager.instance.player.money = endValue;
+        UpdateMoneyUI(GameManager.instance.player.money);
+    }
+
+    public void SaveAllData()
     {
         GameManager.instance.player.inventoryManager.SaveInventory();
         GameManager.instance.plantGrowthManager.SavePlantDataList();
+        SaveData.instance.SavePlayerData(GameManager.instance.player.money, GameManager.instance.timeManager.day, GameManager.instance.timeManager.currentDayIndex, GameManager.instance.itemBox.sellingPrice);
         ShowSaveNotification();
     }
 
@@ -183,5 +189,4 @@ public class UIManager : MonoBehaviour
         yield return new WaitForSeconds(2);
         saveText.enabled = false;
     }
-
 }

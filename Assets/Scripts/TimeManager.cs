@@ -10,26 +10,27 @@ public class TimeManager : MonoBehaviour
 {
     public TextMeshProUGUI dayText;
     public TextMeshProUGUI timeText;
-    public Image fadePanel;
+    public bool isDayEnding = false;
+    public event Action OnDayEnd;
+    public int gameHour = 9;
+    public int gameMinute = 0;
+    public int currentDayIndex = 0;
+    public int day = 1;
 
+    private string[] daysOfWeek = { "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun" };
     private float timePerGameMinute = 1f;
     private float currentTime = 0f;
-    private int gameHour = 9;
-    private int gameMinute = 0;
-    private string[] daysOfWeek = { "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun" };
-    private int currentDayIndex = 0;
+    private ItemBox itemBox;
+    private Player player;
 
-    public bool isDayEnding = false;
-    private int day = 1;
-
-    public event Action OnDayEnd;
-
-    void Start()
+    private void Start()
     {
+        itemBox = GameManager.instance.itemBox;
+        player = GameManager.instance.player;
         UpdateTimeUI();
     }
 
-    void Update()
+    private void Update()
     {
         if (isDayEnding) return;
 
@@ -55,20 +56,7 @@ public class TimeManager : MonoBehaviour
         }
     }
 
-    public IEnumerator EndDay()
-    {
-        isDayEnding = true;
-        GameManager.instance.player.anim.enabled = false;
-        yield return StartCoroutine(FadeEffect.instance.FadeScreen(1f));
-
-        NextDay();
-
-        yield return StartCoroutine(FadeEffect.instance.FadeScreen(0f));
-        isDayEnding = false;
-    }
-
-
-    void NextDay()
+    private void NextDay()
     {
         gameHour = 9;
         gameMinute = 0;
@@ -76,18 +64,30 @@ public class TimeManager : MonoBehaviour
         day++;
         isDayEnding = false;
 
-        OnDayEnd?.Invoke();
+        itemBox.SellItems();
+        itemBox.ResetSellingPrice();
+
         UpdateTimeUI();
-        // UIManager.instance.UpdateMoneyUI();
-        GameManager.instance.player.SetPosition();
+        player.SetPosition();
+
+        OnDayEnd?.Invoke();
 
         Debug.Log("하루가 끝났습니다. 다음 날 시작");
     }
 
-    void UpdateTimeUI()
+    public IEnumerator EndDay()
+    {
+        isDayEnding = true;
+        player.anim.enabled = false;
+        yield return StartCoroutine(FadeEffect.instance.FadeScreen(1f));
+        NextDay();
+        yield return StartCoroutine(FadeEffect.instance.FadeScreen(0f));
+        isDayEnding = false;
+    }
+
+    public void UpdateTimeUI()
     {
         dayText.text = $"{daysOfWeek[currentDayIndex]}\n{day}";
         timeText.text = $"{gameHour:D2} : {gameMinute:D2}";
     }
-
 }
