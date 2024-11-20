@@ -59,11 +59,11 @@ public class TimeManager : MonoBehaviour
     {
         isDayEnding = true;
         GameManager.instance.player.anim.enabled = false;
-        yield return StartCoroutine(FadeEffect.instance.FadeScreen(fadePanel, 1f));
+        yield return StartCoroutine(FadeEffect.instance.FadeScreen(1f));
 
         NextDay();
 
-        yield return StartCoroutine(FadeEffect.instance.FadeScreen(fadePanel, 0f));
+        yield return StartCoroutine(FadeEffect.instance.FadeScreen(0f));
         isDayEnding = false;
     }
 

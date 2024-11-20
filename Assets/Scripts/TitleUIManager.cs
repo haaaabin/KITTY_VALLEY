@@ -1,14 +1,11 @@
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.SceneManagement;
-using System.Collections;
 
 public class TitleUIManager : MonoBehaviour
 {
     public static TitleUIManager instance;
 
     public GameObject panel;
-    public Image fadePanel;
     public Button newGameBtn;
     public Button continueGameBtn;
     public Button exitGameBtn;
@@ -23,7 +20,6 @@ public class TitleUIManager : MonoBehaviour
         {
             instance = this;
             DontDestroyOnLoad(this.gameObject);
-            DontDestroyOnLoad(fadePanel.gameObject);
         }
         else
         {
@@ -42,7 +38,7 @@ public class TitleUIManager : MonoBehaviour
             continueGameBtn.gameObject.SetActive(false);
             newGameBtn.onClick.AddListener(() =>
             {
-                StartCoroutine(LoadSceneWithFade(fadePanel, "InGameScene"));
+                FadeEffect.instance.FadeAndLoadScene("InGameScene");
             });
         }
         else
@@ -51,7 +47,7 @@ public class TitleUIManager : MonoBehaviour
             continueGameBtn.gameObject.SetActive(true);
             continueGameBtn.onClick.AddListener(() =>
             {
-                StartCoroutine(LoadSceneWithFade(fadePanel, "InGameScene"));
+                FadeEffect.instance.FadeAndLoadScene("InGameScene");
             });
 
             newGameBtn.onClick.AddListener(() =>
@@ -62,7 +58,7 @@ public class TitleUIManager : MonoBehaviour
 
                 panel.SetActive(true);
 
-                yesBtn.onClick.AddListener(() => { isNewGame = true; SceneManager.LoadScene("InGameScene"); });
+                yesBtn.onClick.AddListener(() => { isNewGame = true; FadeEffect.instance.FadeAndLoadScene("InGameScene"); });
                 noBtn.onClick.AddListener(() => { panel.SetActive(false); });
             });
         }
@@ -71,24 +67,5 @@ public class TitleUIManager : MonoBehaviour
         {
             Application.Quit();
         });
-    }
-
-    public IEnumerator LoadSceneWithFade(Image fadePanel, string sceneName)
-    {
-        yield return StartCoroutine(FadeEffect.instance.FadeScreen(fadePanel, 1f));
-
-        AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(sceneName);
-        asyncLoad.allowSceneActivation = false; // 씬이 로드되었으나 자동으로 활성화되지 않도록 설정
-
-        while (!asyncLoad.isDone)
-        {
-            if (asyncLoad.progress >= 0.9f)
-            {
-                asyncLoad.allowSceneActivation = true;
-            }
-            yield return null;
-        }
-
-        yield return StartCoroutine(FadeEffect.instance.FadeScreen(fadePanel, 0f));
     }
 }
