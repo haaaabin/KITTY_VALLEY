@@ -9,6 +9,7 @@ TagManager:
   - Object
   - StartTuto
   - HouseRoof
+  - PostBox
   layers:
   - Default
   - TransparentFX
@@ -21,7 +22,7 @@ TagManager:
   - Door
   - Fence
   - Animal
-  - 
+  - PostBox
   - 
   - 
   - 

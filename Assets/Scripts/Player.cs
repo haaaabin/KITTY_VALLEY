@@ -41,6 +41,7 @@ public class Player : MonoBehaviour
         Plow();
         Hit();
         OpenDoor();
+        OpenPostBox();
 
         Debug.DrawRay(rb.position + Vector2.up * 0.1f, lastMoveDirection * 1f, new Color(0, 1, 0));
     }
@@ -129,6 +130,21 @@ public class Player : MonoBehaviour
         {
             isOpenDoor = false;
             doorAnim.SetBool("isOpen", isOpenDoor);
+        }
+    }
+
+    private void OpenPostBox()
+    {
+        rayHit = Physics2D.Raycast(rb.position, lastMoveDirection, 1f, LayerMask.GetMask("PostBox"));
+        if (rayHit.collider != null)
+        {
+            if (UIManager.instance.speechBubble.activeSelf)
+            {
+                if (Input.GetMouseButtonDown(1))
+                {
+                    UIManager.instance.ShowPostPanel();
+                }
+            }
         }
     }
 

@@ -29,6 +29,8 @@ public class UIManager : MonoBehaviour
     public Slider effectSlider;
     public TextMeshProUGUI moneyText;
     public TextMeshProUGUI saveText;
+    public GameObject speechBubble;
+    public GameObject postBoxPanel;
     public int currentMoney = 0;
     public bool dragSingle;
     public bool isInventoryOpen = false;
@@ -76,6 +78,15 @@ public class UIManager : MonoBehaviour
         });
 
         UpdateMoneyUI(GameManager.instance.player.money);
+
+        if (TitleUIManager.instance.isNewGame)
+        {
+            speechBubble.SetActive(true);
+        }
+        else
+        {
+            speechBubble.SetActive(false);
+        }
     }
 
     private void Update()
@@ -96,7 +107,7 @@ public class UIManager : MonoBehaviour
     }
 
 
-#region 인벤토리 UI 
+    #region 인벤토리 UI 
     private void InitializeInventory()
     {
         foreach (InventoryBase ui in inventoryUIs)
@@ -144,7 +155,7 @@ public class UIManager : MonoBehaviour
             keyValuePair.Value.Refresh();
         }
     }
-#endregion
+    #endregion
 
     public void UpdateMoneyUI(int money)
     {
@@ -188,5 +199,11 @@ public class UIManager : MonoBehaviour
         saveText.enabled = true;
         yield return new WaitForSeconds(2);
         saveText.enabled = false;
+    }
+
+    public void ShowPostPanel()
+    {
+        postBoxPanel.SetActive(true);
+        speechBubble.SetActive(false);
     }
 }

@@ -46,7 +46,6 @@ public class GameManager : MonoBehaviour
                 player.inventoryManager.ClearInventory();
                 plantGrowthManager.ClearPlantSaveData();
                 inventorySave.DeleteSavedFiles();
-                player.inventoryManager.startItemAdd("Toolbar");
                 player.money = 0;
                 timeManager.day = 1;
                 timeManager.currentDayIndex = 0;
