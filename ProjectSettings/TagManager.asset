@@ -10,6 +10,7 @@ TagManager:
   - StartTuto
   - HouseRoof
   - PostBox
+  - Shop
   layers:
   - Default
   - TransparentFX
@@ -23,7 +24,7 @@ TagManager:
   - Fence
   - Animal
   - PostBox
-  - 
+  - Shop
   - 
   - 
   - 
