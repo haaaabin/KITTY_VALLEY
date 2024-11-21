@@ -1,16 +1,13 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using TMPro;
-using Unity.VisualScripting;
-using UnityEditor.ProjectWindowCallback;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class UIManager : MonoBehaviour
+public class InGameUI : MonoBehaviour
 {
-    public static UIManager instance;
+    public static InGameUI instance;
 
     public Dictionary<string, InventoryBase> inventoryUIByName = new Dictionary<string, InventoryBase>();
     public List<InventoryBase> inventoryUIs;
@@ -31,7 +28,7 @@ public class UIManager : MonoBehaviour
     public TextMeshProUGUI saveText;
     public GameObject speechBubble;
     public GameObject postBoxPanel;
-    public int currentMoney = 0;
+
     public bool dragSingle;
     public bool isInventoryOpen = false;
 
@@ -164,14 +161,14 @@ public class UIManager : MonoBehaviour
 
     public IEnumerator UpdateMoneyEffect(int startValue, int endValue)
     {
-        yield return new WaitForSeconds(0.5f);
+        // yield return new WaitForSeconds(0.5f);
 
         float duration = 1f;
         float elapsedTime = 0f;
 
         while (elapsedTime < duration)
         {
-            currentMoney = Mathf.RoundToInt(Mathf.Lerp(startValue, endValue, elapsedTime / duration));
+            int currentMoney = Mathf.RoundToInt(Mathf.Lerp(startValue, endValue, elapsedTime / duration));
             UpdateMoneyUI(currentMoney);
             elapsedTime += Time.deltaTime;
             yield return null;
@@ -205,5 +202,35 @@ public class UIManager : MonoBehaviour
     {
         postBoxPanel.SetActive(true);
         speechBubble.SetActive(false);
+    }
+
+    public void ShakingText()
+    {
+        StartCoroutine(ShakeCoroutine());
+    }
+
+    private IEnumerator ShakeCoroutine()
+    {
+        float amplitude = 10f;
+        float frequency = 30f;
+        float duration = 1f;
+        Color originalColor = moneyText.color;
+        Vector3 orignalPosition = moneyText.rectTransform.anchoredPosition;
+
+        moneyText.color = Color.red;
+
+        float elapsedTime = 0f;
+
+        while (elapsedTime < duration)
+        {
+            float offset = Mathf.Sign(elapsedTime * frequency) * amplitude;
+            moneyText.rectTransform.anchoredPosition = orignalPosition + new Vector3(offset, 0, 0);
+
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+
+        moneyText.rectTransform.anchoredPosition = orignalPosition;
+        moneyText.color = originalColor;
     }
 }
