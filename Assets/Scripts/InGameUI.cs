@@ -211,19 +211,19 @@ public class InGameUI : MonoBehaviour
 
     private IEnumerator ShakeCoroutine()
     {
-        float amplitude = 10f;
-        float frequency = 30f;
+        float amplitude = 3f;
+        float frequency = 20f;
         float duration = 1f;
         Color originalColor = moneyText.color;
         Vector3 orignalPosition = moneyText.rectTransform.anchoredPosition;
 
         moneyText.color = Color.red;
-
+        
         float elapsedTime = 0f;
 
         while (elapsedTime < duration)
         {
-            float offset = Mathf.Sign(elapsedTime * frequency) * amplitude;
+            float offset = Mathf.Sin(elapsedTime * frequency) * amplitude;
             moneyText.rectTransform.anchoredPosition = orignalPosition + new Vector3(offset, 0, 0);
 
             elapsedTime += Time.deltaTime;

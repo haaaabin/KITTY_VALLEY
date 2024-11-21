@@ -62,5 +62,4 @@ public class Shop : MonoBehaviour
             shopPanel.SetActive(false);
         }
     }
-
 }
