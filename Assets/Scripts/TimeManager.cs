@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using JetBrains.Annotations;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -8,26 +9,24 @@ using UnityEngine.UI;
 
 public class TimeManager : MonoBehaviour
 {
-    public TextMeshProUGUI dayText;
-    public TextMeshProUGUI timeText;
     public bool isDayEnding = false;
     public event Action OnDayEnd;
+    public event Action OnNextDay;
+    public event Action OnTimeUpdated;
     public int gameHour = 9;
     public int gameMinute = 0;
     public int currentDayIndex = 0;
     public int day = 1;
 
-    private string[] daysOfWeek = { "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun" };
-    private float timePerGameMinute = 1f;
+    public string[] daysOfWeek = { "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun" };
+    private float timePerGameMinute = 10f;
     private float currentTime = 0f;
-    private ItemBox itemBox;
-    private Player player;
 
     private void Start()
     {
-        itemBox = GameManager.instance.itemBox;
-        player = GameManager.instance.player;
-        UpdateTimeUI();
+        OnTimeUpdated?.Invoke();
+        OnNextDay?.Invoke();
+        OnDayEnd += EndDay;
     }
 
     private void Update()
@@ -47,12 +46,12 @@ public class TimeManager : MonoBehaviour
                 gameHour++;
             }
 
-            if (gameHour >= 11)
+            if (gameHour >= 24)
             {
-                StartCoroutine(EndDay());
+                OnDayEnd?.Invoke();
             }
 
-            UpdateTimeUI();
+            OnTimeUpdated?.Invoke();
         }
     }
 
@@ -67,27 +66,29 @@ public class TimeManager : MonoBehaviour
         itemBox.SellItems();
         itemBox.ResetSellingPrice();
 
-        UpdateTimeUI();
-        player.SetPosition();
+        Player.Instance.SetPosition();
 
         OnDayEnd?.Invoke();
 
         Debug.Log("하루가 끝났습니다. 다음 날 시작");
     }
 
-    public IEnumerator EndDay()
+    public void EndDay()
+    {
+        StartCoroutine(EndDayCoroutine());
+    }
+
+    public IEnumerator EndDayCoroutine()
     {
         isDayEnding = true;
-        player.anim.enabled = false;
+        Player.Instance.anim.enabled = false;
+
         yield return StartCoroutine(FadeEffect.instance.FadeScreen(1f));
+
         NextDay();
+
         yield return StartCoroutine(FadeEffect.instance.FadeScreen(0f));
         isDayEnding = false;
     }
 
-    public void UpdateTimeUI()
-    {
-        dayText.text = $"{daysOfWeek[currentDayIndex]}\n{day}";
-        timeText.text = $"{gameHour:D2} : {gameMinute:D2}";
-    }
 }
