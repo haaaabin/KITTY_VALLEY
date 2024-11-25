@@ -95,7 +95,7 @@ public class SaveData : MonoBehaviour
             {
                 if (!slot.isEmpty)
                 {
-                    sw.WriteLine($"{slot.itemName}{SPLIT_CHAR}{slot.count}");
+                    sw.WriteLine($"{slot.itemName}{SPLIT_CHAR}{slot.currentCount}");
                 }
             }
         }
@@ -112,13 +112,14 @@ public class SaveData : MonoBehaviour
         }
 
         Inventory currentInventory = null;
+        Player player = FindObjectOfType<Player>();
         if (inventoryName == "Backpack")
         {
-            currentInventory = InventoryManager.instance.backpack;
+            currentInventory = player.inventoryManager.backpack;
         }
         else if (inventoryName == "Toolbar")
         {
-            currentInventory = InventoryManager.instance.toolbar;
+            currentInventory = player.inventoryManager.toolbar;
         }
 
         if (currentInventory != null)
@@ -251,15 +252,17 @@ public class SaveData : MonoBehaviour
         int currentDayIndex = PlayerPrefs.GetInt("DayIndex");
         int sellingPrice = PlayerPrefs.GetInt("SellingPrice");
 
-        GameManager.instance.player.money = currentMoney;
-        GameManager.instance.timeManager.day = currentDay;
-        GameManager.instance.timeManager.currentDayIndex = currentDayIndex;
-        GameManager.instance.itemBox.sellingPrice = sellingPrice;
+        Player.Instance.money = currentMoney;
+        GameManager.Instance.timeManager.day = currentDay;
+        GameManager.Instance.timeManager.currentDayIndex = currentDayIndex;
+
+        ItemBox itemBox = FindObjectOfType<ItemBox>();
+        itemBox.sellingPrice = sellingPrice;
 
         if (sellingPrice > 0)
         {
-            GameManager.instance.itemBox.SellItems();
-            GameManager.instance.itemBox.ResetSellingPrice();
+            itemBox.SellItems();
+            itemBox.ResetSellingPrice();
         }
     }
 }

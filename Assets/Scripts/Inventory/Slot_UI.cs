@@ -1,4 +1,3 @@
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -15,7 +14,8 @@ public class Slot_UI : MonoBehaviour
     {
         if (slot != null)
         {
-            if (GameManager.instance.itemBox != null && GameManager.instance.itemBox.isBoxOpen && !slot.isSellable)
+            ItemBox itemBox = FindObjectOfType<ItemBox>();
+            if (itemBox != null && itemBox.isBoxOpen && !slot.isSellable)
             {
                 itemIcon.sprite = slot.icon;
                 itemIcon.color = new Color(0.4f, 0.4f, 0.4f, 0.7f);
@@ -25,14 +25,14 @@ public class Slot_UI : MonoBehaviour
                 itemIcon.sprite = slot.icon;
                 itemIcon.color = new Color(1, 1, 1, 1);
 
-                if (slot.count == 0)
+                if (slot.currentCount == 0)
                 {
                     slot.RemoveItem();
                     EmptyItem();
                 }
                 else
                 {
-                    quantityText.text = slot.count == 1 ? "" : slot.count.ToString();
+                    quantityText.text = slot.currentCount == 1 ? "" : slot.currentCount.ToString();
                 }
             }
         }

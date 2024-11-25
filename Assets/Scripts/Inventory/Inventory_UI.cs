@@ -15,7 +15,7 @@ public class Inventory_UI : InventoryBase
 
     protected override void Start()
     {
-        inventory = GameManager.instance.player.inventoryManager.GetInventoryByName(inventoryName);
+        inventory = Player.Instance.inventoryManager.GetInventoryByName(inventoryName);
         if (inventory == null) return;
 
         base.Start();

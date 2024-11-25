@@ -60,7 +60,7 @@ public class InGameUI : MonoBehaviour
         saveText.enabled = false;
         yesBtn.onClick.AddListener(() =>
         {
-            GameManager.instance.timeManager.StartCoroutine(GameManager.instance.timeManager.EndDay());
+
             dayEndPanel.SetActive(false);
         });
 
@@ -74,9 +74,9 @@ public class InGameUI : MonoBehaviour
             Application.Quit();
         });
 
-        UpdateMoneyUI(GameManager.instance.player.money);
+        UpdateMoneyUI(Player.Instance.money);
 
-        if (TitleUIManager.instance.isNewGame)
+        if (GameManager.Instance.isNewGame)
         {
             speechBubble.SetActive(true);
         }
@@ -174,15 +174,17 @@ public class InGameUI : MonoBehaviour
             yield return null;
         }
 
-        GameManager.instance.player.money = endValue;
-        UpdateMoneyUI(GameManager.instance.player.money);
+        Player.Instance.money = endValue;
+        UpdateMoneyUI(Player.Instance.money);
     }
 
     public void SaveAllData()
     {
-        GameManager.instance.player.inventoryManager.SaveInventory();
-        GameManager.instance.plantGrowthManager.SavePlantDataList();
-        SaveData.instance.SavePlayerData(GameManager.instance.player.money, GameManager.instance.timeManager.day, GameManager.instance.timeManager.currentDayIndex, GameManager.instance.itemBox.sellingPrice);
+        Player.Instance.inventoryManager.SaveInventory();
+        GameManager.Instance.plantGrowthManager.SavePlantDataList();
+
+        ItemBox itemBox = FindObjectOfType<ItemBox>();
+        SaveData.instance.SavePlayerData(Player.Instance.money, GameManager.Instance.timeManager.day, GameManager.Instance.timeManager.currentDayIndex, itemBox.sellingPrice);
         ShowSaveNotification();
     }
 
@@ -218,7 +220,7 @@ public class InGameUI : MonoBehaviour
         Vector3 orignalPosition = moneyText.rectTransform.anchoredPosition;
 
         moneyText.color = Color.red;
-        
+
         float elapsedTime = 0f;
 
         while (elapsedTime < duration)

@@ -13,7 +13,7 @@ public class Collectable : MonoBehaviour
 
             if (item != null && item.canInteract)
             {
-                player.inventoryManager.Add("Toolbar", item);
+                player.inventoryManager.AddInventory("Toolbar", item);
                 Destroy(this.gameObject);
             }
         }

@@ -16,7 +16,7 @@ public class Inventory
     {
         public string itemName;
         public Sprite icon;
-        public int count;
+        public int currentCount;
         public int maxAllowed;
         public int price;
         public bool isSellable;
@@ -26,7 +26,7 @@ public class Inventory
         public Slot()
         {
             itemName = "";
-            count = 0;
+            currentCount = 0;
             maxAllowed = 99;
             price = 0;
             isSellable = false;
@@ -38,7 +38,7 @@ public class Inventory
         {
             get
             {
-                if (itemName == "" && count == 0)
+                if (itemName == "" && currentCount == 0)
                 {
                     return true;
                 }
@@ -49,7 +49,7 @@ public class Inventory
 
         public bool CanAddItem(string itemName)
         {
-            if (this.itemName == itemName && count < maxAllowed)
+            if (this.itemName == itemName && currentCount < maxAllowed)
             {
                 return true;
             }
@@ -70,11 +70,11 @@ public class Inventory
 
         public void RemoveItem()
         {
-            if (count > 0)
+            if (currentCount > 0)
             {
-                count--;
+                currentCount--;
 
-                if (count == 0)
+                if (currentCount == 0)
                 {
                     icon = null;
                     itemName = "";
@@ -86,7 +86,7 @@ public class Inventory
         public void Clear()
         {
             itemName = string.Empty;
-            count = 0;
+            currentCount = 0;
             maxAllowed = 99;
             price = 0;
             isSellable = false;
@@ -159,7 +159,7 @@ public class Inventory
             for (int i = 0; i < numToMove; i++)
             {
                 toSlot.AddItem(fromSlot.item);
-                // GameManager.instance.player.inventoryManager.Add(fromInventoryName, fromSlot.item);
+                Player.Instance.inventoryManager.AddInventory(fromInventoryName, fromSlot.item);
                 fromSlot.RemoveItem();
             }
         }
