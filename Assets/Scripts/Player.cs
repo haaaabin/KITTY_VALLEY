@@ -299,24 +299,18 @@ public class Player : MonoBehaviour
         }
     }
 
-    public void DropItem(Item item)
+    public void DropItem(Item item, int itemCount)
     {
-        Debug.Log(item.name);
         Vector3 spawnLocation = transform.position;
-
         Vector3 spawnOffset = Random.insideUnitCircle * 1.25f;
 
+        // 1. 드랍된 아이템 오브젝트 생성
         Item droppedItem = Instantiate(item, spawnLocation + spawnOffset, Quaternion.identity);
 
-        droppedItem.rigid.AddForce(spawnOffset * 0.3f, ForceMode2D.Impulse);
-    }
+        // 2. 드랍된 아이템의 개수 설정
+        droppedItem.SetDroppedItemCount(itemCount);
 
-    public void DropItem(Item item, int numToDrop)
-    {
-        for (int i = 0; i < numToDrop; i++)
-        {
-            DropItem(item);
-        }
+        droppedItem.rigid.AddForce(spawnOffset * 0.3f, ForceMode2D.Impulse);
     }
 
     public void SetPosition()
