@@ -1,39 +1,39 @@
-using System;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
-    public static GameManager Instance { get; private set; }
+    public static GameManager instance;
 
-    [HideInInspector] public TimeManager timeManager;
-    [HideInInspector] public PlantGrowthManager plantGrowthManager;
-    [HideInInspector] public ItemManager itemManager;
-    [HideInInspector] public bool isNewGame;
-
-    public SoundManager soundManager = new SoundManager();
+    public ItemManager itemManager;
+    public Player player;
+    public TimeManager timeManager;
+    public TileManager tileManager;
+    public PlantGrowthManager plantGrowthManager;
+    public ItemBox itemBox;
+    public SaveData inventorySave;
 
     void Awake()
     {
-        if (Instance == null)
+        if (!instance)
         {
-            Instance = this;
-            DontDestroyOnLoad(gameObject);
+            instance = this;
         }
         else
         {
             Destroy(gameObject);
         }
 
-        timeManager = GetComponent<TimeManager>();
-        plantGrowthManager = GetComponent<PlantGrowthManager>();
+        DontDestroyOnLoad(this.gameObject);
+
         itemManager = GetComponent<ItemManager>();
+        timeManager = GetComponent<TimeManager>();
+        inventorySave = GetComponent<SaveData>();
+        plantGrowthManager = GetComponent<PlantGrowthManager>();
+        tileManager = GetComponent<TileManager>();
+        itemBox = FindObjectOfType<ItemBox>();
+        player = FindObjectOfType<Player>();
 
-        soundManager.Init();
-    }
-
-    void Start()
-    {
         SceneManager.sceneLoaded += OnSceneLoaded;
     }
 
@@ -41,27 +41,21 @@ public class GameManager : MonoBehaviour
     {
         if (scene.name == "InGameScene")
         {
-            soundManager.Play("BGM/InGame", SoundType.BGM);
-            InitializeInGame();
-        }
-    }
-
-    private void InitializeInGame()
-    {
-        if (isNewGame)
-        {
-            Player.Instance.inventoryManager.ClearInventory();
-            plantGrowthManager.ClearPlantSaveData();
-            SaveData.instance.DeleteSavedFiles();
-            Player.Instance.money = 0;
-            timeManager.day = 1;
-            timeManager.currentDayIndex = 0;
-        }
-        else
-        {
-            Player.Instance.inventoryManager.LoadInventory();
-            plantGrowthManager.LoadPlantsData();
-            SaveData.instance.LoadPlayerData();
+            if (TitleUIManager.instance.isNewGame)
+            {
+                player.inventoryManager.ClearInventory();
+                plantGrowthManager.ClearPlantSaveData();
+                inventorySave.DeleteSavedFiles();
+                player.money = 0;
+                timeManager.day = 1;
+                timeManager.currentDayIndex = 0;
+            }
+            else
+            {
+                player.inventoryManager.LoadInventory();
+                plantGrowthManager.LoadPlantsData();
+                SaveData.instance.LoadPlayerData();
+            }
         }
     }
 
