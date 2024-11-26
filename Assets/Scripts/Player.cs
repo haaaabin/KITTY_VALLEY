@@ -4,8 +4,6 @@ using UnityEngine.Tilemaps;
 
 public class Player : MonoBehaviour
 {
-    public static Player Instance { get; private set; }
-
     public Animator anim;
     public Animator doorAnim;
     public Tilemap houseRoofTileMap;
@@ -26,16 +24,6 @@ public class Player : MonoBehaviour
 
     private void Awake()
     {
-        if (Instance == null)
-        {
-            Instance = this;
-            DontDestroyOnLoad(gameObject);
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
-
         rb = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>(); ;
 
@@ -45,7 +33,7 @@ public class Player : MonoBehaviour
 
     private void Update()
     {
-        if (GameManager.Instance.timeManager.isDayEnding)
+        if (GameManager.instance.timeManager.isDayEnding)
             return;
 
         GetInput();
@@ -58,7 +46,7 @@ public class Player : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (!GameManager.Instance.timeManager.isDayEnding && !isHoeing && !isWatering && !isAxing)
+        if (!GameManager.instance.timeManager.isDayEnding && !isHoeing && !isWatering && !isAxing)
             Move();
     }
 
@@ -229,7 +217,7 @@ public class Player : MonoBehaviour
 
                             inventoryManager.toolbar.selectedSlot.RemoveItem();  // 씨앗 갯수 줄이기
 
-                            GameManager.Instance.plantGrowthManager.PlantSeed(targetPosition, plantData);  // 씨앗 심기
+                            GameManager.instance.plantGrowthManager.PlantSeed(targetPosition, plantData);  // 씨앗 심기
 
                             if (inventoryManager.toolbar.selectedSlot.isEmpty)
                             {
@@ -252,7 +240,7 @@ public class Player : MonoBehaviour
                     if (tileState == "Grown" && inventoryManager.toolbar.selectedSlot.itemName == "Hoe")
                     {
                         tileManager.RemoveTile(targetPosition);
-                        GameManager.Instance.plantGrowthManager.HarvestPlant(targetPosition);
+                        GameManager.instance.plantGrowthManager.HarvestPlant(targetPosition);
                     }
                 }
             }
