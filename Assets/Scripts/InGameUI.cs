@@ -38,9 +38,6 @@ public class InGameUI : MonoBehaviour
     private float moveSpeed = 5f;
     private bool isInventoryMoving = false;
 
-    public TextMeshProUGUI dayText;
-    public TextMeshProUGUI timeText;
-
     private void Awake()
     {
         if (!instance)
@@ -86,24 +83,6 @@ public class InGameUI : MonoBehaviour
         else
         {
             speechBubble.SetActive(false);
-        }
-    }
-
-    private void OnEnable()
-    {
-        TimeManager timeManager = GameManager.Instance?.timeManager;
-        if (timeManager != null)
-        {
-            timeManager.OnTimeUpdated += UpdateTimeUI;
-        }
-    }
-
-    private void OnDisable()
-    {
-        TimeManager timeManager = GameManager.Instance?.timeManager;
-        if (timeManager != null)
-        {
-            timeManager.OnTimeUpdated -= UpdateTimeUI;
         }
     }
 
@@ -255,11 +234,5 @@ public class InGameUI : MonoBehaviour
 
         moneyText.rectTransform.anchoredPosition = orignalPosition;
         moneyText.color = originalColor;
-    }
-
-    public void UpdateTimeUI()
-    {
-        dayText.text = $"{GameManager.Instance.timeManager.daysOfWeek[GameManager.Instance.timeManager.currentDayIndex]}\n{GameManager.Instance.timeManager.day}";
-        timeText.text = $"{GameManager.Instance.timeManager.gameHour:D2} : {GameManager.Instance.timeManager.gameMinute:D2}";
     }
 }
