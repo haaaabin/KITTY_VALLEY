@@ -9,8 +9,6 @@ public class Item : MonoBehaviour
     public ItemData itemData;
     public PlantData plantData;
     public bool canInteract;
-    public bool isDropped;
-    public int droppedCount;
 
     [HideInInspector] public Rigidbody2D rigid;
 
@@ -18,16 +16,5 @@ public class Item : MonoBehaviour
     {
         rigid = GetComponent<Rigidbody2D>();
         canInteract = true;
-    }
-
-    public void SetDroppedItemCount(int count)
-    {
-        isDropped = true;
-        droppedCount = count;
-    }
-
-    public int GetDroppedItemCount()
-    {
-        return isDropped ? droppedCount : 1;
     }
 }

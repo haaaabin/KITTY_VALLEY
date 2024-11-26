@@ -56,7 +56,7 @@ public class Inventory
             return false;
         }
 
-        public void AddItem(Item item, int count = 1)
+        public void AddItem(Item item)
         {
             this.itemName = item.itemData.itemName;
             this.icon = item.itemData.icon;
@@ -65,7 +65,7 @@ public class Inventory
             this.plantData = item.plantData;
             this.isSellable = item.itemData.isSellable;
             this.item = item;
-            currentCount += count;
+            count++;
         }
 
         public void RemoveItem()
@@ -83,14 +83,6 @@ public class Inventory
             }
         }
 
-        public void RemoveAllItems()
-        {
-            currentCount = 0;
-            icon = null;
-            itemName = "";
-            plantData = null;
-        }
-
         public void Clear()
         {
             itemName = string.Empty;
@@ -100,11 +92,6 @@ public class Inventory
             isSellable = false;
             plantData = null;
             item = null;
-        }
-
-        public int GetRemainingSpace()
-        {
-            return maxAllowed - currentCount;
         }
     }
 
@@ -130,15 +117,7 @@ public class Inventory
         {
             if (slot.itemName == item.itemData.itemName && slot.CanAddItem(item.itemData.itemName))
             {
-                if(item.isDropped)
-                {
-                    int itemCount = item.GetDroppedItemCount();
-                    slot.AddItem(item,itemCount);
-                }
-                else
-                {
-                    slot.AddItem(item);
-                }
+                slot.AddItem(item);
                 return;
             }
         }
@@ -149,29 +128,24 @@ public class Inventory
             // 빈 슬롯이면
             if (slot.itemName == "")
             {
-                 if(item.isDropped)
-                {
-                    int itemCount = item.GetDroppedItemCount();
-                    slot.AddItem(item,itemCount);
-                }
-                else
-                {
-                    slot.AddItem(item);
-                }
+                slot.AddItem(item);
                 return;
             }
         }
     }
 
-    public void Remove(int index, bool isDrop = false)
+    public void Remove(int index)
     {
-        if(isDrop)
+        slots[index].RemoveItem();
+    }
+    public void Remove(int index, int numToRemove)
+    {
+        if (slots[index].count >= numToRemove)
         {
-            slots[index].RemoveAllItems();
-        }
-        else
-        {
-            slots[index].RemoveItem();
+            for (int i = 0; i < numToRemove; i++)
+            {
+                Remove(index);
+            }
         }
     }
 
