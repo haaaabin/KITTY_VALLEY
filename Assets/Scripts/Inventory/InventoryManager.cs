@@ -9,6 +9,8 @@ using UnityEngine;
 
 public class InventoryManager : MonoBehaviour
 {
+    public static InventoryManager instance;
+    
     public Dictionary<string, Inventory> inventoryByName = new Dictionary<string, Inventory>();
 
     [Header("BackPack")]
@@ -22,14 +24,18 @@ public class InventoryManager : MonoBehaviour
 
     void Awake()
     {
+        if (!instance)
+            instance = this;
+
         backpack = new Inventory(backpackSlotCount);
         toolbar = new Inventory(toolbarSlotCount);
 
         inventoryByName.Add("Backpack", backpack);
         inventoryByName.Add("Toolbar", toolbar);
+        
     }
 
-    public void AddStartItem(string inventoryName)
+    public void startItemAdd(string inventoryName)
     {
         foreach (var item in startItems)
         {
@@ -37,7 +43,7 @@ public class InventoryManager : MonoBehaviour
         }
     }
 
-    public void AddInventory(string inventoryName, Item item)
+    public void Add(string inventoryName, Item item)
     {
         if (inventoryByName.ContainsKey(inventoryName))
         {

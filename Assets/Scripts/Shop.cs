@@ -35,8 +35,9 @@ public class Shop : MonoBehaviour
         {
             if (player.money >= item.itemData.price)
             {
-                player.inventoryManager.AddInventory("Toolbar", item);
+                player.inventoryManager.Add("Toolbar", item);
                 StartCoroutine(InGameUI.instance.UpdateMoneyEffect(player.money, player.money - item.itemData.price));
+                Debug.Log(item.plantData.plantName);
             }
             else
             {

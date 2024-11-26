@@ -27,7 +27,7 @@ public class TileManager : MonoBehaviour
 
                 if (SaveData.instance.HasSavedPlant())
                 {
-                    GameManager.Instance.plantGrowthManager.LoadPlantsData();
+                    GameManager.instance.plantGrowthManager.LoadPlantsData();
                 }
             }
         }
@@ -59,7 +59,7 @@ public class TileManager : MonoBehaviour
         return "";
     }
 
-    public void SetTileState(Vector3Int position, string state)
+   public void SetTileState(Vector3Int position, string state)
     {
         if (tileStates.ContainsKey(position))
         {

@@ -19,8 +19,8 @@ public class Player : MonoBehaviour
     private bool isHoeing = false;
     private bool isWatering = false;
     private bool isAxing = false;
-    private bool isPlayerInDoor = false;
-    private bool isPlayerInPostBox = false;
+    private bool isOpenDoor = false;
+
 
     private void Awake()
     {
@@ -28,7 +28,7 @@ public class Player : MonoBehaviour
         anim = GetComponent<Animator>(); ;
 
         inventoryManager = GetComponent<InventoryManager>();
-        tileManager = FindObjectOfType<TileManager>();
+        tileManager = GameManager.instance.tileManager;
     }
 
     private void Update()
@@ -40,8 +40,10 @@ public class Player : MonoBehaviour
         UpdateAnimation();
         Plow();
         Hit();
-        HandleDoorInteraction();
-        HandlePostBoxInteraction();
+        OpenDoor();
+        OpenPostBox();
+
+        Debug.DrawRay(rb.position + Vector2.up * 0.1f, lastMoveDirection * 1f, new Color(0, 1, 0));
     }
 
     private void FixedUpdate()
@@ -74,8 +76,8 @@ public class Player : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            if (InGameUI.instance.settingPanel.activeSelf)
-                InGameUI.instance.settingPanel.SetActive(false);
+            if (UIManager.instance.settingPanel.activeSelf)
+                UIManager.instance.settingPanel.SetActive(false);
         }
     }
 
@@ -94,47 +96,6 @@ public class Player : MonoBehaviour
         }
     }
 
-    private IEnumerator WaitForAnimation()
-    {
-        yield return new WaitForSeconds(0.7f);
-
-        if (isHoeing)
-            isHoeing = false;
-        if (isWatering)
-            isWatering = false;
-        if (isAxing)
-            isAxing = false;
-    }
-
-    private void HandleDoorInteraction()
-    {
-        if (isPlayerInDoor)
-        {
-            if (Input.GetMouseButtonDown(1))
-            {
-                doorAnim.SetBool("isOpen", true);
-            }
-        }
-        else
-        {
-            doorAnim.SetBool("isOpen", false);
-        }
-    }
-
-    private void HandlePostBoxInteraction()
-    {
-        if (isPlayerInPostBox)
-        {
-            if (InGameUI.instance.speechBubble.activeSelf)
-            {
-                if (Input.GetMouseButtonDown(1))
-                {
-                    InGameUI.instance.ShowPostPanel();
-                }
-            }
-        }
-    }
-
     private void Hit()
     {
         rayHit = Physics2D.Raycast(rb.position, lastMoveDirection, 1f, LayerMask.GetMask("Tree"));
@@ -149,6 +110,39 @@ public class Player : MonoBehaviour
                     anim.SetTrigger("isAxing");
                     tree.hitCount++;
                     StartCoroutine(WaitForAnimation());
+                }
+            }
+        }
+    }
+
+    private void OpenDoor()
+    {
+        rayHit = Physics2D.Raycast(rb.position, lastMoveDirection, 1f, LayerMask.GetMask("Door"));
+        if (rayHit.collider != null)
+        {
+            if (Input.GetMouseButtonDown(1))
+            {
+                isOpenDoor = true;
+                doorAnim.SetBool("isOpen", isOpenDoor);
+            }
+        }
+        else
+        {
+            isOpenDoor = false;
+            doorAnim.SetBool("isOpen", isOpenDoor);
+        }
+    }
+
+    private void OpenPostBox()
+    {
+        rayHit = Physics2D.Raycast(rb.position, lastMoveDirection, 1f, LayerMask.GetMask("PostBox"));
+        if (rayHit.collider != null)
+        {
+            if (UIManager.instance.speechBubble.activeSelf)
+            {
+                if (Input.GetMouseButtonDown(1))
+                {
+                    UIManager.instance.ShowPostPanel();
                 }
             }
         }
@@ -199,7 +193,7 @@ public class Player : MonoBehaviour
 
                 if (tileName != null)
                 {
-                    if (tileName == "InteractableTile" && inventoryManager.toolbar.selectedSlot.itemName == "Hoe")
+                    if (tileName == "Interactable" && inventoryManager.toolbar.selectedSlot.itemName == "Hoe")
                     {
                         isHoeing = true;
                         anim.SetTrigger("isHoeing");
@@ -208,7 +202,7 @@ public class Player : MonoBehaviour
                         StartCoroutine(WaitForAnimation());
                     }
 
-                    if (tileName == "PlowedTile")
+                    if (tileName == "Plowed")
                     {
                         if (inventoryManager.toolbar.selectedSlot.itemName == "RiceSeed" || inventoryManager.toolbar.selectedSlot.itemName == "TomatoSeed")
                         {
@@ -247,43 +241,49 @@ public class Player : MonoBehaviour
         }
     }
 
+    private IEnumerator WaitForAnimation()
+    {
+        yield return new WaitForSeconds(0.7f);
+
+        if (isHoeing)
+            isHoeing = false;
+        if (isWatering)
+            isWatering = false;
+        if (isAxing)
+            isAxing = false;
+    }
+
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.gameObject.CompareTag("DayEndCheckPoint"))
+        if (other.CompareTag("DayEndCheckPoint"))
         {
-            InGameUI.instance.dayEndPanel.SetActive(true);
+            Debug.Log("침대 닿음");
+            UIManager.instance.dayEndPanel.SetActive(true);
         }
-        else if (other.gameObject.CompareTag("HouseRoof"))
+        else
+        {
+            UIManager.instance.dayEndPanel.SetActive(false);
+        }
+
+        if (other.CompareTag("HouseRoof"))
         {
             houseRoofTileMap.color = new Color(1f, 1f, 1f, 0f);
         }
-        else if (other.gameObject.CompareTag("Door"))
+
+        if (other.CompareTag("StartTuto"))
         {
-            isPlayerInDoor = true;
-        }
-        else if (other.gameObject.CompareTag("PostBox"))
-        {
-            isPlayerInPostBox = true;
+            Debug.Log("startTuto");
+            lastMoveDirection = new Vector2(1, 0);
+            anim.SetFloat("LastHorizontal", lastMoveDirection.x);
+            anim.SetFloat("LastVertical", lastMoveDirection.y);
         }
     }
 
     private void OnTriggerExit2D(Collider2D other)
     {
-        if (other.gameObject.CompareTag("DayEndCheckPoint"))
-        {
-            InGameUI.instance.dayEndPanel.SetActive(false);
-        }
-        else if (other.gameObject.CompareTag("HouseRoof"))
+        if (other.CompareTag("HouseRoof"))
         {
             houseRoofTileMap.color = new Color(1f, 1f, 1f, 1f);
-        }
-        else if (other.gameObject.CompareTag("Door"))
-        {
-            isPlayerInDoor = false;
-        }
-        else if (other.gameObject.CompareTag("PostBox"))
-        {
-            isPlayerInPostBox = false;
         }
     }
 

@@ -1,5 +1,7 @@
 using System;
+using System.Security;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -44,7 +46,7 @@ public class ItemBox : MonoBehaviour
         }
 
         // 슬롯 선택 상태 확인
-        var currentSlot = Player.Instance.inventoryManager.toolbar.selectedSlot;
+        var currentSlot = GameManager.instance.player.inventoryManager.toolbar.selectedSlot;
         if (currentSlot != selectedSlot)
         {
             selectedSlot = currentSlot;
@@ -61,9 +63,9 @@ public class ItemBox : MonoBehaviour
 
         InitializePanel();
 
-        if (InGameUI.instance != null && !InGameUI.instance.isInventoryOpen)
+        if (UIManager.instance != null && !UIManager.instance.isInventoryOpen)
         {
-            InGameUI.instance.ToggleInventoryUI();
+            UIManager.instance.ToggleInventoryUI();
         }
     }
 
@@ -73,9 +75,9 @@ public class ItemBox : MonoBehaviour
         anim.SetBool("isOpen", isBoxOpen);
         sellingPanel.SetActive(false);
 
-        if (InGameUI.instance != null && InGameUI.instance.isInventoryOpen)
+        if (UIManager.instance != null && UIManager.instance.isInventoryOpen)
         {
-            InGameUI.instance.ToggleInventoryUI();
+            UIManager.instance.ToggleInventoryUI();
         }
     }
 
@@ -90,8 +92,8 @@ public class ItemBox : MonoBehaviour
     {
         if (selectedSlot != null)
         {
-            sellingIcon.sprite = selectedSlot.currentCount > 0 && selectedSlot.isSellable ? selectedSlot.icon : null;
-            sellingIcon.color = selectedSlot.currentCount > 0 && selectedSlot.isSellable ? new Color(1, 1, 1, 1) : new Color(1, 1, 1, 0);
+            sellingIcon.sprite = selectedSlot.count > 0 && selectedSlot.isSellable ? selectedSlot.icon : null;
+            sellingIcon.color = selectedSlot.count > 0 && selectedSlot.isSellable ? new Color(1, 1, 1, 1) : new Color(1, 1, 1, 0);
             priceText.text = itemPrice.ToString();
             countText.text = itemCount.ToString();
         }
@@ -99,7 +101,7 @@ public class ItemBox : MonoBehaviour
 
     private void OnPlusButtonClick()
     {
-        if (selectedSlot != null && selectedSlot.currentCount > 0 && itemCount < selectedSlot.currentCount)
+        if (selectedSlot != null && selectedSlot.count > 0 && itemCount < selectedSlot.count)
         {
             if (selectedSlot.isSellable)
             {
@@ -120,7 +122,7 @@ public class ItemBox : MonoBehaviour
 
     private void OnMinusButtonClick()
     {
-        if (selectedSlot != null && selectedSlot.currentCount > 0 && itemCount > 0)
+        if (selectedSlot != null && selectedSlot.count > 0 && itemCount > 0)
         {
             if (selectedSlot.isSellable)
             {
@@ -141,14 +143,14 @@ public class ItemBox : MonoBehaviour
 
     private void OnCheckButtonClick()
     {
-        if (selectedSlot != null && selectedSlot.currentCount >= 0 && itemCount > 0)
+        if (selectedSlot != null && selectedSlot.count >= 0 && itemCount > 0)
         {
             if (selectedSlot.isSellable)
             {
                 sellingPrice += itemPrice;
-                selectedSlot.currentCount -= itemCount;
+                selectedSlot.count -= itemCount;
 
-                InGameUI.instance.RefreshInventoryUI("Toolbar");
+                UIManager.instance.RefreshInventoryUI("Toolbar");
                 InitializePanel();
             }
             else
@@ -185,10 +187,10 @@ public class ItemBox : MonoBehaviour
     public void SellItems()
     {
         int dailyEarnings = GetSellingPrice();
-        int newTotalMoney = Player.Instance.money + dailyEarnings;
+        int newTotalMoney = GameManager.instance.player.money + dailyEarnings;
 
-        StartCoroutine(InGameUI.instance.UpdateMoneyEffect(Player.Instance.money, newTotalMoney));
-        PlayerPrefs.SetInt("Money", Player.Instance.money);
+        StartCoroutine(UIManager.instance.UpdateMoneyEffect(GameManager.instance.player.money, newTotalMoney));
+        PlayerPrefs.SetInt("Money", GameManager.instance.player.money);
         PlayerPrefs.SetInt("Selling", dailyEarnings);
     }
 

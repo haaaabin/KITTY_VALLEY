@@ -10,7 +10,7 @@ public class Toolbar_UI : InventoryBase
 
     protected override void Start()
     {
-        inventory = Player.Instance.inventoryManager.GetInventoryByName(inventoryName);
+        inventory = GameManager.instance.player.inventoryManager.GetInventoryByName(inventoryName);
         if (inventory == null) return;
 
         SelectSlot(0);
@@ -40,7 +40,7 @@ public class Toolbar_UI : InventoryBase
             selectedSlot = slots[index];
             selectedSlot.SetHighlight(true);
 
-            Player.Instance.inventoryManager.toolbar.SelectSlot(index);
+            GameManager.instance.player.inventoryManager.toolbar.SelectSlot(index);
         }
     }
 

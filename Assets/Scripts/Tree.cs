@@ -30,7 +30,7 @@ public class Tree : MonoBehaviour
             hitCount = 0;
         }
 
-        if (!isFruitDrop && isFruitTree && hitCount == 1 && !Player.Instance.IsAxing())
+        if (!isFruitDrop && isFruitTree && hitCount == 1 && !GameManager.instance.player.IsAxing())
         {
             anim.enabled = false;
             ChangeSprite();

@@ -16,7 +16,7 @@ public class InventoryBase : MonoBehaviour
 
     protected virtual void Start()
     {
-        inventory = Player.Instance.inventoryManager.GetInventoryByName(inventoryName);
+        inventory = GameManager.instance.player.inventoryManager.GetInventoryByName(inventoryName);
         SetUpSlot();
     }
 
@@ -46,63 +46,74 @@ public class InventoryBase : MonoBehaviour
 
     public void Remove()
     {
-        if (inventory == null || InGameUI.instance.draggedSlot == null) return;
+        if (inventory == null || UIManager.instance.draggedSlot == null) return;
 
-        int slotID = InGameUI.instance.draggedSlot.slotID;
+        int slotID = UIManager.instance.draggedSlot.slotID;
         var slotData = inventory.slots[slotID];
 
         if (string.IsNullOrEmpty(slotData.itemName)) return;
 
-        Item itemToDrop = GameManager.Instance.itemManager.GetItemByName(slotData.itemName);
+        Item itemToDrop = GameManager.instance.itemManager.GetItemByName(slotData.itemName);
         if (itemToDrop != null)
         {
-            // 1. 드랍된 아이템에 개수를 저장하고 드랍
-            Player.Instance.DropItem(itemToDrop, slotData.currentCount);
-            // 2. 인벤토리에서 해당 슬롯의 아이템을 모두 삭제
-            inventory.Remove(slotID, true);
+            GameManager.instance.player.DropItem(itemToDrop);
+            inventory.Remove(slotID);
+
+            // if (UIManager.dragSingle)
+            // {
+            //     GameManager.instance.player.DropItem(itemToDrop);
+            //     inventory.Remove(UIManager.draggedSlot.slotID);
+            // }
+            // else
+            // {
+            //     GameManager.instance.player.DropItem(itemToDrop, inventory.slots[UIManager.draggedSlot.slotID].count);
+            //     inventory.Remove(UIManager.draggedSlot.slotID, inventory.slots[UIManager.draggedSlot.slotID].count);
+            // }
         }
+
         Refresh();
-        InGameUI.instance.draggedSlot = null;
+        UIManager.instance.draggedSlot = null;
     }
+
 
     public void SlotBeginDrag(Slot_UI slot)
     {
-        InGameUI.instance.draggedSlot = slot;
-        InGameUI.instance.draggedIcon = Instantiate(slot.itemIcon);
-        InGameUI.instance.draggedIcon.transform.SetParent(canvas.transform);
-        InGameUI.instance.draggedIcon.raycastTarget = false;
-        InGameUI.instance.draggedIcon.rectTransform.sizeDelta = new Vector2(100, 100);
+        UIManager.instance.draggedSlot = slot;
+        UIManager.instance.draggedIcon = Instantiate(slot.itemIcon);
+        UIManager.instance.draggedIcon.transform.SetParent(canvas.transform);
+        UIManager.instance.draggedIcon.raycastTarget = false;
+        UIManager.instance.draggedIcon.rectTransform.sizeDelta = new Vector2(100, 100);
 
-        MoveToMousePosition(InGameUI.instance.draggedIcon.gameObject);
+        MoveToMousePosition(UIManager.instance.draggedIcon.gameObject);
     }
 
     public void SlotDrag()
     {
-        MoveToMousePosition(InGameUI.instance.draggedIcon.gameObject);
+        MoveToMousePosition(UIManager.instance.draggedIcon.gameObject);
     }
 
     public void SlotEndDrag()
     {
-        Destroy(InGameUI.instance.draggedIcon.gameObject);
-        InGameUI.instance.draggedIcon = null;
+        Destroy(UIManager.instance.draggedIcon.gameObject);
+        UIManager.instance.draggedIcon = null;
     }
 
     public void SlotDrop(Slot_UI slot)
     {
-        if (slot == null || InGameUI.instance.draggedSlot == null) return;
+        if (slot == null || UIManager.instance.draggedSlot == null) return;
 
-        var draggedSlot = InGameUI.instance.draggedSlot;
-        if (InGameUI.instance.dragSingle)
+        var draggedSlot = UIManager.instance.draggedSlot;
+        if (UIManager.instance.dragSingle)
         {
             draggedSlot.inventory.MoveSlot(draggedSlot.slotID, slot.slotID, slot.inventory);
         }
         else
         {
-            draggedSlot.inventory.MoveSlot(draggedSlot.slotID, slot.slotID, slot.inventory, draggedSlot.inventory.slots[draggedSlot.slotID].currentCount);
+            draggedSlot.inventory.MoveSlot(draggedSlot.slotID, slot.slotID, slot.inventory, draggedSlot.inventory.slots[draggedSlot.slotID].count);
 
         }
 
-        InGameUI.instance.RefreshAllInventory();
+        UIManager.instance.RefreshAllInventory();
     }
 
     public void MoveToMousePosition(GameObject toMove)
