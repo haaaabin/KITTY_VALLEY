@@ -10,7 +10,7 @@ using UnityEngine;
 public class InventoryManager : MonoBehaviour
 {
     public static InventoryManager instance;
-    
+
     public Dictionary<string, Inventory> inventoryByName = new Dictionary<string, Inventory>();
 
     [Header("BackPack")]
@@ -32,10 +32,10 @@ public class InventoryManager : MonoBehaviour
 
         inventoryByName.Add("Backpack", backpack);
         inventoryByName.Add("Toolbar", toolbar);
-        
+
     }
 
-    public void startItemAdd(string inventoryName)
+    public void AddStartItem(string inventoryName)
     {
         foreach (var item in startItems)
         {
@@ -44,6 +44,14 @@ public class InventoryManager : MonoBehaviour
     }
 
     public void Add(string inventoryName, Item item)
+    {
+        if (inventoryByName.ContainsKey(inventoryName))
+        {
+            inventoryByName[inventoryName].Add(item);
+        }
+    }
+
+    public void AddInventory(string inventoryName, Item item)
     {
         if (inventoryByName.ContainsKey(inventoryName))
         {

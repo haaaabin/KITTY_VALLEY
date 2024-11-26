@@ -39,7 +39,7 @@ public class FadeEffect : MonoBehaviour
         }
 
         fadePanel.color = new Color(0, 0, 0, targetAlpha);
-        // yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(1f);
     }
 
     public void FadeAndLoadScene(string sceneName)

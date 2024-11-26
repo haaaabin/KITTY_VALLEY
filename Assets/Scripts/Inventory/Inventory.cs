@@ -16,7 +16,7 @@ public class Inventory
     {
         public string itemName;
         public Sprite icon;
-        public int count;
+        public int currentCount;
         public int maxAllowed;
         public int price;
         public bool isSellable;
@@ -26,7 +26,7 @@ public class Inventory
         public Slot()
         {
             itemName = "";
-            count = 0;
+            currentCount = 0;
             maxAllowed = 99;
             price = 0;
             isSellable = false;
@@ -38,7 +38,7 @@ public class Inventory
         {
             get
             {
-                if (itemName == "" && count == 0)
+                if (itemName == "" && currentCount == 0)
                 {
                     return true;
                 }
@@ -49,14 +49,14 @@ public class Inventory
 
         public bool CanAddItem(string itemName)
         {
-            if (this.itemName == itemName && count < maxAllowed)
+            if (this.itemName == itemName && currentCount < maxAllowed)
             {
                 return true;
             }
             return false;
         }
 
-        public void AddItem(Item item)
+        public void AddItem(Item item, int count = 1)
         {
             this.itemName = item.itemData.itemName;
             this.icon = item.itemData.icon;
@@ -65,16 +65,16 @@ public class Inventory
             this.plantData = item.plantData;
             this.isSellable = item.itemData.isSellable;
             this.item = item;
-            count++;
+            currentCount += count;
         }
 
         public void RemoveItem()
         {
-            if (count > 0)
+            if (currentCount > 0)
             {
-                count--;
+                currentCount--;
 
-                if (count == 0)
+                if (currentCount == 0)
                 {
                     icon = null;
                     itemName = "";
@@ -83,15 +83,26 @@ public class Inventory
             }
         }
 
+        public void RemoveAllItems()
+        {
+            currentCount = 0;
+            icon = null;
+            itemName = "";
+            plantData = null;
+        }
         public void Clear()
         {
             itemName = string.Empty;
-            count = 0;
+            currentCount = 0;
             maxAllowed = 99;
             price = 0;
             isSellable = false;
             plantData = null;
             item = null;
+        }
+        public int GetRemainingSpace()
+        {
+            return maxAllowed - currentCount;
         }
     }
 
@@ -117,7 +128,15 @@ public class Inventory
         {
             if (slot.itemName == item.itemData.itemName && slot.CanAddItem(item.itemData.itemName))
             {
-                slot.AddItem(item);
+                if(item.isDropped)
+                {
+                    int itemCount = item.GetDroppedItemCount();
+                    slot.AddItem(item,itemCount);
+                }
+                else
+                {
+                    slot.AddItem(item);
+                }
                 return;
             }
         }
@@ -128,24 +147,29 @@ public class Inventory
             // 빈 슬롯이면
             if (slot.itemName == "")
             {
-                slot.AddItem(item);
+                 if(item.isDropped)
+                {
+                    int itemCount = item.GetDroppedItemCount();
+                    slot.AddItem(item,itemCount);
+                }
+                else
+                {
+                    slot.AddItem(item);
+                }
                 return;
             }
         }
     }
 
-    public void Remove(int index)
+    public void Remove(int index, bool isDrop = false)
     {
-        slots[index].RemoveItem();
-    }
-    public void Remove(int index, int numToRemove)
-    {
-        if (slots[index].count >= numToRemove)
+        if(isDrop)
         {
-            for (int i = 0; i < numToRemove; i++)
-            {
-                Remove(index);
-            }
+            slots[index].RemoveAllItems();
+        }
+        else
+        {
+            slots[index].RemoveItem();
         }
     }
 
@@ -159,7 +183,7 @@ public class Inventory
             for (int i = 0; i < numToMove; i++)
             {
                 toSlot.AddItem(fromSlot.item);
-                // GameManager.instance.player.inventoryManager.Add(fromInventoryName, fromSlot.item);
+                Player.Instance.inventoryManager.AddInventory(fromInventoryName, fromSlot.item);
                 fromSlot.RemoveItem();
             }
         }

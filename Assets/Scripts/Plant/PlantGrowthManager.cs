@@ -32,7 +32,7 @@ public class PlantGrowthManager : MonoBehaviour
 
     public void PlantSeed(Vector3Int position, PlantData plantData)
     {
-        if (GameManager.instance.tileManager.DoesTileExist(position) && GameManager.instance.tileManager.GetTileName(position) == "Plowed")
+        if (GameManager.instance.tileManager.DoesTileExist(position) && GameManager.instance.tileManager.GetTileName(position) == "PlowedTile")
         {
             GameManager.instance.tileManager.SetTileState(position, "Seeded");
             GameManager.instance.tileManager.seedMap.SetTile(position, GameManager.instance.tileManager.plantedTile);
@@ -56,13 +56,16 @@ public class PlantGrowthManager : MonoBehaviour
         int currentGrowthDay = plantGrowthDays[position];
 
         // 각 성장 단계별로 경과된 시간이 맞는지 확인
-        if (currentStage - 1 >= 0 && currentStage < plantData.growthStagesTiles.Length)
+        if (currentStage >= 0 && currentStage < plantData.growthStagesTiles.Length)
         {
             currentStage++;
             currentGrowthDay++;
+            Debug.Log(plantData.growthStagesTiles[currentStage - 1]);
 
             GameManager.instance.tileManager.seedMap.SetTile(position, plantData.growthStagesTiles[currentStage - 1]);
             plantData.growthStagesTiles[currentStage - 1].colliderType = Tile.ColliderType.Sprite;
+
+            currentGrowthStages[position] = currentStage;
 
             // 모든 성장 단계를 완료했으면 "Grown" 상태로 변경
             if (currentGrowthStages[position] >= plantData.growthStagesTiles.Length)
@@ -75,7 +78,6 @@ public class PlantGrowthManager : MonoBehaviour
             }
         }
 
-        currentGrowthStages[position] = currentStage;
         plantGrowthDays[position] = currentGrowthDay;
 
         yield return null;
@@ -151,6 +153,7 @@ public class PlantGrowthManager : MonoBehaviour
     {
         // wateredTiles의 키를 미리 복사하여 List에 저장
         List<Vector3Int> wateredTilesKey = GameManager.instance.tileManager.GetWateredTilesKeys();
+
         foreach (var position in wateredTilesKey)
         {
             if (GameManager.instance.tileManager.GetWateringTile(position) && plantGrowthDays.ContainsKey(position))
@@ -181,7 +184,6 @@ public class PlantGrowthManager : MonoBehaviour
 
     public void SavePlantDataList()
     {
-
         foreach (var position in plantDataDict.Keys)
         {
             PlantData plantData = plantDataDict[position];

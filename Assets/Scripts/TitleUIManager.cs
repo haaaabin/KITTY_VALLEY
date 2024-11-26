@@ -1,9 +1,9 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class TitleUIManager : MonoBehaviour
+public class OutGameUI : MonoBehaviour
 {
-    public static TitleUIManager instance;
+    public static OutGameUI instance;
 
     public GameObject panel;
     public Button newGameBtn;

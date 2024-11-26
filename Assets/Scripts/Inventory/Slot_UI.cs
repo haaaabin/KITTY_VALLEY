@@ -25,14 +25,14 @@ public class Slot_UI : MonoBehaviour
                 itemIcon.sprite = slot.icon;
                 itemIcon.color = new Color(1, 1, 1, 1);
 
-                if (slot.count == 0)
+                if (slot.currentCount == 0)
                 {
                     slot.RemoveItem();
                     EmptyItem();
                 }
                 else
                 {
-                    quantityText.text = slot.count == 1 ? "" : slot.count.ToString();
+                    quantityText.text = slot.currentCount == 1 ? "" : slot.currentCount.ToString();
                 }
             }
         }

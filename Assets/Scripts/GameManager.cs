@@ -41,11 +41,11 @@ public class GameManager : MonoBehaviour
     {
         if (scene.name == "InGameScene")
         {
-            if (TitleUIManager.instance.isNewGame)
+            if (OutGameUI.instance.isNewGame)
             {
                 player.inventoryManager.ClearInventory();
                 plantGrowthManager.ClearPlantSaveData();
-                inventorySave.DeleteSavedFiles();
+                SaveData.instance.DeleteSavedFiles();
                 player.money = 0;
                 timeManager.day = 1;
                 timeManager.currentDayIndex = 0;

@@ -76,7 +76,7 @@ public class InGameUI : MonoBehaviour
 
         UpdateMoneyUI(GameManager.instance.player.money);
 
-        if (TitleUIManager.instance.isNewGame)
+        if (OutGameUI.instance.isNewGame)
         {
             speechBubble.SetActive(true);
         }
@@ -218,7 +218,7 @@ public class InGameUI : MonoBehaviour
         Vector3 orignalPosition = moneyText.rectTransform.anchoredPosition;
 
         moneyText.color = Color.red;
-        
+
         float elapsedTime = 0f;
 
         while (elapsedTime < duration)

@@ -95,7 +95,7 @@ public class SaveData : MonoBehaviour
             {
                 if (!slot.isEmpty)
                 {
-                    sw.WriteLine($"{slot.itemName}{SPLIT_CHAR}{slot.count}");
+                    sw.WriteLine($"{slot.itemName}{SPLIT_CHAR}{slot.currentCount}");
                 }
             }
         }

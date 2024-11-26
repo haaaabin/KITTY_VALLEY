@@ -4,6 +4,7 @@ using UnityEngine.Tilemaps;
 
 public class Player : MonoBehaviour
 {
+    public static Player Instance { get; private set; }
     public Animator anim;
     public Animator doorAnim;
     public Tilemap houseRoofTileMap;
@@ -19,16 +20,25 @@ public class Player : MonoBehaviour
     private bool isHoeing = false;
     private bool isWatering = false;
     private bool isAxing = false;
-    private bool isOpenDoor = false;
-
+    private bool isPlayerInDoor = false;
+    private bool isPlayerInPostBox = false;
 
     private void Awake()
     {
+        if (Instance == null)
+        {
+            Instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
         rb = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>(); ;
 
         inventoryManager = GetComponent<InventoryManager>();
-        tileManager = GameManager.instance.tileManager;
+        tileManager = FindObjectOfType<TileManager>();
     }
 
     private void Update()
@@ -40,10 +50,8 @@ public class Player : MonoBehaviour
         UpdateAnimation();
         Plow();
         Hit();
-        OpenDoor();
-        OpenPostBox();
-
-        Debug.DrawRay(rb.position + Vector2.up * 0.1f, lastMoveDirection * 1f, new Color(0, 1, 0));
+        HandleDoorInteraction();
+        HandlePostBoxInteraction();
     }
 
     private void FixedUpdate()
@@ -76,8 +84,8 @@ public class Player : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            if (UIManager.instance.settingPanel.activeSelf)
-                UIManager.instance.settingPanel.SetActive(false);
+            if (InGameUI.instance.settingPanel.activeSelf)
+                InGameUI.instance.settingPanel.SetActive(false);
         }
     }
 
@@ -96,6 +104,45 @@ public class Player : MonoBehaviour
         }
     }
 
+    private IEnumerator WaitForAnimation()
+    {
+        yield return new WaitForSeconds(0.7f);
+        if (isHoeing)
+            isHoeing = false;
+        if (isWatering)
+            isWatering = false;
+        if (isAxing)
+            isAxing = false;
+    }
+
+    private void HandleDoorInteraction()
+    {
+        if (isPlayerInDoor)
+        {
+            if (Input.GetMouseButtonDown(1))
+            {
+                doorAnim.SetBool("isOpen", true);
+            }
+        }
+        else
+        {
+            doorAnim.SetBool("isOpen", false);
+        }
+    }
+
+    private void HandlePostBoxInteraction()
+    {
+        if (isPlayerInPostBox)
+        {
+            if (InGameUI.instance.speechBubble.activeSelf)
+            {
+                if (Input.GetMouseButtonDown(1))
+                {
+                    InGameUI.instance.ShowPostPanel();
+                }
+            }
+        }
+    }
     private void Hit()
     {
         rayHit = Physics2D.Raycast(rb.position, lastMoveDirection, 1f, LayerMask.GetMask("Tree"));
@@ -110,39 +157,6 @@ public class Player : MonoBehaviour
                     anim.SetTrigger("isAxing");
                     tree.hitCount++;
                     StartCoroutine(WaitForAnimation());
-                }
-            }
-        }
-    }
-
-    private void OpenDoor()
-    {
-        rayHit = Physics2D.Raycast(rb.position, lastMoveDirection, 1f, LayerMask.GetMask("Door"));
-        if (rayHit.collider != null)
-        {
-            if (Input.GetMouseButtonDown(1))
-            {
-                isOpenDoor = true;
-                doorAnim.SetBool("isOpen", isOpenDoor);
-            }
-        }
-        else
-        {
-            isOpenDoor = false;
-            doorAnim.SetBool("isOpen", isOpenDoor);
-        }
-    }
-
-    private void OpenPostBox()
-    {
-        rayHit = Physics2D.Raycast(rb.position, lastMoveDirection, 1f, LayerMask.GetMask("PostBox"));
-        if (rayHit.collider != null)
-        {
-            if (UIManager.instance.speechBubble.activeSelf)
-            {
-                if (Input.GetMouseButtonDown(1))
-                {
-                    UIManager.instance.ShowPostPanel();
                 }
             }
         }
@@ -193,7 +207,7 @@ public class Player : MonoBehaviour
 
                 if (tileName != null)
                 {
-                    if (tileName == "Interactable" && inventoryManager.toolbar.selectedSlot.itemName == "Hoe")
+                    if (tileName == "InteractableTile" && inventoryManager.toolbar.selectedSlot.itemName == "Hoe")
                     {
                         isHoeing = true;
                         anim.SetTrigger("isHoeing");
@@ -202,7 +216,7 @@ public class Player : MonoBehaviour
                         StartCoroutine(WaitForAnimation());
                     }
 
-                    if (tileName == "Plowed")
+                    if (tileName == "PlowedTile")
                     {
                         if (inventoryManager.toolbar.selectedSlot.itemName == "RiceSeed" || inventoryManager.toolbar.selectedSlot.itemName == "TomatoSeed")
                         {
@@ -218,7 +232,7 @@ public class Player : MonoBehaviour
                                 inventoryManager.toolbar.selectedSlot = null;  // 씨앗이 다 떨어지면 슬롯 비우기
                             }
                         }
-                        else if (inventoryManager.toolbar.selectedSlot.itemName == "Watering") // && !tileManager.GetWateringTile(targetPosition))
+                        else if (inventoryManager.toolbar.selectedSlot.itemName == "Watering")
                         {
                             isWatering = true;
                             anim.SetTrigger("isWatering");
@@ -229,82 +243,69 @@ public class Player : MonoBehaviour
                     }
                 }
 
-                if (tileState != null)
+                if (tileState == "Grown" && inventoryManager.toolbar.selectedSlot.itemName == "Hoe")
                 {
-                    if (tileState == "Grown" && inventoryManager.toolbar.selectedSlot.itemName == "Hoe")
-                    {
-                        tileManager.RemoveTile(targetPosition);
-                        GameManager.instance.plantGrowthManager.HarvestPlant(targetPosition);
-                    }
+                    tileManager.RemoveTile(targetPosition);
+                    GameManager.instance.plantGrowthManager.HarvestPlant(targetPosition);
                 }
             }
         }
     }
 
-    private IEnumerator WaitForAnimation()
-    {
-        yield return new WaitForSeconds(0.7f);
-
-        if (isHoeing)
-            isHoeing = false;
-        if (isWatering)
-            isWatering = false;
-        if (isAxing)
-            isAxing = false;
-    }
-
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.CompareTag("DayEndCheckPoint"))
+        if (other.gameObject.CompareTag("DayEndCheckPoint"))
         {
-            Debug.Log("침대 닿음");
-            UIManager.instance.dayEndPanel.SetActive(true);
+            InGameUI.instance.dayEndPanel.SetActive(true);
         }
-        else
-        {
-            UIManager.instance.dayEndPanel.SetActive(false);
-        }
-
-        if (other.CompareTag("HouseRoof"))
+        else if (other.gameObject.CompareTag("HouseRoof"))
         {
             houseRoofTileMap.color = new Color(1f, 1f, 1f, 0f);
         }
-
-        if (other.CompareTag("StartTuto"))
+        else if (other.gameObject.CompareTag("Door"))
         {
-            Debug.Log("startTuto");
-            lastMoveDirection = new Vector2(1, 0);
-            anim.SetFloat("LastHorizontal", lastMoveDirection.x);
-            anim.SetFloat("LastVertical", lastMoveDirection.y);
+            isPlayerInDoor = true;
+        }
+        else if (other.gameObject.CompareTag("PostBox"))
+        {
+            isPlayerInPostBox = true;
         }
     }
 
     private void OnTriggerExit2D(Collider2D other)
     {
-        if (other.CompareTag("HouseRoof"))
+        if (other.gameObject.CompareTag("DayEndCheckPoint"))
+        {
+            InGameUI.instance.dayEndPanel.SetActive(false);
+        }
+        else if (other.gameObject.CompareTag("HouseRoof"))
         {
             houseRoofTileMap.color = new Color(1f, 1f, 1f, 1f);
         }
+        else if (other.gameObject.CompareTag("Door"))
+        {
+            isPlayerInDoor = false;
+        }
+        else if (other.gameObject.CompareTag("PostBox"))
+        {
+            isPlayerInPostBox = false;
+        }
     }
 
-    public void DropItem(Item item)
+    public void DropItem(Item item, int itemCount)
     {
         Debug.Log(item.name);
         Vector3 spawnLocation = transform.position;
 
         Vector3 spawnOffset = Random.insideUnitCircle * 1.25f;
 
+        // 1. 드랍된 아이템 오브젝트 생성
         Item droppedItem = Instantiate(item, spawnLocation + spawnOffset, Quaternion.identity);
 
-        droppedItem.rigid.AddForce(spawnOffset * 0.3f, ForceMode2D.Impulse);
-    }
+        // 2. 드랍된 아이템의 개수 설정
+        droppedItem.SetDroppedItemCount(itemCount);
 
-    public void DropItem(Item item, int numToDrop)
-    {
-        for (int i = 0; i < numToDrop; i++)
-        {
-            DropItem(item);
-        }
+        droppedItem.rigid.AddForce(spawnOffset * 0.3f, ForceMode2D.Impulse);
     }
 
     public void SetPosition()

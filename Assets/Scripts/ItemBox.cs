@@ -63,9 +63,9 @@ public class ItemBox : MonoBehaviour
 
         InitializePanel();
 
-        if (UIManager.instance != null && !UIManager.instance.isInventoryOpen)
+        if (InGameUI.instance != null && !InGameUI.instance.isInventoryOpen)
         {
-            UIManager.instance.ToggleInventoryUI();
+            InGameUI.instance.ToggleInventoryUI();
         }
     }
 
@@ -75,9 +75,9 @@ public class ItemBox : MonoBehaviour
         anim.SetBool("isOpen", isBoxOpen);
         sellingPanel.SetActive(false);
 
-        if (UIManager.instance != null && UIManager.instance.isInventoryOpen)
+        if (InGameUI.instance != null && InGameUI.instance.isInventoryOpen)
         {
-            UIManager.instance.ToggleInventoryUI();
+            InGameUI.instance.ToggleInventoryUI();
         }
     }
 
@@ -92,8 +92,8 @@ public class ItemBox : MonoBehaviour
     {
         if (selectedSlot != null)
         {
-            sellingIcon.sprite = selectedSlot.count > 0 && selectedSlot.isSellable ? selectedSlot.icon : null;
-            sellingIcon.color = selectedSlot.count > 0 && selectedSlot.isSellable ? new Color(1, 1, 1, 1) : new Color(1, 1, 1, 0);
+            sellingIcon.sprite = selectedSlot.currentCount > 0 && selectedSlot.isSellable ? selectedSlot.icon : null;
+            sellingIcon.color = selectedSlot.currentCount > 0 && selectedSlot.isSellable ? new Color(1, 1, 1, 1) : new Color(1, 1, 1, 0);
             priceText.text = itemPrice.ToString();
             countText.text = itemCount.ToString();
         }
@@ -101,7 +101,7 @@ public class ItemBox : MonoBehaviour
 
     private void OnPlusButtonClick()
     {
-        if (selectedSlot != null && selectedSlot.count > 0 && itemCount < selectedSlot.count)
+        if (selectedSlot != null && selectedSlot.currentCount > 0 && itemCount < selectedSlot.currentCount)
         {
             if (selectedSlot.isSellable)
             {
@@ -122,7 +122,7 @@ public class ItemBox : MonoBehaviour
 
     private void OnMinusButtonClick()
     {
-        if (selectedSlot != null && selectedSlot.count > 0 && itemCount > 0)
+        if (selectedSlot != null && selectedSlot.currentCount > 0 && itemCount > 0)
         {
             if (selectedSlot.isSellable)
             {
@@ -143,14 +143,14 @@ public class ItemBox : MonoBehaviour
 
     private void OnCheckButtonClick()
     {
-        if (selectedSlot != null && selectedSlot.count >= 0 && itemCount > 0)
+        if (selectedSlot != null && selectedSlot.currentCount >= 0 && itemCount > 0)
         {
             if (selectedSlot.isSellable)
             {
                 sellingPrice += itemPrice;
-                selectedSlot.count -= itemCount;
+                selectedSlot.currentCount -= itemCount;
 
-                UIManager.instance.RefreshInventoryUI("Toolbar");
+                InGameUI.instance.RefreshInventoryUI("Toolbar");
                 InitializePanel();
             }
             else
@@ -189,7 +189,7 @@ public class ItemBox : MonoBehaviour
         int dailyEarnings = GetSellingPrice();
         int newTotalMoney = GameManager.instance.player.money + dailyEarnings;
 
-        StartCoroutine(UIManager.instance.UpdateMoneyEffect(GameManager.instance.player.money, newTotalMoney));
+        StartCoroutine(InGameUI.instance.UpdateMoneyEffect(GameManager.instance.player.money, newTotalMoney));
         PlayerPrefs.SetInt("Money", GameManager.instance.player.money);
         PlayerPrefs.SetInt("Selling", dailyEarnings);
     }

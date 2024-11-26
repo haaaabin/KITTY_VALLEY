@@ -47,7 +47,7 @@ public class TimeManager : MonoBehaviour
                 gameHour++;
             }
 
-            if (gameHour >= 11)
+            if (gameHour >= 24)
             {
                 StartCoroutine(EndDay());
             }
