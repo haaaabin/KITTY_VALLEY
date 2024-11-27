@@ -41,6 +41,8 @@ public class GameManager : MonoBehaviour
     {
         if (scene.name == "InGameScene")
         {
+            SoundManager.Instance.Play("BGM/InGame", SoundType.BGM);
+
             if (OutGameUI.instance.isNewGame)
             {
                 player.inventoryManager.ClearInventory();

@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -13,6 +14,7 @@ public class OutGameUI : MonoBehaviour
     public Button noBtn;
     public bool isNewGame;
 
+
     void Awake()
     {
         if (!instance)
@@ -24,10 +26,13 @@ public class OutGameUI : MonoBehaviour
         {
             Destroy(gameObject);
         }
+        SoundManager.Instance.Init();
     }
 
     void Start()
     {
+        SoundManager.Instance.Play("BGM/OutGame", SoundType.BGM);
+
         GameObject inventoryObj = new GameObject("InventorySave");
         SaveData inventorySave = inventoryObj.AddComponent<SaveData>();
 
@@ -37,7 +42,7 @@ public class OutGameUI : MonoBehaviour
             continueGameBtn.gameObject.SetActive(false);
             newGameBtn.onClick.AddListener(() =>
             {
-                FadeEffect.instance.FadeAndLoadScene("InGameScene");
+                StartCoroutine(StartGameWithFadeOut());
             });
         }
         else
@@ -46,7 +51,7 @@ public class OutGameUI : MonoBehaviour
             continueGameBtn.gameObject.SetActive(true);
             continueGameBtn.onClick.AddListener(() =>
             {
-                FadeEffect.instance.FadeAndLoadScene("InGameScene");
+                StartCoroutine(StartGameWithFadeOut());
             });
 
             newGameBtn.onClick.AddListener(() =>
@@ -57,14 +62,32 @@ public class OutGameUI : MonoBehaviour
 
                 panel.SetActive(true);
 
-                yesBtn.onClick.AddListener(() => { isNewGame = true; FadeEffect.instance.FadeAndLoadScene("InGameScene"); });
-                noBtn.onClick.AddListener(() => { panel.SetActive(false); });
+                yesBtn.onClick.AddListener(() =>
+                {
+                    isNewGame = true;
+                    StartCoroutine(StartGameWithFadeOut());
+                });
+                noBtn.onClick.AddListener(() =>
+                {
+                    panel.SetActive(false);
+                });
             });
         }
 
         exitGameBtn.onClick.AddListener(() =>
         {
+            SoundManager.Instance.StopAll();
             Application.Quit();
         });
+    }
+
+    // FadeOut과 게임 시작을 동시에 실행
+    private IEnumerator StartGameWithFadeOut()
+    {
+        SoundManager.Instance.FadeOut(3.0f);
+        
+        FadeEffect.instance.FadeAndLoadScene("InGameScene");
+
+        yield return new WaitForSeconds(2.0f);
     }
 }

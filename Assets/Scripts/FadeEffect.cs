@@ -10,7 +10,7 @@ public class FadeEffect : MonoBehaviour
     public Image fadePanel;
     public TextMeshProUGUI loadingText;
 
-    private float fadeDuration = 3f;
+    private float fadeDuration = 2f;
 
     private void Awake()
     {
