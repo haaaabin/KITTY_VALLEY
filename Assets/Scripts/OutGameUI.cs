@@ -42,6 +42,7 @@ public class OutGameUI : MonoBehaviour
             continueGameBtn.gameObject.SetActive(false);
             newGameBtn.onClick.AddListener(() =>
             {
+                SoundManager.Instance.Play("EFFECT/Click2", SoundType.EFFECT);
                 StartCoroutine(StartGameWithFadeOut());
             });
         }
@@ -51,11 +52,14 @@ public class OutGameUI : MonoBehaviour
             continueGameBtn.gameObject.SetActive(true);
             continueGameBtn.onClick.AddListener(() =>
             {
+                SoundManager.Instance.Play("EFFECT/Click2", SoundType.EFFECT);
                 StartCoroutine(StartGameWithFadeOut());
             });
 
             newGameBtn.onClick.AddListener(() =>
             {
+                SoundManager.Instance.Play("EFFECT/Click2", SoundType.EFFECT);
+
                 // 기존 리스너 제거 (중복 등록 방지)
                 yesBtn.onClick.RemoveAllListeners();
                 noBtn.onClick.RemoveAllListeners();
@@ -64,11 +68,13 @@ public class OutGameUI : MonoBehaviour
 
                 yesBtn.onClick.AddListener(() =>
                 {
+                    SoundManager.Instance.Play("EFFECT/Click2", SoundType.EFFECT);
                     isNewGame = true;
                     StartCoroutine(StartGameWithFadeOut());
                 });
                 noBtn.onClick.AddListener(() =>
                 {
+                    SoundManager.Instance.Play("EFFECT/Click2", SoundType.EFFECT);
                     panel.SetActive(false);
                 });
             });
@@ -76,6 +82,7 @@ public class OutGameUI : MonoBehaviour
 
         exitGameBtn.onClick.AddListener(() =>
         {
+            SoundManager.Instance.Play("EFFECT/Click2", SoundType.EFFECT);
             SoundManager.Instance.StopAll();
             Application.Quit();
         });
@@ -85,7 +92,7 @@ public class OutGameUI : MonoBehaviour
     private IEnumerator StartGameWithFadeOut()
     {
         SoundManager.Instance.FadeOut(3.0f);
-        
+
         FadeEffect.instance.FadeAndLoadScene("InGameScene");
 
         yield return new WaitForSeconds(2.0f);

@@ -16,12 +16,14 @@ public class Player : MonoBehaviour
     private TileManager tileManager;
     private Vector2 movement;
     private Vector2 lastMoveDirection;
+    private Vector2 directionToMouse;
     private float moveSpeed = 3;
     private bool isHoeing = false;
     private bool isWatering = false;
     private bool isAxing = false;
     private bool isPlayerInDoor = false;
     private bool isPlayerInPostBox = false;
+    Vector3Int targetPosition;
 
     private void Awake()
     {
@@ -48,7 +50,7 @@ public class Player : MonoBehaviour
 
         GetInput();
         UpdateAnimation();
-        Plow();
+        PlantInteracted();
         Hit();
         HandleDoorInteraction();
         HandlePostBoxInteraction();
@@ -138,6 +140,7 @@ public class Player : MonoBehaviour
             {
                 if (Input.GetMouseButtonDown(1))
                 {
+                    SoundManager.Instance.Play("EFFECT/Pick", SoundType.EFFECT);
                     InGameUI.instance.ShowPostPanel();
                 }
             }
@@ -153,6 +156,7 @@ public class Player : MonoBehaviour
             {
                 if (inventoryManager.toolbar.selectedSlot.itemName == "Axe")
                 {
+                    SoundManager.Instance.Play("EFFECT/HITTREE", SoundType.EFFECT);
                     isAxing = true;
                     anim.SetTrigger("isAxing");
                     tree.hitCount++;
@@ -162,7 +166,7 @@ public class Player : MonoBehaviour
         }
     }
 
-    private void Plow()
+    public void PlantInteracted()
     {
         if (isHoeing) return;
         if (tileManager == null) return;
@@ -175,7 +179,7 @@ public class Player : MonoBehaviour
             Vector3 worldMousePosition = UnityEngine.Camera.main.ScreenToWorldPoint(mousePosition);
             worldMousePosition.z = 0;
 
-            Vector3Int targetPosition = new Vector3Int(Mathf.FloorToInt(worldMousePosition.x), Mathf.FloorToInt(worldMousePosition.y), 0);
+            targetPosition = new Vector3Int(Mathf.FloorToInt(worldMousePosition.x), Mathf.FloorToInt(worldMousePosition.y), 0);
 
             Vector3 playerPosition = transform.position;
             Vector3Int gridPlayerPosition = new Vector3Int(Mathf.FloorToInt(playerPosition.x), Mathf.FloorToInt(playerPosition.y), 0);
@@ -207,20 +211,33 @@ public class Player : MonoBehaviour
 
                 if (tileName != null)
                 {
-                    if (tileName == "InteractableTile" && inventoryManager.toolbar.selectedSlot.itemName == "Hoe")
+                    if (inventoryManager.toolbar.selectedSlot.itemName == "Hoe")
                     {
-                        isHoeing = true;
-                        anim.SetTrigger("isHoeing");
-                        tileManager.SetInteracted(targetPosition);
+                        // 새로운 땅 파기
+                        if (tileName == "InteractableTile")
+                        {
+                            anim.SetTrigger("isHoeing");
+                        }
 
-                        StartCoroutine(WaitForAnimation());
+                        // 식물이 다 자란 경우
+                        if (tileState == "Grown")
+                        {
+                            tileManager.RemoveTile(targetPosition);
+                            GameManager.instance.plantGrowthManager.HarvestPlant(targetPosition);
+                        }
                     }
 
+                    // 땅을 판 후
                     if (tileName == "PlowedTile")
                     {
                         if (inventoryManager.toolbar.selectedSlot.itemName == "RiceSeed" || inventoryManager.toolbar.selectedSlot.itemName == "TomatoSeed")
                         {
                             PlantData plantData = inventoryManager.toolbar.selectedSlot.plantData;
+                            if (plantData == null)
+                            {
+                                Debug.Log("no plantdata");
+                            }
+
                             Debug.Log(plantData.plantName);
 
                             inventoryManager.toolbar.selectedSlot.RemoveItem();  // 씨앗 갯수 줄이기
@@ -234,22 +251,28 @@ public class Player : MonoBehaviour
                         }
                         else if (inventoryManager.toolbar.selectedSlot.itemName == "Watering")
                         {
-                            isWatering = true;
                             anim.SetTrigger("isWatering");
-                            tileManager.WaterTile(targetPosition);
-
-                            StartCoroutine(WaitForAnimation());
                         }
                     }
                 }
-
-                if (tileState == "Grown" && inventoryManager.toolbar.selectedSlot.itemName == "Hoe")
-                {
-                    tileManager.RemoveTile(targetPosition);
-                    GameManager.instance.plantGrowthManager.HarvestPlant(targetPosition);
-                }
             }
         }
+    }
+
+    private void Hoeing()
+    {
+        isHoeing = true;
+        SoundManager.Instance.Play("EFFECT/Plow", SoundType.EFFECT);
+        tileManager.SetInteracted(targetPosition);
+        StartCoroutine(WaitForAnimation());
+    }
+
+    private void Watering()
+    {
+        isWatering = true;
+        SoundManager.Instance.Play("EFFECT/Watering", SoundType.EFFECT, 1, 1);
+        tileManager.WaterTile(targetPosition);
+        StartCoroutine(WaitForAnimation());
     }
 
     private void OnTriggerEnter2D(Collider2D other)

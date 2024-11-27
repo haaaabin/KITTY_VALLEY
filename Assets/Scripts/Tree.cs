@@ -48,6 +48,8 @@ public class Tree : MonoBehaviour
 
     void DropFruit()
     {
+        SoundManager.Instance.Play("EFFECT/Fall", SoundType.EFFECT);
+
         isFruitDrop = true;
 
         for (int i = 0; i < 3; i++)
@@ -80,6 +82,7 @@ public class Tree : MonoBehaviour
 
     void SpawnWood()
     {
+        SoundManager.Instance.Play("EFFECT/Pick", SoundType.EFFECT);
         anim.enabled = true;
         Vector3 spawnPosition = transform.position;
         GameObject wood = Instantiate(WoodPrefab, spawnPosition, Quaternion.identity);
@@ -99,7 +102,10 @@ public class Tree : MonoBehaviour
             float randomY = Random.Range(1f, -3f);
             rb2.AddForce(new Vector2(randomX, randomY), ForceMode2D.Impulse);
         }
+
+        SoundManager.Instance.Play("EFFECT/FallTree", SoundType.EFFECT);
         anim.SetTrigger("isFalling");
+
         Destroy(gameObject, 1f);
     }
 }

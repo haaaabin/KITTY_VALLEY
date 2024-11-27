@@ -44,6 +44,7 @@ public class Shop : MonoBehaviour
                 InGameUI.instance.ShakingText();
             }
         }
+        SoundManager.Instance.Play("EFFECT/Click", SoundType.EFFECT);
     }
 
     private void OnTriggerEnter2D(Collider2D other)

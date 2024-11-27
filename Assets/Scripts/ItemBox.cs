@@ -101,6 +101,7 @@ public class ItemBox : MonoBehaviour
 
     private void OnPlusButtonClick()
     {
+        SoundManager.Instance.Play("EFFECT/Click", SoundType.EFFECT);
         if (selectedSlot != null && selectedSlot.currentCount > 0 && itemCount < selectedSlot.currentCount)
         {
             if (selectedSlot.isSellable)
@@ -122,6 +123,7 @@ public class ItemBox : MonoBehaviour
 
     private void OnMinusButtonClick()
     {
+        SoundManager.Instance.Play("EFFECT/Click", SoundType.EFFECT);
         if (selectedSlot != null && selectedSlot.currentCount > 0 && itemCount > 0)
         {
             if (selectedSlot.isSellable)
@@ -143,6 +145,7 @@ public class ItemBox : MonoBehaviour
 
     private void OnCheckButtonClick()
     {
+        SoundManager.Instance.Play("EFFECT/Click", SoundType.EFFECT);
         if (selectedSlot != null && selectedSlot.currentCount >= 0 && itemCount > 0)
         {
             if (selectedSlot.isSellable)

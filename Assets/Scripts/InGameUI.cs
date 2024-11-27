@@ -28,7 +28,6 @@ public class InGameUI : MonoBehaviour
     public TextMeshProUGUI saveText;
     public GameObject speechBubble;
     public GameObject postBoxPanel;
-
     public bool dragSingle;
     public bool isInventoryOpen = false;
 
@@ -60,17 +59,20 @@ public class InGameUI : MonoBehaviour
         saveText.enabled = false;
         yesBtn.onClick.AddListener(() =>
         {
+            SoundManager.Instance.Play("EFFECT/Click", SoundType.EFFECT);
             GameManager.instance.timeManager.StartCoroutine(GameManager.instance.timeManager.EndDay());
             dayEndPanel.SetActive(false);
         });
 
         noBtn.onClick.AddListener(() =>
         {
+            SoundManager.Instance.Play("EFFECT/Click", SoundType.EFFECT);
             dayEndPanel.SetActive(false);
         });
 
         gameExitBtn.onClick.AddListener(() =>
         {
+            SoundManager.Instance.Play("EFFECT/Click", SoundType.EFFECT);
             Application.Quit();
         });
 
@@ -84,22 +86,19 @@ public class InGameUI : MonoBehaviour
         {
             speechBubble.SetActive(false);
         }
+
+        bgmSlider.value = 0.5f;
+        effectSlider.value = 0.5f;
+        bgmSlider.onValueChanged.AddListener((value) => SoundManager.Instance.OnVolumeChanged(value, SoundType.BGM));
+        effectSlider.onValueChanged.AddListener((value) => SoundManager.Instance.OnVolumeChanged(value, SoundType.EFFECT));
     }
 
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.E) && !isInventoryMoving)
         {
+            SoundManager.Instance.Play("EFFECT/Click", SoundType.EFFECT);
             ToggleInventoryUI();
-        }
-
-        if (Input.GetKey(KeyCode.LeftShift))
-        {
-            dragSingle = true;
-        }
-        else
-        {
-            dragSingle = false;
         }
     }
 

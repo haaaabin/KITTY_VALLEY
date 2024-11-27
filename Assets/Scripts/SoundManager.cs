@@ -13,7 +13,7 @@ public class SoundManager
 {
     public static SoundManager Instance { get; private set; } // 외부에서 접근 가능, 변경 불가능
 
-    private AudioSource[] audioSources = new AudioSource[(int)SoundType.MAXCOUNT];
+    public AudioSource[] audioSources = new AudioSource[(int)SoundType.MAXCOUNT];
     private Dictionary<string, AudioClip> audioClips = new Dictionary<string, AudioClip>(); // 사운드 파일을 저장할 딕셔너리 <경로, 해당 오디오 클립> -> Object Pooling
 
     //private 생성자 : 외부에서 생성 불가능
@@ -68,6 +68,8 @@ public class SoundManager
             }
 
             audioSources[(int)SoundType.BGM].loop = true;       // bgm 재생기는 무한 반복 재생
+            audioSources[(int)SoundType.BGM].volume = 1f;
+            audioSources[(int)SoundType.EFFECT].volume = 1f;
         }
     }
 
@@ -180,4 +182,46 @@ public class SoundManager
         audioSource.Stop();
         audioSource.volume = startVolume;
     }
+
+    public void FadeIn(float duration)
+    {
+        AudioSource audioSource = audioSources[(int)SoundType.BGM];
+        {
+            if (!audioSource.isPlaying)
+            {
+                audioSource.Play();
+            }
+            //볼륨을 서서히 키우기 위한 코루틴 호출
+            CoroutineHandler.StartStaticCoroutine(FadeInCoroutine(audioSource, duration));
+        }
+    }
+
+    private IEnumerator FadeInCoroutine(AudioSource audioSource, float duration)
+    {
+        float startVolume = audioSource.volume;
+        float elapsedTime = 0f;
+
+        while (elapsedTime < duration)
+        {
+            elapsedTime += Time.deltaTime;
+            audioSource.volume = Mathf.Lerp(startVolume, 1f, elapsedTime / duration);
+            yield return null;
+        }
+        audioSource.volume = 1;
+    }
+
+    public void OnVolumeChanged(float value, SoundType type)
+    {
+        if (type == SoundType.BGM)
+        {
+            AudioSource audioSource = audioSources[(int)type];
+            audioSource.volume = value;
+        }
+        else
+        {
+            AudioSource audioSource = audioSources[(int)type];
+            audioSource.volume = value;
+        }
+    }
+
 }
