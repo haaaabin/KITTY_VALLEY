@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
 /* 시간 흐름 관리*/
 
@@ -18,15 +17,13 @@ public class TimeManager : MonoBehaviour
     public int day = 1;
 
     private string[] daysOfWeek = { "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun" };
-    private float timePerGameMinute = 1f;
+    private float timePerGameMinute = 10f;
     private float currentTime = 0f;
-    private ItemBox itemBox;
-    private Player player;
+    private ItemSellingBox itemBox;
 
     private void Start()
     {
         itemBox = GameManager.instance.itemBox;
-        player = GameManager.instance.player;
         UpdateTimeUI();
     }
 
@@ -68,7 +65,8 @@ public class TimeManager : MonoBehaviour
         itemBox.ResetSellingPrice();
 
         UpdateTimeUI();
-        player.SetPosition();
+        Player.Instance.SetPosition();
+        Player.Instance.inventoryManager.toolbar.SelectSlot(0);
 
         OnDayEnd?.Invoke();
 
@@ -78,7 +76,7 @@ public class TimeManager : MonoBehaviour
     public IEnumerator EndDay()
     {
         isDayEnding = true;
-        player.anim.enabled = false;
+        Player.Instance.anim.enabled = false;
         yield return StartCoroutine(FadeEffect.instance.FadeScreen(1f));
         NextDay();
         yield return StartCoroutine(FadeEffect.instance.FadeScreen(0f));

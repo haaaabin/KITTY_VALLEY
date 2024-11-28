@@ -1,7 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
 using UnityEngine.UI;
-using JetBrains.Annotations;
 
 public class Shop : MonoBehaviour
 {
@@ -23,7 +22,7 @@ public class Shop : MonoBehaviour
 
     private void Update()
     {
-        if (isPlayerInRange && Input.GetMouseButtonDown(1))
+        if (isPlayerInRange && Input.GetMouseButtonDown(0))
         {
             shopPanel.SetActive(true);
         }

@@ -1,7 +1,5 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -35,7 +33,6 @@ public class PlantGrowthManager : MonoBehaviour
         if (GameManager.instance.tileManager.DoesTileExist(position) && GameManager.instance.tileManager.GetTileName(position) == "PlowedTile")
         {
             SoundManager.Instance.Play("EFFECT/Seeded", SoundType.EFFECT);
-
             GameManager.instance.tileManager.SetTileState(position, "Seeded");
             GameManager.instance.tileManager.seedMap.SetTile(position, GameManager.instance.tileManager.plantedTile);
 

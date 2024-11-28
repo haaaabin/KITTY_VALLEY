@@ -1,7 +1,5 @@
 using System.Collections.Generic;
 using UnityEngine;
-using System;
-using Unity.VisualScripting;
 
 // Inventory 클래스는 게임 내 슬롯 기반 인벤토리 시스템을 구현합니다.
 // 각 슬롯은 아이템 정보를 저장하며, 아이템의 추가, 제거, 이동을 관리합니다.

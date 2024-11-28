@@ -1,7 +1,4 @@
-using System.Collections;
 using System.Collections.Generic;
-using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 
 /* 게임 내 다양한 인벤토리 관리

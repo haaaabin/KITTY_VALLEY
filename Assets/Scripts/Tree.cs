@@ -3,34 +3,35 @@ using UnityEngine;
 
 public class Tree : MonoBehaviour
 {
+    private Animator anim;
+    private SpriteRenderer spriteRenderer;
+    public Sprite newSprite;
     public Transform fruitSpawnPos;
     public Transform fallPos;
     public GameObject WoodPrefab;
     public GameObject fruitPrefab;
-    public Sprite newSprite;
     public int hitCount;
     public bool isFruitTree;
-
-    private Animator anim;
-    private SpriteRenderer spriteRenderer;
     private bool isFruitDrop = false;
     private float fruitOffset = 0.5f;
 
-    void Start()
+    private void Start()
     {
         anim = GetComponent<Animator>();
         spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
-    void Update()
+    private void Update()
     {
+        // 4번 쳤을 경우 나무 조각 생성 후, hitCount 초기화
         if (hitCount == 4)
         {
             Invoke("SpawnWood", 0.3f);
             hitCount = 0;
         }
 
-        if (!isFruitDrop && isFruitTree && hitCount == 1 && !GameManager.instance.player.IsAxing())
+        // 과일 나무인 경우 과일 드랍, sprite 변경
+        if (isFruitTree && !isFruitDrop && hitCount == 1 && !Player.Instance.IsAxing())
         {
             anim.enabled = false;
             ChangeSprite();
@@ -38,7 +39,7 @@ public class Tree : MonoBehaviour
         }
     }
 
-    void ChangeSprite()
+    private void ChangeSprite()
     {
         if (spriteRenderer != null && newSprite != null)
         {
@@ -46,12 +47,13 @@ public class Tree : MonoBehaviour
         }
     }
 
-    void DropFruit()
+    private void DropFruit()
     {
         SoundManager.Instance.Play("EFFECT/Fall", SoundType.EFFECT);
 
         isFruitDrop = true;
 
+        // fruitOffset 간격으로 3개의 과일 생성
         for (int i = 0; i < 3; i++)
         {
             Vector3 spawnPosition = fruitSpawnPos.position + new Vector3(i * fruitOffset - fruitOffset, 0, 0);
@@ -60,7 +62,7 @@ public class Tree : MonoBehaviour
         }
     }
 
-    IEnumerator MoveFruitToPosition(GameObject fruit, Vector2 targetPosition, float duration)
+    private IEnumerator MoveFruitToPosition(GameObject fruit, Vector2 targetPosition, float duration)
     {
         Vector3 startPosition = fruit.transform.position;
         float elapsedTime = 0f;
@@ -80,11 +82,13 @@ public class Tree : MonoBehaviour
         interactable.canInteract = true;
     }
 
-    void SpawnWood()
+    private void SpawnWood()
     {
-        SoundManager.Instance.Play("EFFECT/Pick", SoundType.EFFECT);
         anim.enabled = true;
+
         Vector3 spawnPosition = transform.position;
+
+        // 랜덤한 위치의 나무 조각 2개 생성
         GameObject wood = Instantiate(WoodPrefab, spawnPosition, Quaternion.identity);
         Rigidbody2D rb = wood.GetComponent<Rigidbody2D>();
         if (rb != null)
@@ -106,6 +110,6 @@ public class Tree : MonoBehaviour
         SoundManager.Instance.Play("EFFECT/FallTree", SoundType.EFFECT);
         anim.SetTrigger("isFalling");
 
-        Destroy(gameObject, 1f);
+        Destroy(gameObject, 1f);  // 나무 오브젝트 파괴
     }
 }

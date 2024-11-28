@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-
 public class InventoryBase : MonoBehaviour
 {
     [SerializeField] protected List<Slot_UI> slots = new List<Slot_UI>();
@@ -16,7 +15,7 @@ public class InventoryBase : MonoBehaviour
 
     protected virtual void Start()
     {
-        inventory = GameManager.instance.player.inventoryManager.GetInventoryByName(inventoryName);
+        inventory = Player.Instance.inventoryManager.GetInventoryByName(inventoryName);
         SetUpSlot();
     }
 

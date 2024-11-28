@@ -6,11 +6,11 @@ public class GameManager : MonoBehaviour
     public static GameManager instance;
 
     public ItemManager itemManager;
-    public Player player;
+    // public Player player;
     public TimeManager timeManager;
     public TileManager tileManager;
     public PlantGrowthManager plantGrowthManager;
-    public ItemBox itemBox;
+    public ItemSellingBox itemBox;
     public SaveData inventorySave;
 
     void Awake()
@@ -31,8 +31,8 @@ public class GameManager : MonoBehaviour
         inventorySave = GetComponent<SaveData>();
         plantGrowthManager = GetComponent<PlantGrowthManager>();
         tileManager = GetComponent<TileManager>();
-        itemBox = FindObjectOfType<ItemBox>();
-        player = FindObjectOfType<Player>();
+        itemBox = FindObjectOfType<ItemSellingBox>();
+        // player = FindObjectOfType<Player>();
 
         SceneManager.sceneLoaded += OnSceneLoaded;
     }
@@ -53,16 +53,16 @@ public class GameManager : MonoBehaviour
 
             if (OutGameUI.instance.isNewGame)
             {
-                player.inventoryManager.ClearInventory();
+                Player.Instance.inventoryManager.ClearInventory();
                 plantGrowthManager.ClearPlantSaveData();
                 SaveData.instance.DeleteSavedFiles();
-                player.money = 0;
+                Player.Instance.money = 0;
                 timeManager.day = 1;
                 timeManager.currentDayIndex = 0;
             }
             else
             {
-                player.inventoryManager.LoadInventory();
+                Player.Instance.inventoryManager.LoadInventory();
                 plantGrowthManager.LoadPlantsData();
                 SaveData.instance.LoadPlayerData();
             }

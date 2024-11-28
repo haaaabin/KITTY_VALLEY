@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
-using System.Data;
 
 public class PlantSaveData
 {
@@ -251,7 +250,7 @@ public class SaveData : MonoBehaviour
         int currentDayIndex = PlayerPrefs.GetInt("DayIndex");
         int sellingPrice = PlayerPrefs.GetInt("SellingPrice");
 
-        GameManager.instance.player.money = currentMoney;
+        Player.Instance.money = currentMoney;
         GameManager.instance.timeManager.day = currentDay;
         GameManager.instance.timeManager.currentDayIndex = currentDayIndex;
         GameManager.instance.itemBox.sellingPrice = sellingPrice;
