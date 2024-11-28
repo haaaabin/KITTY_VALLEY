@@ -1,0 +1,235 @@
+fileFormatVersion: 2
+guid: 7647937c44d9aa34f9c3e08c752d16f2
+TextureImporter:
+  internalIDToNameTable: []
+  externalObjects: {}
+  serializedVersion: 12
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 45
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Inventory_Spritesheet_8
+      rect:
+        serializedVersion: 2
+        x: 225
+        y: 288
+        width: 46
+        height: 48
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 36a85b00878bb814fb62756ffa9eba82
+      internalID: 847530483
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Inventory_Spritesheet_11
+      rect:
+        serializedVersion: 2
+        x: 273
+        y: 288
+        width: 46
+        height: 48
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 755ced666eb18b84489bed3869b77a2a
+      internalID: 388827871
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Inventory_Spritesheet_25
+      rect:
+        serializedVersion: 2
+        x: 321
+        y: 288
+        width: 46
+        height: 48
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 318ea2866328e24409e65996b66221a7
+      internalID: -1669862574
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    nameFileIdTable:
+      Inventory_Spritesheet 1_0: 1978082467
+      Inventory_Spritesheet_0: -1209126284
+      Inventory_Spritesheet_1: -1402770468
+      Inventory_Spritesheet_10: -423468937
+      Inventory_Spritesheet_11: 388827871
+      Inventory_Spritesheet_12: -2025396994
+      Inventory_Spritesheet_13: -211098371
+      Inventory_Spritesheet_14: -774523754
+      Inventory_Spritesheet_15: 1603473783
+      Inventory_Spritesheet_16: -1815047510
+      Inventory_Spritesheet_17: 481283446
+      Inventory_Spritesheet_18: -1792193867
+      Inventory_Spritesheet_19: -2130176803
+      Inventory_Spritesheet_2: 578586229
+      Inventory_Spritesheet_20: 702616020
+      Inventory_Spritesheet_21: -1561779741
+      Inventory_Spritesheet_22: 1922805346
+      Inventory_Spritesheet_23: -549308786
+      Inventory_Spritesheet_24: -1555621000
+      Inventory_Spritesheet_25: -1669862574
+      Inventory_Spritesheet_26: -1194213263
+      Inventory_Spritesheet_27: 957768202
+      Inventory_Spritesheet_28: 1726986275
+      Inventory_Spritesheet_29: -854414191
+      Inventory_Spritesheet_3: 1033311266
+      Inventory_Spritesheet_30: -1071746718
+      Inventory_Spritesheet_31: 1143519091
+      Inventory_Spritesheet_32: -1141712829
+      Inventory_Spritesheet_33: 769525086
+      Inventory_Spritesheet_34: -70497860
+      Inventory_Spritesheet_35: -1933636364
+      Inventory_Spritesheet_36: 1298284914
+      Inventory_Spritesheet_37: 1240093622
+      Inventory_Spritesheet_38: 1480430295
+      Inventory_Spritesheet_39: -2026570257
+      Inventory_Spritesheet_4: 509866281
+      Inventory_Spritesheet_40: -2077361269
+      Inventory_Spritesheet_41: -720239905
+      Inventory_Spritesheet_42: -211793304
+      Inventory_Spritesheet_43: 1441131358
+      Inventory_Spritesheet_44: -661023797
+      Inventory_Spritesheet_45: 1754120241
+      Inventory_Spritesheet_46: -176768105
+      Inventory_Spritesheet_47: 1927265141
+      Inventory_Spritesheet_48: -679632094
+      Inventory_Spritesheet_49: -294847873
+      Inventory_Spritesheet_5: 688648259
+      Inventory_Spritesheet_50: -834503238
+      Inventory_Spritesheet_51: -400909779
+      Inventory_Spritesheet_52: 1315922895
+      Inventory_Spritesheet_53: 996866467
+      Inventory_Spritesheet_54: 27828326
+      Inventory_Spritesheet_55: 648792555
+      Inventory_Spritesheet_56: -1880959888
+      Inventory_Spritesheet_6: -386033469
+      Inventory_Spritesheet_7: 1091311750
+      Inventory_Spritesheet_8: 847530483
+      Inventory_Spritesheet_9: 1375151150
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

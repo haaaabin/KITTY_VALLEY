@@ -11,6 +11,8 @@ TagManager:
   - HouseRoof
   - PostBox
   - Shop
+  - Door
+  - Fence
   layers:
   - Default
   - TransparentFX
