@@ -26,7 +26,6 @@ public class Player : MonoBehaviour
     private bool isHoeing = false;
     private bool isWatering = false;
     private bool isAxing = false;
-    private bool isPlayerInDoor = false;
 
 
     private void Awake()
@@ -57,7 +56,6 @@ public class Player : MonoBehaviour
         UpdateAnimation();
         PlantInteracted();
         Hit();
-        HandleDoorInteraction();
         HandlePostBoxInteraction();
 
     }
@@ -121,21 +119,6 @@ public class Player : MonoBehaviour
             isWatering = false;
         if (isAxing)
             isAxing = false;
-    }
-
-    private void HandleDoorInteraction()
-    {
-        if (isPlayerInDoor)
-        {
-            if (Input.GetMouseButtonDown(1))
-            {
-                doorAnim.SetBool("isOpen", true);
-            }
-        }
-        else
-        {
-            doorAnim.SetBool("isOpen", false);
-        }
     }
 
     private void HandlePostBoxInteraction()
