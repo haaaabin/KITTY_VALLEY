@@ -1,8 +1,6 @@
 using System.Collections.Generic;
-using UnityEditor.U2D.Aseprite;
 using UnityEngine;
 using UnityEngine.Tilemaps;
-using UnityEngine.Video;
 
 public class TileManager : MonoBehaviour
 {
@@ -40,6 +38,34 @@ public class TileManager : MonoBehaviour
         tileStates[position] = "Plowed";
     }
 
+    public List<Vector3Int> SavePlowedTiles()
+    {
+        List<Vector3Int> plowedTilePositions = new List<Vector3Int>();
+
+        foreach (var tile in tileStates)
+        {
+            if (tile.Value == "Plowed")
+            {
+                plowedTilePositions.Add(tile.Key);
+            }
+        }
+        return plowedTilePositions;
+    }
+
+    public List<Vector3Int> SaveSeededTiles()
+    {
+        List<Vector3Int> seededTilePositions = new List<Vector3Int>();
+
+        foreach (var tile in tileStates)
+        {
+            if (tile.Value == "Seeded")
+            {
+                seededTilePositions.Add(tile.Key);
+            }
+        }
+        return seededTilePositions;
+    }
+
     public string GetTileName(Vector3Int position)
     {
         if (interactableMap != null)
@@ -59,7 +85,7 @@ public class TileManager : MonoBehaviour
         return "";
     }
 
-   public void SetTileState(Vector3Int position, string state)
+    public void SetTileState(Vector3Int position, string state)
     {
         if (tileStates.ContainsKey(position))
         {

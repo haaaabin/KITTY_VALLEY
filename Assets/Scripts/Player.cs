@@ -1,29 +1,33 @@
 using System.Collections;
+using System.Collections.Generic;
+using System.Reflection;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
 public class Player : MonoBehaviour
 {
     public static Player Instance { get; private set; }
-    public Animator anim;
-    public Animator doorAnim;
-    public Tilemap houseRoofTileMap;
-    public InventoryManager inventoryManager;
-    public int money = 0;
-
     private Rigidbody2D rb;
+    public Animator anim;
     private RaycastHit2D rayHit;
-    private TileManager tileManager;
     private Vector2 movement;
     private Vector2 lastMoveDirection;
-    private Vector2 directionToMouse;
     private float moveSpeed = 3;
+
+    public InventoryManager inventoryManager;
+    public Tilemap houseRoofTileMap;
+    public int money = 0;
+    private bool isPlayerInPostBox = false;
+
+    private TileManager tileManager;
+    private Vector3Int targetPosition;
+    private Vector3Int[] validTiles;
+    private bool isValidTile = false;
     private bool isHoeing = false;
     private bool isWatering = false;
     private bool isAxing = false;
     private bool isPlayerInDoor = false;
-    private bool isPlayerInPostBox = false;
-    Vector3Int targetPosition;
+
 
     private void Awake()
     {
@@ -36,6 +40,7 @@ public class Player : MonoBehaviour
         {
             Destroy(gameObject);
         }
+
         rb = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>(); ;
 
@@ -54,6 +59,7 @@ public class Player : MonoBehaviour
         Hit();
         HandleDoorInteraction();
         HandlePostBoxInteraction();
+
     }
 
     private void FixedUpdate()
@@ -138,7 +144,7 @@ public class Player : MonoBehaviour
         {
             if (InGameUI.instance.speechBubble.activeSelf)
             {
-                if (Input.GetMouseButtonDown(1))
+                if (Input.GetMouseButtonDown(0))
                 {
                     SoundManager.Instance.Play("EFFECT/Pick", SoundType.EFFECT);
                     InGameUI.instance.ShowPostPanel();
@@ -146,6 +152,7 @@ public class Player : MonoBehaviour
             }
         }
     }
+
     private void Hit()
     {
         rayHit = Physics2D.Raycast(rb.position, lastMoveDirection, 1f, LayerMask.GetMask("Tree"));
@@ -166,45 +173,56 @@ public class Player : MonoBehaviour
         }
     }
 
+    private void CheckValidTiles()
+    {
+        Vector3 mousePosition = Input.mousePosition;
+        Vector3 worldMousePosition = UnityEngine.Camera.main.ScreenToWorldPoint(mousePosition);
+        worldMousePosition.z = 0;
+
+        targetPosition = new Vector3Int(Mathf.FloorToInt(worldMousePosition.x), Mathf.FloorToInt(worldMousePosition.y), 0);
+
+        Vector3 playerPosition = transform.position;
+        Vector3Int gridPlayerPosition = new Vector3Int(Mathf.FloorToInt(playerPosition.x), Mathf.FloorToInt(playerPosition.y), 0);
+
+        validTiles = new Vector3Int[]
+        {
+            gridPlayerPosition,
+            gridPlayerPosition + new Vector3Int(0,1,0),
+            gridPlayerPosition + new Vector3Int(0,-1,0),
+            gridPlayerPosition + new Vector3Int(-1,0,0),
+            gridPlayerPosition + new Vector3Int(1,0,0)
+        };
+
+        isValidTile = false;
+
+        foreach (var tile in validTiles)
+        {
+            if (tile == targetPosition)
+            {
+                isValidTile = true;
+                break;
+            }
+        }
+    }
+
     public void PlantInteracted()
     {
-        if (isHoeing) return;
+        if (isHoeing || isWatering) return;
         if (tileManager == null) return;
         if (inventoryManager == null || inventoryManager.toolbar == null || inventoryManager.toolbar.selectedSlot == null) return;
         if (inventoryManager.toolbar.selectedSlot.itemName == null) return;
 
-        if (Input.GetMouseButtonDown(0))
+        CheckValidTiles();
+
+        if (isValidTile)
         {
-            Vector3 mousePosition = Input.mousePosition;
-            Vector3 worldMousePosition = UnityEngine.Camera.main.ScreenToWorldPoint(mousePosition);
-            worldMousePosition.z = 0;
-
-            targetPosition = new Vector3Int(Mathf.FloorToInt(worldMousePosition.x), Mathf.FloorToInt(worldMousePosition.y), 0);
-
-            Vector3 playerPosition = transform.position;
-            Vector3Int gridPlayerPosition = new Vector3Int(Mathf.FloorToInt(playerPosition.x), Mathf.FloorToInt(playerPosition.y), 0);
-
-            Vector3Int[] validTiles = new Vector3Int[]
+            MouseSelect mouseSelect = GetComponentInChildren<MouseSelect>();
+            if (mouseSelect != null)
             {
-                gridPlayerPosition,
-                gridPlayerPosition + new Vector3Int(0,1,0),
-                gridPlayerPosition + new Vector3Int(0,-1,0),
-                gridPlayerPosition + new Vector3Int(-1,0,0),
-                gridPlayerPosition + new Vector3Int(1,0,0)
-            };
-
-            bool isValidTile = false;
-
-            foreach (var tile in validTiles)
-            {
-                if (tile == targetPosition)
-                {
-                    isValidTile = true;
-                    break;
-                }
+                mouseSelect.SetTargetPosition(targetPosition);
             }
 
-            if (isValidTile)
+            if (Input.GetMouseButtonDown(0))
             {
                 string tileName = tileManager.GetTileName(targetPosition);
                 string tileState = tileManager.GetTileState(targetPosition);
@@ -216,6 +234,7 @@ public class Player : MonoBehaviour
                         // 새로운 땅 파기
                         if (tileName == "InteractableTile")
                         {
+                            isHoeing = true;
                             anim.SetTrigger("isHoeing");
                         }
 
@@ -232,25 +251,11 @@ public class Player : MonoBehaviour
                     {
                         if (inventoryManager.toolbar.selectedSlot.itemName == "RiceSeed" || inventoryManager.toolbar.selectedSlot.itemName == "TomatoSeed")
                         {
-                            PlantData plantData = inventoryManager.toolbar.selectedSlot.plantData;
-                            if (plantData == null)
-                            {
-                                Debug.Log("no plantdata");
-                            }
-
-                            Debug.Log(plantData.plantName);
-
-                            inventoryManager.toolbar.selectedSlot.RemoveItem();  // 씨앗 갯수 줄이기
-
-                            GameManager.instance.plantGrowthManager.PlantSeed(targetPosition, plantData);  // 씨앗 심기
-
-                            if (inventoryManager.toolbar.selectedSlot.isEmpty)
-                            {
-                                inventoryManager.toolbar.selectedSlot = null;  // 씨앗이 다 떨어지면 슬롯 비우기
-                            }
+                            Sowing();
                         }
                         else if (inventoryManager.toolbar.selectedSlot.itemName == "Watering")
                         {
+                            isWatering = true;
                             anim.SetTrigger("isWatering");
                         }
                     }
@@ -261,7 +266,6 @@ public class Player : MonoBehaviour
 
     private void Hoeing()
     {
-        isHoeing = true;
         SoundManager.Instance.Play("EFFECT/Plow", SoundType.EFFECT);
         tileManager.SetInteracted(targetPosition);
         StartCoroutine(WaitForAnimation());
@@ -269,10 +273,22 @@ public class Player : MonoBehaviour
 
     private void Watering()
     {
-        isWatering = true;
         SoundManager.Instance.Play("EFFECT/Watering", SoundType.EFFECT, 1, 1);
         tileManager.WaterTile(targetPosition);
         StartCoroutine(WaitForAnimation());
+    }
+
+    private void Sowing()
+    {
+        PlantData plantData = inventoryManager.toolbar.selectedSlot.plantData;
+        inventoryManager.toolbar.selectedSlot.RemoveItem();  // 씨앗 갯수 줄이기
+        GameManager.instance.plantGrowthManager.PlantSeed(targetPosition, plantData);  // 씨앗 심기
+
+        // 씨앗이 다 떨어졌으면 슬롯 비우기
+        if (inventoryManager.toolbar.selectedSlot.isEmpty)
+        {
+            inventoryManager.toolbar.selectedSlot = null;
+        }
     }
 
     private void OnTriggerEnter2D(Collider2D other)
@@ -284,10 +300,6 @@ public class Player : MonoBehaviour
         else if (other.gameObject.CompareTag("HouseRoof"))
         {
             houseRoofTileMap.color = new Color(1f, 1f, 1f, 0f);
-        }
-        else if (other.gameObject.CompareTag("Door"))
-        {
-            isPlayerInDoor = true;
         }
         else if (other.gameObject.CompareTag("PostBox"))
         {
@@ -304,10 +316,6 @@ public class Player : MonoBehaviour
         else if (other.gameObject.CompareTag("HouseRoof"))
         {
             houseRoofTileMap.color = new Color(1f, 1f, 1f, 1f);
-        }
-        else if (other.gameObject.CompareTag("Door"))
-        {
-            isPlayerInDoor = false;
         }
         else if (other.gameObject.CompareTag("PostBox"))
         {
@@ -333,7 +341,7 @@ public class Player : MonoBehaviour
 
     public void SetPosition()
     {
-        transform.position = Vector2.zero;
+        transform.position = new Vector2(-0.5f, 0);
         lastMoveDirection = new Vector2(0, -1);
 
         anim.enabled = true;
