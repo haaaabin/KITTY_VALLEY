@@ -99,6 +99,12 @@ public class InGameUI : MonoBehaviour
             SoundManager.Instance.Play("EFFECT/Click", SoundType.EFFECT);
             ToggleInventoryUI();
         }
+
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            if (settingPanel.activeSelf)
+                settingPanel.SetActive(false);
+        }
     }
 
 

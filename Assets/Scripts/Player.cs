@@ -87,12 +87,6 @@ public class Player : MonoBehaviour
         {
             lastMoveDirection = movement;
         }
-
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            if (InGameUI.instance.settingPanel.activeSelf)
-                InGameUI.instance.settingPanel.SetActive(false);
-        }
     }
 
     private void UpdateAnimation()
