@@ -62,15 +62,15 @@ public class FadeEffect : MonoBehaviour
             if (asyncLoad.progress >= 0.9f)
             {
                 yield return new WaitForSeconds(2f);
+                loadingText.text = "로딩 완료!";
+                yield return new WaitForSeconds(1f);
+                loadingText.gameObject.SetActive(false);
+
                 asyncLoad.allowSceneActivation = true;
+                yield return FadeScreen(0f);
             }
             yield return null;
         }
 
-        loadingText.text = "로딩 완료!";
-        yield return new WaitForSeconds(1f);
-        loadingText.gameObject.SetActive(false);
-
-        yield return FadeScreen(0f);
     }
 }

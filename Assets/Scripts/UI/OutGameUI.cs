@@ -94,7 +94,7 @@ public class OutGameUI : MonoBehaviour
     // FadeOut과 게임 시작을 동시에 실행
     private IEnumerator StartGameWithFadeOut()
     {
-        SoundManager.Instance.FadeOut(3.0f);
+        SoundManager.Instance.FadeOut(3.0f, "BGM/OutGame");
 
         FadeEffect.instance.FadeAndLoadScene("InGameScene");
 

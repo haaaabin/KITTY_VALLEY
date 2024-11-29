@@ -155,12 +155,20 @@ public class SoundManager
         }
     }
 
-    public void FadeOut(float duration)
+    public void FadeOut(float duration, string path)
     {
+        AudioClip audioClip = GetOrAddAudioClip(path, SoundType.BGM);
+
         AudioSource audioSource = audioSources[(int)SoundType.BGM];
         {
-            if (audioSource.isPlaying)
+            if (audioSource != null)
             {
+                audioSource.clip = audioClip;
+
+                if (!audioSource.isPlaying)
+                {
+                    audioSource.Play();
+                }
                 //볼륨을 서서히 줄이기 위한 코루틴 호출
                 CoroutineHandler.StartStaticCoroutine(FadeOutCoroutine(audioSource, duration));
             }
@@ -183,10 +191,17 @@ public class SoundManager
         audioSource.volume = startVolume;
     }
 
-    public void FadeIn(float duration)
+    public void FadeIn(float duration, string path)
     {
+        AudioClip audioClip = GetOrAddAudioClip(path, SoundType.BGM);
+
         AudioSource audioSource = audioSources[(int)SoundType.BGM];
+
+        if (audioSource != null)
         {
+            audioSource.clip = audioClip;
+            audioSource.volume = 0f;
+
             if (!audioSource.isPlaying)
             {
                 audioSource.Play();

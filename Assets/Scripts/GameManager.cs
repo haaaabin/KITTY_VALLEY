@@ -6,7 +6,6 @@ public class GameManager : MonoBehaviour
     public static GameManager instance;
 
     public ItemManager itemManager;
-    // public Player player;
     public TimeManager timeManager;
     public TileManager tileManager;
     public PlantGrowthManager plantGrowthManager;
@@ -32,7 +31,6 @@ public class GameManager : MonoBehaviour
         plantGrowthManager = GetComponent<PlantGrowthManager>();
         tileManager = GetComponent<TileManager>();
         itemBox = FindObjectOfType<ItemSellingBox>();
-        // player = FindObjectOfType<Player>();
 
         SceneManager.sceneLoaded += OnSceneLoaded;
     }
@@ -41,15 +39,8 @@ public class GameManager : MonoBehaviour
     {
         if (scene.name == "InGameScene")
         {
-            // BGM을 재생하기 전에 볼륨을 0으로 설정
-            AudioSource bgmSource = SoundManager.Instance.audioSources[(int)SoundType.BGM];
-            bgmSource.volume = 0f;
-
-            // BGM 재생 시작
-            SoundManager.Instance.Play("BGM/InGame", SoundType.BGM);
-
             // 페이드 인 효과 적용
-            SoundManager.Instance.FadeIn(2f); // 2초 동안 페이드 인
+            SoundManager.Instance.FadeIn(1f, "BGM/InGame"); // 2초 동안 페이드 인
 
             if (OutGameUI.instance.isNewGame)
             {
