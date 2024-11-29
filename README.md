@@ -12,11 +12,11 @@
 
 ## 목차
 
-1. [프로젝트 개요](#SnowRail)
-2. [게임 기능](#Intro)
+1. [프로젝트 개요](#Intro)
+2. [게임 기능](#Features)
 <br/>
 
-<!-- ABOUT THE PROJECT-->
+<a name="Intro"></a>
 ## 프로젝트 개요
 - 프로젝트 기간 : 2024.10 ~ 2024.11
 - 개발 엔진 및 언어 : Unity & C#
@@ -24,7 +24,7 @@
 
 <br/>
 
-<a name="Intro"></a>
+<a name="Features"></a>
 ## 게임 기능
 1. 플레이어 캐릭터 조작
     - W / A / S / D로 플레이어를 이동하고, 마우스를 사용하여 상호작용합니다.
@@ -54,5 +54,10 @@
 이 게임의 핵심 기능은 인벤토리 시스템, 농작물 관리 시스템, 저장/로드 시스템입니다.
 
 - 인벤토리 시스템
-- 
+    - [Inventory](https://github.com/haaaabin/Valley/blob/main/Assets/Scripts/Inventory/Inventory.cs) : 게임 내 아이템을 저장하는 슬롯 시스템을 관리하며, 아이템의 추가, 삭제, 이동 등의 기능을 제공합니다.
+    - [InventoryManager](https://github.com/haaaabin/Valley/blob/main/Assets/Scripts/Inventory/InventoryManager.cs) : 게임 내 다양한 인벤토리(Backpack, Toolbar)를 관리합니다.
+    - [InventoryBase](https://github.com/haaaabin/Valley/blob/main/Assets/Scripts/Inventory/InventoryBase.cs) : 인벤토리 UI와 관련된 기본적인 기능을 담당합니다. (인벤토리 UI 갱신, 드래그 앤 드롭 기능)
+    - [Inventory_UI](https://github.com/haaaabin/Valley/blob/main/Assets/Scripts/Inventory/Inventory_UI.cs) : InventoryBase를 상속받아, 인벤토리(Backpack) UI를 담당합니다.
+    - [Toolbar_UI](https://github.com/haaaabin/Valley/blob/main/Assets/Scripts/Inventory/Toolbar_UI.cs) : InventoryBase를 상속받아, 인벤토리(Toolbar) UI를 담당합니다.
+    - [Slot_UI](https://github.com/haaaabin/Valley/blob/main/Assets/Scripts/Inventory/Slot_UI.cs) : 인벤토리의 각 슬롯의 UI를 담당합니다.
 
