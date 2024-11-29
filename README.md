@@ -4,6 +4,8 @@
 <p>
   Unity 2D RPG 농장 생활 시뮬레이션 게임
 </p>
+
+![title](https://github.com/user-attachments/assets/c899b047-01b7-4f7f-b0ea-0be394a1c65f)
 <br/>
 
 <!-- TABLE OF CONTENTS -->
@@ -46,10 +48,7 @@
 <br/>
 
 
-![title](https://github.com/user-attachments/assets/c899b047-01b7-4f7f-b0ea-0be394a1c65f)
-<p align="center">
-  <b>게임 시작 화면</b>
-</p>
+
 
 ## 핵심 기능
 이 게임의 핵심 기능은 인벤토리 시스템, 농작물 관리 시스템, 저장/로드 시스템입니다.
