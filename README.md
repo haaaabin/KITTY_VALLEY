@@ -14,6 +14,7 @@
 
 1. [프로젝트 개요](#Intro)
 2. [게임 기능](#Features)
+4. [핵심 기능](#CoreFeatures)
 <br/>
 
 <a name="Intro"></a>
@@ -44,12 +45,9 @@
 4. 저장 / 로드 시스템
     - 게임 진행 상황(날짜, 돈, 툴바/인벤토리의 저장된 아이템, 식물 성장 단계)을 저장하고, 다시 로드하여 이어서 플레이 가능합니다.
 
-
 <br/>
 
-
-
-
+<a name="CoreFeatures"></a>
 ## 핵심 기능
 이 게임의 핵심 기능은 인벤토리 시스템, 농작물 관리 시스템, 저장/로드 시스템입니다.
 
@@ -62,3 +60,16 @@
     - [Toolbar_UI](https://github.com/haaaabin/Valley/blob/main/Assets/Scripts/Inventory/Toolbar_UI.cs) : InventoryBase를 상속받아, 인벤토리(Toolbar) UI를 담당합니다.
     - [Slot_UI](https://github.com/haaaabin/Valley/blob/main/Assets/Scripts/Inventory/Slot_UI.cs) : 인벤토리의 각 슬롯의 UI를 담당합니다.
 
+<br/>
+ 
+- 농작물 관리 시스템 [코드](https://github.com/haaaabin/KITTY_VALLEY/blob/main/Assets/Scripts/Plant/PlantGrowthManager.cs)
+    - 식물 데이터는 식물의 이름, 프리팹, 성장 단계별 타일 리스트, 성장 시간 리스트 정보를 관리하는 ScriptableObject로 구성했습니다.
+    - 타일맵과 상호작용하는 기능이 핵심으로, 타일의 상태를 실시간으로 관리하고 옵저버 패턴으로 타일의 상태를 변경합니다.
+    - 현재 심어진 식물의 상태를 PlantSaveData 리스트에 저장하고, 게임 로드 시 해당 데이터를 복원합니다.
+
+<br/>
+ 
+-  저장/로드 시스템 [코드](https://github.com/haaaabin/KITTY_VALLEY/blob/main/Assets/Scripts/SaveData.cs)
+    - 인벤토리의 데이터와 플레이어의 데이터(돈, 날짜)를 JSON 파일로 직렬화와 역직렬화를 통해 저장하고 로드합니다.
+    - 식물 데이터의 경우 게임 오브젝트와 타일 정보를 저장하고 있기 때문에 복잡한 직렬화와 역직렬화 대신 텍스트 파일로 저장하고 로드하는 방식으로 관리합니다.
+      
