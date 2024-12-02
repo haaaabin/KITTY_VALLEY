@@ -54,6 +54,7 @@
 이 게임의 핵심 기능은 인벤토리 시스템, 농작물 관리 시스템, 저장/로드 시스템입니다.
 
 - 인벤토리 시스템
+    - 아이템 데이터는 아이템 이름, 아이콘, 가격, 최대 개수, 판매 가능 여부 정보를 관리하는 ScriptableObject로 구성했습니다.
     - [Inventory](https://github.com/haaaabin/Valley/blob/main/Assets/Scripts/Inventory/Inventory.cs) : 게임 내 아이템을 저장하는 슬롯 시스템을 관리하며, 아이템의 추가, 삭제, 이동 등의 기능을 제공합니다.
     - [InventoryManager](https://github.com/haaaabin/Valley/blob/main/Assets/Scripts/Inventory/InventoryManager.cs) : 게임 내 다양한 인벤토리(Backpack, Toolbar)를 관리합니다.
     - [InventoryBase](https://github.com/haaaabin/Valley/blob/main/Assets/Scripts/Inventory/InventoryBase.cs) : 인벤토리 UI와 관련된 기본적인 기능을 담당합니다. (인벤토리 UI 갱신, 드래그 앤 드롭 기능)
