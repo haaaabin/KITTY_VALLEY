@@ -24,6 +24,23 @@ public class PlantSaveData
 }
 
 [System.Serializable]
+public class PlayerSaveData
+{
+    public int money;
+    public int currentDay;
+    public int currentDayIndex;
+    public int sellingPrice;
+
+    public PlayerSaveData(int money, int currentDay, int currentDayIndex, int sellingPrice)
+    {
+        this.money = money;
+        this.currentDay = currentDay;
+        this.currentDayIndex = currentDayIndex;
+        this.sellingPrice = sellingPrice;
+    }
+}
+
+[System.Serializable]
 public class InventorySlotData
 {
     public string itemName;
@@ -35,6 +52,7 @@ public class InventorySaveData
 {
     public List<InventorySlotData> slots = new List<InventorySlotData>();
 }
+
 
 public class SaveData : MonoBehaviour
 {
@@ -215,6 +233,37 @@ public class SaveData : MonoBehaviour
         return plantSaveDataList;
     }
 
+    public void SavePlayerData(int currentMoney, int currentDay, int currentDayIndex, int sellingPrice)
+    {
+        string filePath = Application.persistentDataPath + "/PlayerData.json";
+        PlayerSaveData playerSaveData = new PlayerSaveData(currentMoney, currentDay, currentDayIndex, sellingPrice);
+
+        string json = JsonUtility.ToJson(playerSaveData, true);
+        File.WriteAllText(filePath, json);
+
+        Debug.Log("Player data saved as JSON!");
+    }
+
+    public void LoadPlayerData()
+    {
+        string filePath = Application.persistentDataPath + "/PlayerData.json";
+        if(File.Exists(filePath))
+        {
+            string json = File.ReadAllText(filePath);
+            PlayerSaveData playerSaveData = JsonUtility.FromJson<PlayerSaveData>(json);
+
+            Player.Instance.money = playerSaveData.money;
+            GameManager.instance.timeManager.day = playerSaveData.currentDay;
+            GameManager.instance.timeManager.currentDayIndex = playerSaveData.currentDayIndex;
+            GameManager.instance.itemBox.sellingPrice = playerSaveData.sellingPrice;
+
+            if(playerSaveData.sellingPrice > 0)
+            {
+                GameManager.instance.itemBox.SellItems();
+                GameManager.instance.itemBox.ResetSellingPrice();
+            }
+        }
+    }
     public bool HasSavedInventory()
     {
         string backpackPath = Application.persistentDataPath + "/Backpack.json";
@@ -228,33 +277,5 @@ public class SaveData : MonoBehaviour
         string plantPath = Application.persistentDataPath + "/plants.txt";
 
         return File.Exists(plantPath);
-    }
-
-    public void SavePlayerData(int currentMoney, int currentDay, int currentDaysOfWeekIndex, int sellingPrice)
-    {
-        PlayerPrefs.SetInt("Money", currentMoney);
-        PlayerPrefs.SetInt("Day", currentDay);
-        PlayerPrefs.SetInt("DaysOfWeekIndex", currentDaysOfWeekIndex);
-        PlayerPrefs.SetInt("SellingPrice", sellingPrice);
-        PlayerPrefs.Save();
-    }
-
-    public void LoadPlayerData()
-    {
-        int currentMoney = PlayerPrefs.GetInt("Money");
-        int currentDay = PlayerPrefs.GetInt("Day");
-        int currentDayIndex = PlayerPrefs.GetInt("DayIndex");
-        int sellingPrice = PlayerPrefs.GetInt("SellingPrice");
-
-        Player.Instance.money = currentMoney;
-        GameManager.instance.timeManager.day = currentDay;
-        GameManager.instance.timeManager.currentDayIndex = currentDayIndex;
-        GameManager.instance.itemBox.sellingPrice = sellingPrice;
-
-        if (sellingPrice > 0)
-        {
-            GameManager.instance.itemBox.SellItems();
-            GameManager.instance.itemBox.ResetSellingPrice();
-        }
     }
 }
