@@ -1,22 +1,22 @@
-# KittyValley
+# KITTY VALLEY
 <a name="readme-top"></a>
 
 <p>
   Unity 2D RPG 농장 생활 시뮬레이션 게임
 </p>
+
+![title](https://github.com/user-attachments/assets/c899b047-01b7-4f7f-b0ea-0be394a1c65f)
 <br/>
 
 <!-- TABLE OF CONTENTS -->
 
 ## 목차
 
-1. [프로젝트 개요](#SnowRail)
-2. [프로젝트 소개](#Intro)
-3. [프로젝트 구조도](#Arch)
-4. [프로젝트 포스터](#Poster)
+1. [프로젝트 개요](#Intro)
+2. [게임 기능](#Features)
 <br/>
 
-<!-- ABOUT THE PROJECT-->
+<a name="Intro"></a>
 ## 프로젝트 개요
 - 프로젝트 기간 : 2024.10 ~ 2024.11
 - 개발 엔진 및 언어 : Unity & C#
@@ -24,55 +24,40 @@
 
 <br/>
 
+<a name="Features"></a>
+## 게임 기능
+1. 플레이어 캐릭터 조작
+    - W / A / S / D로 플레이어를 이동하고, 마우스를 사용하여 상호작용합니다.
+      
+2. 농작물 관리 시스템
+    - 땅을 갈고 씨앗을 심어 다양한 농작물을 재배합니다.
+    - 일정 시간이 지나면 농작물은 성장하고, 수확 가능합니다.
+      
+3. 아이템 관리 및 인벤토리 시스템
+    - 다양한 아이템을 수집하고 인벤토리에서 확인할 수 있습니다.
+    - 툴바에서 아이템을 빠르게 선택하여 사용할 수 있습니다.
+      
+4. 상점과 아이템 판매
+    - 판매 상자를 통해 수확한 농작물을 판매할 수 있습니다.
+    - 상점에서 씨앗을 구매할 수 있습니다.
+      
+4. 저장 / 로드 시스템
+    - 게임 진행 상황(날짜, 돈, 툴바/인벤토리의 저장된 아이템, 식물 성장 단계)을 저장하고, 다시 로드하여 이어서 플레이 가능합니다.
 
-<a name="Intro"></a>
-## 게임 설명
-
-- W / A / S / D 로 이동하고 , 마우스를 사용하여 상호작용합니다.
-- 플레이어는 땅을 갈고, 씨앗을 심고, 물을 주어 작물을 재배합니다.
-- 획득한 아이템은 툴바와 인벤토리에서 확인할 수 있습니다. 
-- 하루가 지나면 작물이 성장하며, 최종적으로 수확하여 판매하여 새로운 씨앗을 구매할 수 있습니다.
 
 <br/>
 
 
-![로그인](https://github.com/user-attachments/assets/7c11735a-5932-49e6-8962-0026f8f9288f)
-<p align="center">
-  <b>게임 시작 화면</b>
-</p>
 
-![로비](https://github.com/user-attachments/assets/544cae38-c63d-414c-8c8c-83024b247d48)
-<p align="center">
-  <b>로비</b>
-</p>
 
-![매치메이킹](https://github.com/user-attachments/assets/c814d069-2b70-4eab-92b5-e4a13b0cf3fa)
-<p align="center">
-  <b>매치메이킹</b>
-</p>
+## 핵심 기능
+이 게임의 핵심 기능은 인벤토리 시스템, 농작물 관리 시스템, 저장/로드 시스템입니다.
 
-![매치메이킹 성공](https://github.com/user-attachments/assets/f83b8e40-fa17-4766-8875-b012d935a5fe)
-<p align="center">
-  <b>매치메이킹 성공</b>
-</p>
+- 인벤토리 시스템
+    - [Inventory](https://github.com/haaaabin/Valley/blob/main/Assets/Scripts/Inventory/Inventory.cs) : 게임 내 아이템을 저장하는 슬롯 시스템을 관리하며, 아이템의 추가, 삭제, 이동 등의 기능을 제공합니다.
+    - [InventoryManager](https://github.com/haaaabin/Valley/blob/main/Assets/Scripts/Inventory/InventoryManager.cs) : 게임 내 다양한 인벤토리(Backpack, Toolbar)를 관리합니다.
+    - [InventoryBase](https://github.com/haaaabin/Valley/blob/main/Assets/Scripts/Inventory/InventoryBase.cs) : 인벤토리 UI와 관련된 기본적인 기능을 담당합니다. (인벤토리 UI 갱신, 드래그 앤 드롭 기능)
+    - [Inventory_UI](https://github.com/haaaabin/Valley/blob/main/Assets/Scripts/Inventory/Inventory_UI.cs) : InventoryBase를 상속받아, 인벤토리(Backpack) UI를 담당합니다.
+    - [Toolbar_UI](https://github.com/haaaabin/Valley/blob/main/Assets/Scripts/Inventory/Toolbar_UI.cs) : InventoryBase를 상속받아, 인벤토리(Toolbar) UI를 담당합니다.
+    - [Slot_UI](https://github.com/haaaabin/Valley/blob/main/Assets/Scripts/Inventory/Slot_UI.cs) : 인벤토리의 각 슬롯의 UI를 담당합니다.
 
-![인게임 준비](https://github.com/user-attachments/assets/1ebdf3fb-7492-45d4-9c62-8bd885156dc7)
-<p align="center">
-  <b>인게임 준비</b>
-</p>
-
-![인게임 1](https://github.com/user-attachments/assets/5c55410b-04f2-4d39-bddb-f1309a8d0af1)
-<p align="center">
-  <b>인게임 1</b>
-</p>
-
-![인게임 2](https://github.com/user-attachments/assets/671ac2da-3b20-4048-a6dc-acd5d794c5dd)
-<p align="center">
-  <b>인게임 2</b>
-</p>
-
-![인게임 결과](https://github.com/user-attachments/assets/1f4bf291-769a-48c5-a87a-81997a6619f2)
-<p align="center">
-  <b>인게임 결과</b>
-</p>
-<br/>
