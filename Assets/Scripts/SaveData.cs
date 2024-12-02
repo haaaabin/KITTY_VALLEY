@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
+using System.Linq;
 
 public class PlantSaveData
 {
@@ -22,17 +23,27 @@ public class PlantSaveData
     }
 }
 
+[System.Serializable]
+public class InventorySlotData
+{
+    public string itemName;
+    public int currentCount;
+}
+
+[System.Serializable]
+public class InventorySaveData
+{
+    public List<InventorySlotData> slots = new List<InventorySlotData>();
+}
+
 public class SaveData : MonoBehaviour
 {
     public static SaveData instance;
     public Inventory inventoryToSave = null;    // 저장할 인벤토리
 
     private static Dictionary<int, ItemData> allItem = new Dictionary<int, ItemData>();
-    private static int HashItem(ItemData item) => Animator.StringToHash(item.itemName);    // 아이템의 이름을 해시 값으로 변환해 고유한 키로 사용
-    private const char SPLIT_CHAR = '_';
-
     private static Dictionary<int, PlantData> allPlant = new Dictionary<int, PlantData>();
-    private static int HashItem(PlantData plant) => Animator.StringToHash(plant.plantName);
+    private const char SPLIT_CHAR = '_';
 
     void Awake()
     {
@@ -51,7 +62,7 @@ public class SaveData : MonoBehaviour
 
         foreach (ItemData i in allItems)
         {
-            int key = HashItem(i);
+            int key = Animator.StringToHash(i.itemName);  // 아이템의 이름을 해시 값으로 변환해 고유한 키로 사용
 
             if (!allItem.ContainsKey(key))
                 allItem.Add(key, i);
@@ -64,7 +75,7 @@ public class SaveData : MonoBehaviour
 
         foreach (PlantData i in allPlants)
         {
-            int key = HashItem(i);
+            int key = Animator.StringToHash(i.plantName);
 
             if (!allPlant.ContainsKey(key))
                 allPlant.Add(key, i);
@@ -73,95 +84,80 @@ public class SaveData : MonoBehaviour
 
     public void DeleteSavedFiles()
     {
-        string[] filePaths = Directory.GetFiles(Application.persistentDataPath, "*.txt");
-        foreach (string filePath in filePaths)
+        // Get all .txt files in the persistent data path
+        string[] txtFilePaths = Directory.GetFiles(Application.persistentDataPath, "*.txt");
+
+        // Get all .json files in the persistent data path
+        string[] jsonFilePaths = Directory.GetFiles(Application.persistentDataPath, "*.json");
+
+        // Combine the two file arrays
+        string[] allFilePaths = txtFilePaths.Concat(jsonFilePaths).ToArray();
+
+        // Iterate through each file and delete it
+        foreach (string filePath in allFilePaths)
         {
             File.Delete(filePath);
         }
-        Debug.Log("All inventory files deleted at game start.");
     }
 
-    /* ---- Inventory Save & Load ----*/
+    /* ---- Inventory Save & Load ---- */
     public void SaveInventory(string inventoryName, Inventory inventoryToSave)
     {
-        string filePath = Application.persistentDataPath + $"/{inventoryName}.txt";
+        string filePath = Application.persistentDataPath + $"/{inventoryName}.json";
 
-        // StreamWriter : 파일에 텍스트 데이터를 쓰기 위한 클래스
-        using (StreamWriter sw = new StreamWriter(filePath, false))
+        InventorySaveData inventorySaveData = new InventorySaveData();
+
+        foreach (var slot in inventoryToSave.GetSlots)
         {
-            sw.WriteLine($"-- {inventoryName} --");
-            foreach (var slot in inventoryToSave.GetSlots)
+            if (!slot.isEmpty)
             {
-                if (!slot.isEmpty)
+                inventorySaveData.slots.Add(new InventorySlotData
                 {
-                    sw.WriteLine($"{slot.itemName}{SPLIT_CHAR}{slot.currentCount}");
-                }
+                    itemName = slot.itemName,
+                    currentCount = slot.currentCount
+                });
             }
         }
-        Debug.Log($"{inventoryName} inventory saved!");
+
+        string json = JsonUtility.ToJson(inventorySaveData, true);
+        File.WriteAllText(filePath, json);
+
+        Debug.Log($"{inventoryName} inventory saved as JSON!");
     }
 
     public void LoadInventory(string inventoryName)
     {
-        string filePath = Application.persistentDataPath + $"/{inventoryName}.txt";
+        string filePath = Application.persistentDataPath + $"/{inventoryName}.json";
+        if (!File.Exists(filePath)) return;
 
-        if (!File.Exists(filePath))
-        {
-            return;
-        }
+        string json = File.ReadAllText(filePath);
+        InventorySaveData inventorySaveData = JsonUtility.FromJson<InventorySaveData>(json);
 
-        Inventory currentInventory = null;
-        if (inventoryName == "Backpack")
-        {
-            currentInventory = InventoryManager.instance.backpack;
-        }
-        else if (inventoryName == "Toolbar")
-        {
-            currentInventory = InventoryManager.instance.toolbar;
-        }
+        Inventory currentInventory = inventoryName == "Backpack"
+            ? InventoryManager.instance.backpack
+            : InventoryManager.instance.toolbar;
 
         if (currentInventory != null)
         {
             currentInventory.Clear();
-            Debug.Log("Clear inventory");
-        }
-
-        // StreamWriter : 파일에서 텍스트 데이터를 읽기 위한 클래스
-        using (StreamReader sr = new StreamReader(filePath))
-        {
-            string line;
-            while ((line = sr.ReadLine()) != null)
+            foreach (var slotData in inventorySaveData.slots)
             {
-                // load할 인벤토리 구분
-                if (line.StartsWith("--"))
+                int key = Animator.StringToHash(slotData.itemName);
+                if (allItem.TryGetValue(key, out var itemData))
                 {
-                    continue;
-                }
-                else if (currentInventory != null)
-                {
-                    string[] data = line.Split(SPLIT_CHAR);
-                    if (data.Length == 2)
+                    for (int i = 0; i < slotData.currentCount; i++)
                     {
-                        string itemName = data[0];
-                        int count = int.Parse(data[1]);
-
-                        ItemData itemData;
-                        // 아이템 이름을 해시 값으로 변환하고, 딕셔너리에서 해당 아이템 데이터 찾음
-                        int key = Animator.StringToHash(itemName);
-                        if (allItem.TryGetValue(key, out itemData))
-                        {
-                            for (int i = 0; i < count; i++)
-                            {
-                                Item item = new GameObject("Item").AddComponent<Item>();
-                                item.itemData = itemData;
-                                currentInventory.Add(item);
-                            }
-                        }
+                        Item item = new GameObject("Item").AddComponent<Item>();
+                        item.itemData = itemData;
+                        currentInventory.Add(item);
                     }
                 }
             }
         }
+
+        Debug.Log($"{inventoryName} inventory loaded from JSON!");
     }
+
 
     /* ---- Plant Save & Load ----*/
     public void SavePlants(List<PlantSaveData> plantSaveDataList)
@@ -221,8 +217,8 @@ public class SaveData : MonoBehaviour
 
     public bool HasSavedInventory()
     {
-        string backpackPath = Application.persistentDataPath + "/Backpack.txt";
-        string toolbarPath = Application.persistentDataPath + "/Toolbar.txt";
+        string backpackPath = Application.persistentDataPath + "/Backpack.json";
+        string toolbarPath = Application.persistentDataPath + "/Toolbar.json";
 
         return File.Exists(backpackPath) || File.Exists(toolbarPath);
     }
@@ -262,5 +258,3 @@ public class SaveData : MonoBehaviour
         }
     }
 }
-
-
