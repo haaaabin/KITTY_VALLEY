@@ -1,10 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-// Inventory 클래스는 게임 내 슬롯 기반 인벤토리 시스템을 구현합니다.
-// 각 슬롯은 아이템 정보를 저장하며, 아이템의 추가, 제거, 이동을 관리합니다.
-// 아이템의 최대 수량 제한을 두고, 같은 아이템을 같은 슬롯에 추가하거나 빈 슬롯에 새로 추가할 수 있습니다.
-// 인벤토리 간 슬롯 이동 기능도 제공하여 유저가 아이템을 자유롭게 정리할 수 있습니다.
 
 [System.Serializable]
 public class Inventory
@@ -31,29 +27,23 @@ public class Inventory
             plantData = null;
             item = null;
         }
-
+        
+        // 슬롯이 비어있는지 확인
         public bool isEmpty
         {
             get
             {
-                if (itemName == "" && currentCount == 0)
-                {
-                    return true;
-                }
-
-                return false;
+                return string.IsNullOrEmpty(itemName) && currentCount == 0;
             }
         }
 
+        // 해당 아이템을 추가할 수 있는지 확인
         public bool CanAddItem(string itemName)
         {
-            if (this.itemName == itemName && currentCount < maxAllowed)
-            {
-                return true;
-            }
-            return false;
+            return this.itemName == itemName && currentCount < maxAllowed;
         }
 
+        // 아이템을 슬롯에 추가
         public void AddItem(Item item, int count = 1)
         {
             this.itemName = item.itemData.itemName;
@@ -74,9 +64,7 @@ public class Inventory
 
                 if (currentCount == 0)
                 {
-                    icon = null;
-                    itemName = "";
-                    plantData = null;
+                    ClearAll();
                 }
             }
         }
@@ -88,7 +76,9 @@ public class Inventory
             itemName = "";
             plantData = null;
         }
-        public void Clear()
+
+        // 슬롯 초기화
+        public void ClearAll()
         {
             itemName = string.Empty;
             currentCount = 0;
@@ -98,14 +88,16 @@ public class Inventory
             plantData = null;
             item = null;
         }
+
         public int GetRemainingSpace()
         {
             return maxAllowed - currentCount;
         }
     }
 
-    public List<Slot> slots = new List<Slot>();
-    public Slot selectedSlot = null;
+    public List<Slot> slots = new List<Slot>();  //슬롯 리스트
+    public Slot selectedSlot = null;  // 현재 선택된 슬롯
+
     public Inventory(int numSlots)
     {
         for (int i = 0; i < numSlots; i++)
@@ -119,6 +111,7 @@ public class Inventory
     // IReadOnlyList<Slot> 읽을 수는 있지만 수정할 수는 없는 
     public IReadOnlyList<Slot> GetSlots => slots.AsReadOnly();
 
+    // 인벤토리에 아이템 추가
     public void Add(Item item)
     {
         // 슬롯의 타입이 추가하려는 아이템의 타입과 같고 maxAllowed보다 적으면
@@ -126,10 +119,10 @@ public class Inventory
         {
             if (slot.itemName == item.itemData.itemName && slot.CanAddItem(item.itemData.itemName))
             {
-                if(item.isDropped)
+                if (item.isDropped)
                 {
                     int itemCount = item.GetDroppedItemCount();
-                    slot.AddItem(item,itemCount);
+                    slot.AddItem(item, itemCount);
                 }
                 else
                 {
@@ -145,10 +138,10 @@ public class Inventory
             // 빈 슬롯이면
             if (slot.itemName == "")
             {
-                 if(item.isDropped)
+                if (item.isDropped)
                 {
                     int itemCount = item.GetDroppedItemCount();
-                    slot.AddItem(item,itemCount);
+                    slot.AddItem(item, itemCount);
                 }
                 else
                 {
@@ -161,7 +154,7 @@ public class Inventory
 
     public void Remove(int index, bool isDrop = false)
     {
-        if(isDrop)
+        if (isDrop)
         {
             slots[index].RemoveAllItems();
         }
@@ -199,7 +192,7 @@ public class Inventory
     {
         foreach (var slot in slots)
         {
-            slot.Clear();
+            slot.ClearAll();
         }
     }
 }
