@@ -5,11 +5,12 @@ using UnityEngine.Tilemaps;
 
 public class PlantGrowthManager : MonoBehaviour
 {
-    private Dictionary<Vector3Int, PlantData> plantDataDict = new Dictionary<Vector3Int, PlantData>();
+    private Dictionary<Vector3Int, PlantData> plantDataDict = new Dictionary<Vector3Int, PlantData>(); // 타일 위치별로 심어진 식물의 데이터 저장
     private Dictionary<Vector3Int, int> plantGrowthDays = new Dictionary<Vector3Int, int>(); // 씨앗 심은 날 저장
     private Dictionary<Vector3Int, int> currentGrowthStages = new Dictionary<Vector3Int, int>(); // 현재 성장 단계 저장
-    private List<PlantSaveData> plantSaveDataList = new List<PlantSaveData>();
+    private List<PlantSaveData> plantSaveDataList = new List<PlantSaveData>(); // 저장&로드에 사용할 식물 데이터 리스트
     private TimeManager timeManager;
+
 
     private void Start()
     {
@@ -20,7 +21,7 @@ public class PlantGrowthManager : MonoBehaviour
         }
     }
 
-    void OnDestroy()
+    private void OnDestroy()
     {
         if (timeManager != null)
         {
@@ -28,11 +29,14 @@ public class PlantGrowthManager : MonoBehaviour
         }
     }
 
+    // 씨앗 심기
     public void PlantSeed(Vector3Int position, PlantData plantData)
     {
         if (GameManager.instance.tileManager.DoesTileExist(position) && GameManager.instance.tileManager.GetTileName(position) == "PlowedTile")
         {
             SoundManager.Instance.Play("EFFECT/Seeded", SoundType.EFFECT);
+
+            // 타일 상태 변경, Seeded 타일로 설정
             GameManager.instance.tileManager.SetTileState(position, "Seeded");
             GameManager.instance.tileManager.seedMap.SetTile(position, GameManager.instance.tileManager.plantedTile);
 
@@ -42,11 +46,11 @@ public class PlantGrowthManager : MonoBehaviour
         }
     }
 
-    IEnumerator GrowPlant(Vector3Int position)
+    // 식물 성장
+    private IEnumerator GrowPlant(Vector3Int position)
     {
         if (!GameManager.instance.tileManager.DoesTileExist(position) || GameManager.instance.tileManager.GetTileState(position) == "Grown")
         {
-            Debug.Log("no tile");
             yield break;
         }
 
@@ -54,13 +58,13 @@ public class PlantGrowthManager : MonoBehaviour
         int currentStage = currentGrowthStages[position];
         int currentGrowthDay = plantGrowthDays[position];
 
-        // 각 성장 단계별로 경과된 시간이 맞는지 확인
+        // 각 성장 단계가 유효한 지 확인
         if (currentStage >= 0 && currentStage < plantData.growthStagesTiles.Length)
         {
             currentStage++;
             currentGrowthDay++;
-            Debug.Log(plantData.growthStagesTiles[currentStage - 1]);
 
+            // 다음 성장 단계 타일로 변경
             GameManager.instance.tileManager.seedMap.SetTile(position, plantData.growthStagesTiles[currentStage - 1]);
             plantData.growthStagesTiles[currentStage - 1].colliderType = Tile.ColliderType.Sprite;
 
@@ -82,12 +86,14 @@ public class PlantGrowthManager : MonoBehaviour
         yield return null;
     }
 
+    // 식물 수확
     public void HarvestPlant(Vector3Int position)
     {
         PlantData plantData = GetPlantData(position);
 
         if (plantData != null)
-        {
+        {   
+            // GetCellCenterWorld() : 해당 타일 위치의 중심에 해당하는 월드 좌표를 반환
             Vector3 spawnPosition = GameManager.instance.tileManager.interactableMap.GetCellCenterWorld(position);
             GameObject plant = Instantiate(plantData.plantPrefab, spawnPosition, Quaternion.identity);
 
@@ -153,6 +159,7 @@ public class PlantGrowthManager : MonoBehaviour
         // wateredTiles의 키를 미리 복사하여 List에 저장
         List<Vector3Int> wateredTilesKey = GameManager.instance.tileManager.GetWateredTilesKeys();
 
+        // 물을 준 식물만 성장하도록
         foreach (var position in wateredTilesKey)
         {
             if (GameManager.instance.tileManager.GetWateringTile(position) && plantGrowthDays.ContainsKey(position))
@@ -167,20 +174,7 @@ public class PlantGrowthManager : MonoBehaviour
         }
     }
 
-    public PlantData GetPlantData(Vector3Int position)
-    {
-        if (plantDataDict.ContainsKey(position))
-            return plantDataDict[position];
-        return null;
-    }
-
-    public void RemovePlantData(Vector3Int position)
-    {
-        plantDataDict.Remove(position);
-        currentGrowthStages.Remove(position);
-        plantGrowthDays.Remove(position);
-    }
-
+    // 식물의 상태 저장
     public void SavePlantDataList()
     {
         foreach (var position in plantDataDict.Keys)
@@ -197,12 +191,14 @@ public class PlantGrowthManager : MonoBehaviour
         SaveData.instance.SavePlants(plantSaveDataList);
     }
 
+    // 저장된 식물 데이터 불러오기 
     public void LoadPlantsData()
     {
         List<PlantSaveData> plantSaveDataList = SaveData.instance.LoadPlants();
         SetTilePlantSaveData(plantSaveDataList);
     }
 
+    // 저장된 식물 데이터를 기반으로 타일과 관련된 정보 설정
     public void SetTilePlantSaveData(List<PlantSaveData> plantSaveDataList)
     {
         foreach (var saveData in plantSaveDataList)
@@ -214,13 +210,12 @@ public class PlantGrowthManager : MonoBehaviour
             string currentState = saveData.currentState;
             bool isWatered = saveData.isWatered;
 
-            if (GameManager.instance.tileManager == null)
-                Debug.Log("no tileManager ");
-            if (GameManager.instance.tileManager.seedMap == null)
-                Debug.Log(" no seedMap: ");
+            if (GameManager.instance.tileManager == null && GameManager.instance.tileManager.seedMap == null)
+                return;
 
             GameManager.instance.tileManager.SetTileState(position, currentState);
             GameManager.instance.tileManager.interactableMap.SetTile(position, GameManager.instance.tileManager.interactedTile);
+            
             if (currentGrowthStage - 1 >= 0 && currentGrowthStage < plantData.growthStagesTiles.Length)
             {
                 GameManager.instance.tileManager.seedMap.SetTile(position, plantData.growthStagesTiles[currentGrowthStage - 1]);
@@ -232,6 +227,20 @@ public class PlantGrowthManager : MonoBehaviour
 
             GameManager.instance.tileManager.SetWateringTile(position, isWatered);
         }
+    }
+
+    public PlantData GetPlantData(Vector3Int position)
+    {
+        if (plantDataDict.ContainsKey(position))
+            return plantDataDict[position];
+        return null;
+    }
+
+    public void RemovePlantData(Vector3Int position)
+    {
+        plantDataDict.Remove(position);
+        currentGrowthStages.Remove(position);
+        plantGrowthDays.Remove(position);
     }
 
     public void ClearPlantSaveData()
