@@ -106,13 +106,18 @@ public class Player : MonoBehaviour
 
     private IEnumerator WaitForAnimation()
     {
-        yield return new WaitForSeconds(0.2f);
-        if (isHoeing)
-            isHoeing = false;
-        if (isWatering)
+        if (isHoeing || isWatering)
+        {
+            yield return new WaitForSeconds(0.2f);
+            isHoeing = true;
             isWatering = false;
-        if (isAxing)
+        }
+        else if (isAxing)
+        {
+            yield return new WaitForSeconds(0.7f);
             isAxing = false;
+
+        }
     }
 
     private void HandlePostBoxInteraction()
