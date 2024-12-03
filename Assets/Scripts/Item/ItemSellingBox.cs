@@ -31,8 +31,8 @@ public class ItemSellingBox : MonoBehaviour
         plusBtn.onClick.AddListener(OnPlusButtonClick);
         minusBtn.onClick.AddListener(OnMinusButtonClick);
         checkBtn.onClick.AddListener(OnCheckButtonClick);
-        InitializePanel();
 
+        InitializePanel();
     }
 
     private void Update()
@@ -107,14 +107,6 @@ public class ItemSellingBox : MonoBehaviour
                 itemPrice = itemCount * selectedSlot.price;
                 UpdatePanel();
             }
-            else
-            {
-                Debug.Log("판매 불가능한 상품");
-            }
-        }
-        else
-        {
-            Debug.Log("보유 아이템 없음");
         }
     }
 
@@ -129,14 +121,6 @@ public class ItemSellingBox : MonoBehaviour
                 itemPrice = itemCount * selectedSlot.price;
                 UpdatePanel();
             }
-            else
-            {
-                Debug.Log("판매 불가능한 상품");
-            }
-        }
-        else
-        {
-            Debug.Log("보유 아이템 없음");
         }
     }
 
@@ -150,17 +134,14 @@ public class ItemSellingBox : MonoBehaviour
                 sellingPrice += itemPrice;
                 selectedSlot.currentCount -= itemCount;
 
+                // 선택된 슬롯 아이템의 개수가 0개면 슬롯 비우기
+                if (selectedSlot.currentCount == 0)
+                {
+                    selectedSlot.ClearAll();
+                }
                 InGameUI.instance.RefreshInventoryUI("Toolbar");
                 InitializePanel();
             }
-            else
-            {
-                Debug.Log("판매 불가능한 상품");
-            }
-        }
-        else
-        {
-            Debug.Log("보유 아이템 없음");
         }
     }
 
@@ -190,8 +171,8 @@ public class ItemSellingBox : MonoBehaviour
         int newTotalMoney = Player.Instance.money + dailyEarnings;
 
         StartCoroutine(InGameUI.instance.UpdateMoneyEffect(Player.Instance.money, newTotalMoney));
-        PlayerPrefs.SetInt("Money", Player.Instance.money);
-        PlayerPrefs.SetInt("Selling", dailyEarnings);
+        SaveData.instance.SavePlayerData(Player.Instance.money, GameManager.instance.timeManager.day,
+                                GameManager.instance.timeManager.currentDayIndex, dailyEarnings);
     }
 
     public int GetSellingPrice()
@@ -202,6 +183,5 @@ public class ItemSellingBox : MonoBehaviour
     public void ResetSellingPrice()
     {
         sellingPrice = 0;
-        PlayerPrefs.SetInt("SellingPrice", 0);
     }
 }
