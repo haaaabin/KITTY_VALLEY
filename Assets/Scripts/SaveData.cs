@@ -45,6 +45,7 @@ public class InventorySlotData
 {
     public string itemName;
     public int currentCount;
+    public string plantName;
 }
 
 [System.Serializable]
@@ -52,7 +53,6 @@ public class InventorySaveData
 {
     public List<InventorySlotData> slots = new List<InventorySlotData>();
 }
-
 
 public class SaveData : MonoBehaviour
 {
@@ -132,15 +132,14 @@ public class SaveData : MonoBehaviour
                 inventorySaveData.slots.Add(new InventorySlotData
                 {
                     itemName = slot.itemName,
-                    currentCount = slot.currentCount
+                    currentCount = slot.currentCount,
+                    plantName = slot.item?.plantData?.plantName
                 });
             }
         }
 
         string json = JsonUtility.ToJson(inventorySaveData, true);
         File.WriteAllText(filePath, json);
-
-        Debug.Log($"{inventoryName} inventory saved as JSON!");
     }
 
     public void LoadInventory(string inventoryName)
@@ -163,17 +162,25 @@ public class SaveData : MonoBehaviour
                 int key = Animator.StringToHash(slotData.itemName);
                 if (allItem.TryGetValue(key, out var itemData))
                 {
+                    PlantData plantData = null;
+
+                    // 해당 item의 plantData 가져오기
+                    if (!string.IsNullOrEmpty(slotData.plantName))
+                    {
+                        int plantKey = Animator.StringToHash(slotData.plantName);
+                        allPlant.TryGetValue(plantKey, out plantData);
+                    };
+
                     for (int i = 0; i < slotData.currentCount; i++)
                     {
                         Item item = new GameObject("Item").AddComponent<Item>();
                         item.itemData = itemData;
+                        item.plantData = plantData;
                         currentInventory.Add(item);
                     }
                 }
             }
         }
-
-        Debug.Log($"{inventoryName} inventory loaded from JSON!");
     }
 
 
@@ -190,7 +197,6 @@ public class SaveData : MonoBehaviour
                 sw.WriteLine($"{plant.plantData.plantName}{SPLIT_CHAR}{plant.position.x}{SPLIT_CHAR}{plant.position.y}{SPLIT_CHAR}{plant.position.z}{SPLIT_CHAR}{plant.growthStage}{SPLIT_CHAR}{plant.growthDay}{SPLIT_CHAR}{plant.currentState}{SPLIT_CHAR}{plant.isWatered}");
             }
         }
-        Debug.Log($"PlantData saved!");
     }
 
     public List<PlantSaveData> LoadPlants()
@@ -226,10 +232,6 @@ public class SaveData : MonoBehaviour
                 }
             }
         }
-        else
-        {
-            Debug.LogWarning("No saved plant data found.");
-        }
         return plantSaveDataList;
     }
 
@@ -240,14 +242,12 @@ public class SaveData : MonoBehaviour
 
         string json = JsonUtility.ToJson(playerSaveData, true);
         File.WriteAllText(filePath, json);
-
-        Debug.Log("Player data saved as JSON!");
     }
 
     public void LoadPlayerData()
     {
         string filePath = Application.persistentDataPath + "/PlayerData.json";
-        if(File.Exists(filePath))
+        if (File.Exists(filePath))
         {
             string json = File.ReadAllText(filePath);
             PlayerSaveData playerSaveData = JsonUtility.FromJson<PlayerSaveData>(json);
@@ -257,7 +257,7 @@ public class SaveData : MonoBehaviour
             GameManager.instance.timeManager.currentDayIndex = playerSaveData.currentDayIndex;
             GameManager.instance.itemBox.sellingPrice = playerSaveData.sellingPrice;
 
-            if(playerSaveData.sellingPrice > 0)
+            if (playerSaveData.sellingPrice > 0)
             {
                 GameManager.instance.itemBox.SellItems();
                 GameManager.instance.itemBox.ResetSellingPrice();
