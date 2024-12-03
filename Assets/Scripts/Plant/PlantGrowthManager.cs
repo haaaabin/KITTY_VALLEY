@@ -53,7 +53,7 @@ public class PlantGrowthManager : MonoBehaviour
         {
             yield break;
         }
-
+        
         PlantData plantData = plantDataDict[position];
         int currentStage = currentGrowthStages[position];
         int currentGrowthDay = plantGrowthDays[position];
@@ -92,7 +92,7 @@ public class PlantGrowthManager : MonoBehaviour
         PlantData plantData = GetPlantData(position);
 
         if (plantData != null)
-        {   
+        {
             // GetCellCenterWorld() : 해당 타일 위치의 중심에 해당하는 월드 좌표를 반환
             Vector3 spawnPosition = GameManager.instance.tileManager.interactableMap.GetCellCenterWorld(position);
             GameObject plant = Instantiate(plantData.plantPrefab, spawnPosition, Quaternion.identity);
@@ -148,10 +148,9 @@ public class PlantGrowthManager : MonoBehaviour
             yield return null; // 다음 프레임을 기다림
         }
 
+        interactable.canInteract = true;
         // 마지막으로 정확한 착지 위치로 설정
         plant.transform.position = initialPosition;
-
-        interactable.canInteract = true;
     }
 
     void OnDayEnd()
@@ -215,7 +214,7 @@ public class PlantGrowthManager : MonoBehaviour
 
             GameManager.instance.tileManager.SetTileState(position, currentState);
             GameManager.instance.tileManager.interactableMap.SetTile(position, GameManager.instance.tileManager.interactedTile);
-            
+
             if (currentGrowthStage - 1 >= 0 && currentGrowthStage < plantData.growthStagesTiles.Length)
             {
                 GameManager.instance.tileManager.seedMap.SetTile(position, plantData.growthStagesTiles[currentGrowthStage - 1]);

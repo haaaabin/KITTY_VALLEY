@@ -126,14 +126,12 @@ public class TileManager : MonoBehaviour
     public void WaterTile(Vector3Int position)
     {
         wateredTiles[position] = true;
-        Debug.Log("wateredTiles : " + position + wateredTiles[position]);
 
         TileBase tile = interactableMap.GetTile(position);
         if (tile != null)
         {
             interactableMap.SetTileFlags(position, TileFlags.None);  // 타일의 기본 속성 플래그를 None으로 설정
             interactableMap.SetColor(position, new Color(222f / 255f, 222f / 255f, 222f / 255f));
-            Debug.Log("Watering: 색 변하기 성공");
         }
     }
 
@@ -154,7 +152,4 @@ public class TileManager : MonoBehaviour
         }
         return tilePositions;
     }
-
-
-
 }

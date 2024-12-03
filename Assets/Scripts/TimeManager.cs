@@ -7,10 +7,10 @@ using UnityEngine;
 
 public class TimeManager : MonoBehaviour
 {
+    public event Action OnDayEnd;
     public TextMeshProUGUI dayText;
     public TextMeshProUGUI timeText;
     public bool isDayEnding = false;
-    public event Action OnDayEnd;
     public int gameHour = 9;
     public int gameMinute = 0;
     public int currentDayIndex = 0;
