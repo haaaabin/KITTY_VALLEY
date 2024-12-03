@@ -109,14 +109,13 @@ public class Player : MonoBehaviour
         if (isHoeing || isWatering)
         {
             yield return new WaitForSeconds(0.2f);
-            isHoeing = true;
+            isHoeing = false;
             isWatering = false;
         }
         else if (isAxing)
         {
             yield return new WaitForSeconds(0.7f);
             isAxing = false;
-
         }
     }
 
