@@ -1,3 +1,4 @@
+using UnityEditor.Rendering;
 using UnityEngine;
 
 public class MouseSelect : MonoBehaviour
@@ -17,57 +18,51 @@ public class MouseSelect : MonoBehaviour
         transform.position = GameManager.instance.tileManager.interactableMap.CellToWorld(targetPosition) + GameManager.instance.tileManager.interactableMap.cellSize / 2f;
 
         string selectedItem = Player.Instance.inventoryManager.toolbar.selectedSlot.itemName;
-        if (selectedItem != null)
-        {
-            SetSpriteColor(none);
-        }
-
+        string tileName = GameManager.instance.tileManager.GetTileName(targetPosition);
         bool isWithinRange = Mathf.Abs(transform.localPosition.x) <= 1.5f && Mathf.Abs(transform.localPosition.y) <= 1.5f;
+
         bool isPlowed = GameManager.instance.tileManager.SavePlowedTiles().Contains(targetPosition);
         bool isSeeded = GameManager.instance.tileManager.SaveSeededTiles().Contains(targetPosition);
         bool isWatered = GameManager.instance.tileManager.GetWateringTile(targetPosition);
 
         string tileState = GameManager.instance.tileManager.GetTileState(targetPosition);
 
-        if (!isWithinRange)
+        if (selectedItem == null || !isWithinRange || tileName == "")
         {
-            SetSpriteColor(none);
+            return;
         }
-        else if (selectedItem == "Hoe")
+
+        if (selectedItem == "Hoe")
         {
-            if (isPlowed || isSeeded)
-            {
-                SetSpriteColor(none);
-            }
-            else if (tileState == "Grown")
+            if (tileName == "InteractableTile" || (tileName == "PlowedTile " && tileState == "Grown"))
             {
                 SetSpriteColor(exist);
             }
             else
             {
-                SetSpriteColor(exist);
+                SetSpriteColor(none);
             }
         }
         else if (selectedItem == "RiceSeed" || selectedItem == "TomatoSeed")
         {
-            if (!isPlowed || isSeeded)
+            if (tileName == "PlowedTile" && !isSeeded)
             {
-                SetSpriteColor(none);
+                SetSpriteColor(exist);
             }
             else
             {
-                SetSpriteColor(exist);
+                SetSpriteColor(none);
             }
         }
         else if (selectedItem == "Watering")
         {
-            if (isWatered)
+            if (tileName == "PlowedTile" && !isWatered)
             {
-                SetSpriteColor(none);
+                SetSpriteColor(exist);
             }
             else
             {
-                SetSpriteColor(exist);
+                SetSpriteColor(none);
             }
         }
     }
