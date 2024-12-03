@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 using UnityEngine.UI;
+using System.Collections;
 
 public class Shop : MonoBehaviour
 {
@@ -10,6 +11,7 @@ public class Shop : MonoBehaviour
     public List<Item> sellItems;
 
     private bool isPlayerInRange = false;
+    private bool isBuying = false;
     private Player player;
 
     private void Start()
@@ -30,20 +32,30 @@ public class Shop : MonoBehaviour
 
     public void BuyItem(Item item)
     {
+        if (isBuying) return;
+
+        isBuying = true;
         if (sellItems.Contains(item))
         {
             if (player.money >= item.itemData.price)
             {
+                player.money -= item.itemData.price;
+                StartCoroutine(InGameUI.instance.UpdateMoneyEffect(player.money + item.itemData.price, player.money));
                 player.inventoryManager.Add("Toolbar", item);
-                StartCoroutine(InGameUI.instance.UpdateMoneyEffect(player.money, player.money - item.itemData.price));
-                Debug.Log(item.plantData.plantName);
+                SoundManager.Instance.Play("EFFECT/Click", SoundType.EFFECT);
             }
             else
             {
                 InGameUI.instance.ShakingText();
             }
         }
-        SoundManager.Instance.Play("EFFECT/Click", SoundType.EFFECT);
+        StartCoroutine(ResetBuyState());
+    }
+
+    private IEnumerator ResetBuyState()
+    {
+        yield return new WaitForSeconds(0.3f);
+        isBuying = false;
     }
 
     private void OnTriggerEnter2D(Collider2D other)
