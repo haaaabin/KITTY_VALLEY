@@ -106,10 +106,14 @@ public class Player : MonoBehaviour
 
     private IEnumerator WaitForAnimation()
     {
-        if (isHoeing || isWatering)
+        if (isHoeing)
         {
             yield return new WaitForSeconds(0.2f);
             isHoeing = false;
+        }
+        else if (isWatering)
+        {
+            yield return new WaitForSeconds(0.2f);
             isWatering = false;
         }
         else if (isAxing)
