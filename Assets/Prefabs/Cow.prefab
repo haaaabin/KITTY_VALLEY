@@ -12,11 +12,11 @@ GameObject:
   - component: {fileID: 93311360657515159}
   - component: {fileID: 9098533067809981957}
   - component: {fileID: 2806535633299825754}
-  - component: {fileID: 3281691767406630748}
   - component: {fileID: 5354913956797495803}
+  - component: {fileID: 2121759199076789453}
   m_Layer: 0
   m_Name: Cow
-  m_TagString: Untagged
+  m_TagString: Cow
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -136,8 +136,20 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 4
---- !u!61 &3281691767406630748
-BoxCollider2D:
+--- !u!114 &5354913956797495803
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7766753025237708018}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b5a372dce8a7d6b4a9eb258cffb01d0a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!70 &2121759199076789453
+CapsuleCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -168,28 +180,6 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0.0029211044, y: -0.005421877}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1.6875, y: 1.125}
-    newSize: {x: 1.6875, y: 1.125}
-    adaptiveTilingThreshold: 0.5
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  serializedVersion: 2
-  m_Size: {x: 1.7068481, y: 1.1130528}
-  m_EdgeRadius: 0
---- !u!114 &5354913956797495803
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7766753025237708018}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b5a372dce8a7d6b4a9eb258cffb01d0a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  m_Offset: {x: 0, y: 0}
+  m_Size: {x: 1.92, y: 1.2}
+  m_Direction: 1

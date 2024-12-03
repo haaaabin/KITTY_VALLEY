@@ -8,9 +8,9 @@ public class Cow : MonoBehaviour
     private Vector2 direction;
     private float timer;
     private bool isWalking;
-    private float walkSpeed = 1.2f; // 소의 이동 속도
-    private float walkTime = 3f;    // 걷기 지속 시간
-    private float idleTime = 2f;    // 멈춤 지속 시간
+    private float walkSpeed = 1.2f;
+    private float walkTime = 3f;
+    private float idleTime = 3f;
 
     private void Start()
     {
@@ -18,7 +18,7 @@ public class Cow : MonoBehaviour
         rigid = GetComponent<Rigidbody2D>();
         sprite = GetComponent<SpriteRenderer>();
 
-        timer = walkTime; 
+        timer = walkTime;
         isWalking = true;
         ChooseRandomDirection();
     }
@@ -31,7 +31,6 @@ public class Cow : MonoBehaviour
         {
             MoveCow();
 
-            // 걷기 시간이 끝나면 멈춤
             if (timer <= 0)
             {
                 StopWalking();
@@ -47,11 +46,10 @@ public class Cow : MonoBehaviour
         }
     }
 
-    private void OnCollisionEnter2D(Collision2D other) 
+    private void OnCollisionEnter2D(Collision2D other)
     {
-        // 펜스에 부딪히면 걷기를 멈추고 방향을 전환
-        if (other.gameObject.CompareTag("Fence"))
-        {
+        if (other.gameObject.CompareTag("Cow") || other.gameObject.CompareTag("Fence"))
+        {    
             StopWalking();
             Invoke("ChooseRandomDirection", idleTime); // 2초 후 방향 전환
         }
@@ -75,9 +73,9 @@ public class Cow : MonoBehaviour
 
     private void StopWalking()
     {
+        rigid.velocity = Vector2.zero; // 속도 초기화
         isWalking = false;
         timer = idleTime;
-        rigid.velocity = Vector2.zero;
         anim.SetBool("isWalking", false);
     }
 
