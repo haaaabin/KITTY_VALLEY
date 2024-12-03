@@ -27,12 +27,16 @@ public class MouseSelect : MonoBehaviour
 
         string tileState = GameManager.instance.tileManager.GetTileState(targetPosition);
 
-        if (selectedItem == null || !isWithinRange || tileName == "")
+        if (!isWithinRange || tileName == "")
         {
             return;
         }
 
-        if (selectedItem == "Hoe")
+        if (selectedItem == null)
+        {
+            SetSpriteColor(none);
+        }
+        else if (selectedItem == "Hoe")
         {
             if (tileName == "InteractableTile" || (tileName == "PlowedTile " && tileState == "Grown"))
             {
