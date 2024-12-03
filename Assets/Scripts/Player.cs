@@ -12,7 +12,7 @@ public class Player : MonoBehaviour
     private RaycastHit2D rayHit;
     private Vector2 movement;
     private Vector2 lastMoveDirection;
-    private float moveSpeed = 3;
+    private float moveSpeed = 2.5f;
 
     public InventoryManager inventoryManager;
     public Tilemap houseRoofTileMap;

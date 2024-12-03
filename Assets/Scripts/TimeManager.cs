@@ -66,11 +66,11 @@ public class TimeManager : MonoBehaviour
 
         UpdateTimeUI();
         Player.Instance.SetPosition();
-        Player.Instance.inventoryManager.toolbar.SelectSlot(0);
-
+        Toolbar_UI toolbar_UI = FindObjectOfType<Toolbar_UI>();
+        toolbar_UI.SelectSlot(0);
+        
         OnDayEnd?.Invoke();
 
-        Debug.Log("하루가 끝났습니다. 다음 날 시작");
     }
 
     public IEnumerator EndDay()
