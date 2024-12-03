@@ -2634,7 +2634,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &543451313
 RectTransform:
   m_ObjectHideFlags: 0
@@ -6349,7 +6349,7 @@ MonoBehaviour:
   m_text: "\uC548\uB155\uD558\uC138\uC694!\n\nValley\uC5D0 \uC624\uC2E0 \uAC83\uC744
     \uC9C4\uC2EC\uC73C\uB85C \uD658\uC601\uD574\uC694! \n\n\uC774 \uBA4B\uC9C4 \uACF3\uC5D0\uC11C
     \uC990\uAC81\uAC8C \uC9C0\uB0B4\uC2E4 \uC218 \uC788\uB3C4\uB85D \uC791\uC740
-    \uC120\uBB3C\uC744 \uC900\uBE44\uD588\uC5B4\uC694.\n\n\uC138 \uAC00\uC9C0\uC758
+    \uC120\uBB3C\uC744 \uC900\uBE44\uD588\uC5B4\uC694.\n\n\uB2E4\uC12F \uAC00\uC9C0\uC758
     \uC544\uC774\uD15C\uC744 \uB4DC\uB9B4 \uD14C\uB2C8, \uC798 \uC0AC\uC6A9\uD574
     \uBCF4\uC138\uC694!\n\n\uC0C8\uB85C\uC6B4 \uC2DC\uC791\uC744 \uC751\uC6D0\uD569\uB2C8\uB2E4!"
   m_isRightToLeft: 0
