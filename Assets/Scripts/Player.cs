@@ -26,6 +26,7 @@ public class Player : MonoBehaviour
     private bool isHoeing = false;
     private bool isWatering = false;
     private bool isAxing = false;
+    private bool isMoving = false;
 
 
     private void Awake()
@@ -68,6 +69,7 @@ public class Player : MonoBehaviour
 
     private void Move()
     {
+        isMoving = true;
         rb.MovePosition(rb.position + movement * moveSpeed * Time.fixedDeltaTime);
     }
 
@@ -101,6 +103,10 @@ public class Player : MonoBehaviour
         {
             anim.SetFloat("LastHorizontal", lastMoveDirection.x);
             anim.SetFloat("LastVertical", lastMoveDirection.y);
+
+            isMoving = false;
+            MouseSelect mouseSelect = GetComponentInChildren<MouseSelect>();
+            mouseSelect.SetSpriteColor(new Color(0, 0, 0, 0));
         }
     }
 
@@ -171,11 +177,14 @@ public class Player : MonoBehaviour
 
         validTiles = new Vector3Int[]
         {
-            gridPlayerPosition,
+            gridPlayerPosition + new Vector3Int(-1,1,0),
             gridPlayerPosition + new Vector3Int(0,1,0),
-            gridPlayerPosition + new Vector3Int(0,-1,0),
+            gridPlayerPosition + new Vector3Int(1,1,0),
             gridPlayerPosition + new Vector3Int(-1,0,0),
-            gridPlayerPosition + new Vector3Int(1,0,0)
+            gridPlayerPosition + new Vector3Int(1,0,0),
+            gridPlayerPosition + new Vector3Int(-1,-1,0),
+            gridPlayerPosition + new Vector3Int(0,-1,0),
+            gridPlayerPosition + new Vector3Int(1,-1,0)
         };
 
         isValidTile = false;
@@ -188,8 +197,8 @@ public class Player : MonoBehaviour
                 break;
             }
         }
-    }
 
+    }
     public void PlantInteracted()
     {
         if (isHoeing || isWatering) return;
@@ -199,7 +208,7 @@ public class Player : MonoBehaviour
 
         CheckValidTiles();
 
-        if (isValidTile)
+        if (isValidTile && !isMoving)
         {
             MouseSelect mouseSelect = GetComponentInChildren<MouseSelect>();
             if (mouseSelect != null)
