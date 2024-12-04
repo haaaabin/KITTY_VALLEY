@@ -18,27 +18,23 @@ public class MouseSelect : MonoBehaviour
         transform.position = GameManager.instance.tileManager.interactableMap.CellToWorld(targetPosition) + GameManager.instance.tileManager.interactableMap.cellSize / 2f;
 
         string selectedItem = Player.Instance.inventoryManager.toolbar.selectedSlot.itemName;
+        if (selectedItem == null)
+        {
+            SetSpriteColor(none);
+        }
+
         string tileName = GameManager.instance.tileManager.GetTileName(targetPosition);
-        bool isWithinRange = Mathf.Abs(transform.localPosition.x) <= 1.5f && Mathf.Abs(transform.localPosition.y) <= 1.5f;
-
-        bool isPlowed = GameManager.instance.tileManager.SavePlowedTiles().Contains(targetPosition);
-        bool isSeeded = GameManager.instance.tileManager.SaveSeededTiles().Contains(targetPosition);
-        bool isWatered = GameManager.instance.tileManager.GetWateringTile(targetPosition);
-
         string tileState = GameManager.instance.tileManager.GetTileState(targetPosition);
+        bool isWithinRange = Mathf.Abs(transform.localPosition.x) <= 1.5f && Mathf.Abs(transform.localPosition.y) <= 1.5f;
 
         if (!isWithinRange || tileName == "")
         {
             return;
         }
 
-        if (selectedItem == null)
-        {
-            SetSpriteColor(none);
-        }
         else if (selectedItem == "Hoe")
         {
-            if (tileName == "InteractableTile" || (tileName == "PlowedTile " && tileState == "Grown"))
+            if (tileName == "InteractableTile" || (tileName == "PlantedTile " && tileState == "Grown"))
             {
                 SetSpriteColor(exist);
             }
@@ -49,6 +45,7 @@ public class MouseSelect : MonoBehaviour
         }
         else if (selectedItem == "RiceSeed" || selectedItem == "TomatoSeed")
         {
+            bool isSeeded = GameManager.instance.tileManager.SaveSeededTiles().Contains(targetPosition);
             if (tileName == "PlowedTile" && !isSeeded)
             {
                 SetSpriteColor(exist);
@@ -60,6 +57,7 @@ public class MouseSelect : MonoBehaviour
         }
         else if (selectedItem == "Watering")
         {
+            bool isWatered = GameManager.instance.tileManager.GetWateringTile(targetPosition);
             if (tileName == "PlowedTile" && !isWatered)
             {
                 SetSpriteColor(exist);
