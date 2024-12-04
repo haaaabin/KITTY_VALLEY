@@ -75,6 +75,7 @@ GameObject:
   - component: {fileID: 4221196550097003820}
   - component: {fileID: 8129484809720633492}
   - component: {fileID: 5566891832000021921}
+  - component: {fileID: 6629279604904150382}
   m_Layer: 6
   m_Name: FruitTree
   m_TagString: Tree
@@ -183,7 +184,7 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0.46385854}
+  m_Offset: {x: 0, y: 0.28062558}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0}
@@ -194,7 +195,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.875, y: 0.9277171}
+  m_Size: {x: 0.875, y: 0.56125116}
   m_EdgeRadius: 0
 --- !u!95 &8129484809720633492
 Animator:
@@ -229,10 +230,55 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e1e2a4b9acfdca142b5c53a93815c541, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hitCount: 0
-  WoodPrefab: {fileID: 3121230369053445424, guid: 8c5ca463ceaa639499042aaf0d393fd6, type: 3}
-  isFruitTree: 1
   newSprite: {fileID: -1868528077, guid: 4bffa5d6383e7e547b492283063ff1eb, type: 3}
-  fruitPrefab: {fileID: 724418913424436359, guid: f69b4a33c62d2cc45bee4f7dc481f3f1, type: 3}
   fruitSpawnPos: {fileID: 2552055863423827720}
   fallPos: {fileID: 8213219009904495630}
+  WoodPrefab: {fileID: 3121230369053445424, guid: 8c5ca463ceaa639499042aaf0d393fd6, type: 3}
+  fruitPrefab: {fileID: 724418913424436359, guid: f69b4a33c62d2cc45bee4f7dc481f3f1, type: 3}
+  hitCount: 0
+  isFruitTree: 1
+--- !u!61 &6629279604904150382
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7270640091312228301}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0.007499218, y: 1.1638849}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0}
+    oldSize: {x: 1.5, y: 1.9375}
+    newSize: {x: 1, y: 1}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 0.6437969, y: 1.1860862}
+  m_EdgeRadius: 0

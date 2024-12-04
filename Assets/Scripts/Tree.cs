@@ -1,4 +1,6 @@
 using System.Collections;
+using Unity.VisualScripting;
+using UnityEditor.ShaderGraph.Internal;
 using UnityEngine;
 
 public class Tree : MonoBehaviour
@@ -14,11 +16,14 @@ public class Tree : MonoBehaviour
     public bool isFruitTree;
     private bool isFruitDrop = false;
     private float fruitOffset = 0.5f;
+    private Color originalColor;
+    private float fadedAlpha = 0.5f;
 
     private void Start()
     {
         anim = GetComponent<Animator>();
         spriteRenderer = GetComponent<SpriteRenderer>();
+        originalColor = spriteRenderer.color; // 기본 색상 저장
     }
 
     private void Update()
@@ -112,4 +117,28 @@ public class Tree : MonoBehaviour
 
         Destroy(gameObject, 1f);  // 나무 오브젝트 파괴
     }
+
+    void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.CompareTag("Player"))
+        {
+            SetTreeAlpha(fadedAlpha);
+        }
+    }
+
+    void OnTriggerExit2D(Collider2D other)
+    {
+        if (other.CompareTag("Player"))
+        {
+            SetTreeAlpha(originalColor.a);
+        }
+    }
+
+    private void SetTreeAlpha(float alpha)
+    {
+        Color color = spriteRenderer.color;
+        color.a = alpha;
+        spriteRenderer.color = color;
+    }
+
 }
