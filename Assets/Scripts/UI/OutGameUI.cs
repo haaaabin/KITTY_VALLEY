@@ -36,7 +36,7 @@ public class OutGameUI : MonoBehaviour
         GameObject inventoryObj = new GameObject("InventorySave");
         SaveData inventorySave = inventoryObj.AddComponent<SaveData>();
 
-        if (!inventorySave.HasSavedInventory())
+        if (!inventorySave.HasSavedData())
         {
             isNewGame = true;
             continueGameBtn.gameObject.SetActive(false);

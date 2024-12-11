@@ -182,9 +182,15 @@ public class InGameUI : MonoBehaviour
 
     public void SaveAllData()
     {
-        Player.Instance.inventoryManager.SaveInventory();
-        GameManager.instance.plantGrowthManager.SavePlantDataList();
-        SaveData.instance.SavePlayerData(Player.Instance.money, GameManager.instance.timeManager.day, GameManager.instance.timeManager.currentDayIndex, GameManager.instance.itemBox.sellingPrice);
+        SaveData.instance.SaveGameData(
+            Player.Instance.inventoryManager.backpack,
+            Player.Instance.inventoryManager.toolbar,
+            Player.Instance.money,
+            GameManager.instance.timeManager.day,
+            GameManager.instance.timeManager.currentDayIndex,
+            GameManager.instance.itemBox.sellingPrice,
+            GameManager.instance.plantGrowthManager.SavePlantDataList()
+        );
         ShowSaveNotification();
     }
 

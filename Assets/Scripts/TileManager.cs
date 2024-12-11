@@ -22,11 +22,6 @@ public class TileManager : MonoBehaviour
             {
                 interactableMap.SetTile(position, hiddenInteractableTile);
                 seedMap.SetTile(position, hiddenInteractableTile);
-
-                if (SaveData.instance.HasSavedPlant())
-                {
-                    GameManager.instance.plantGrowthManager.LoadPlantsData();
-                }
             }
         }
 

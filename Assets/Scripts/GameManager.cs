@@ -53,9 +53,8 @@ public class GameManager : MonoBehaviour
             }
             else
             {
-                Player.Instance.inventoryManager.LoadInventory();
-                plantGrowthManager.LoadPlantsData();
-                SaveData.instance.LoadPlayerData();
+                SaveData.instance.LoadGameData();
+                // plantGrowthManager.LoadPlantsData();
             }
         }
     }

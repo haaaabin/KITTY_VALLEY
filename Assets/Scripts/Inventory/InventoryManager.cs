@@ -77,18 +77,6 @@ public class InventoryManager : MonoBehaviour
         return null;
     }
 
-    public void SaveInventory()
-    {
-        SaveData.instance.SaveInventory("Backpack", backpack);
-        SaveData.instance.SaveInventory("Toolbar", toolbar);
-    }
-
-    public void LoadInventory()
-    {
-        SaveData.instance.LoadInventory("Backpack");
-        SaveData.instance.LoadInventory("Toolbar");
-    }
-
     public void ClearInventory()
     {
         foreach (var inventory in inventoryByName.Values)

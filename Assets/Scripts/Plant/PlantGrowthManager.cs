@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -41,6 +42,7 @@ public class PlantGrowthManager : MonoBehaviour
             GameManager.instance.tileManager.seedMap.SetTile(position, GameManager.instance.tileManager.plantedTile);
 
             plantDataDict[position] = plantData;
+            Debug.Log(plantDataDict[position].plantName);
             plantGrowthDays[position] = 0;
             currentGrowthStages[position] = 0;
         }
@@ -53,7 +55,7 @@ public class PlantGrowthManager : MonoBehaviour
         {
             yield break;
         }
-        
+
         PlantData plantData = plantDataDict[position];
         int currentStage = currentGrowthStages[position];
         int currentGrowthDay = plantGrowthDays[position];
@@ -174,28 +176,27 @@ public class PlantGrowthManager : MonoBehaviour
     }
 
     // 식물의 상태 저장
-    public void SavePlantDataList()
+    public List<PlantSaveData> SavePlantDataList()
     {
         foreach (var position in plantDataDict.Keys)
         {
-            PlantData plantData = plantDataDict[position];
+            string plantName = GetPlantName(position);
             int growthStage = currentGrowthStages[position];
             int growthDay = plantGrowthDays[position];
             string currentState = GameManager.instance.tileManager.GetTileState(position);
             bool isWatered = GameManager.instance.tileManager.GetWateringTile(position);
 
-            plantSaveDataList.Add(new PlantSaveData(plantData, position, growthStage, growthDay, currentState, isWatered));
+            plantSaveDataList.Add(new PlantSaveData(plantName, position, growthStage, growthDay, currentState, isWatered));
         }
-
-        SaveData.instance.SavePlants(plantSaveDataList);
+        return plantSaveDataList;
     }
 
-    // 저장된 식물 데이터 불러오기 
-    public void LoadPlantsData()
-    {
-        List<PlantSaveData> plantSaveDataList = SaveData.instance.LoadPlants();
-        SetTilePlantSaveData(plantSaveDataList);
-    }
+    // // 저장된 식물 데이터 불러오기 
+    // public void LoadPlantsData()
+    // {
+    //     List<PlantSaveData> plantSaveDataList = SaveData.instance.LoadPlants();
+    //     SetTilePlantSaveData(plantSaveDataList);
+    // }
 
     // 저장된 식물 데이터를 기반으로 타일과 관련된 정보 설정
     public void SetTilePlantSaveData(List<PlantSaveData> plantSaveDataList)
@@ -228,6 +229,7 @@ public class PlantGrowthManager : MonoBehaviour
         }
     }
 
+
     public PlantData GetPlantData(Vector3Int position)
     {
         if (plantDataDict.ContainsKey(position))
@@ -245,6 +247,13 @@ public class PlantGrowthManager : MonoBehaviour
     public void ClearPlantSaveData()
     {
         plantSaveDataList.Clear();
+    }
+
+    public string GetPlantName(Vector3Int position)
+    {
+        if (plantDataDict.ContainsKey(position))
+            return plantDataDict[position].plantName;
+        return "";
     }
 }
 

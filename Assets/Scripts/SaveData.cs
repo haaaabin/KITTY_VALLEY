@@ -2,19 +2,23 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
 using System.Linq;
+using TMPro;
+using Unity.VisualScripting;
 
+[System.Serializable]
 public class PlantSaveData
 {
     public PlantData plantData;
+    public string plantName;
     public Vector3Int position;
     public int growthStage;
     public int growthDay;
     public string currentState;
     public bool isWatered;
 
-    public PlantSaveData(PlantData plantData, Vector3Int position, int growthStage, int growthDay, string currentState, bool isWatered)
+    public PlantSaveData(string plantName, Vector3Int position, int growthStage, int growthDay, string currentState, bool isWatered)
     {
-        this.plantData = plantData;
+        this.plantName = plantName;
         this.position = position;
         this.growthStage = growthStage;
         this.growthDay = growthDay;
@@ -24,14 +28,14 @@ public class PlantSaveData
 }
 
 [System.Serializable]
-public class PlayerSaveData
+public class PlayerData
 {
     public int money;
     public int currentDay;
     public int currentDayIndex;
     public int sellingPrice;
 
-    public PlayerSaveData(int money, int currentDay, int currentDayIndex, int sellingPrice)
+    public PlayerData(int money, int currentDay, int currentDayIndex, int sellingPrice)
     {
         this.money = money;
         this.currentDay = currentDay;
@@ -49,9 +53,24 @@ public class InventorySlotData
 }
 
 [System.Serializable]
-public class InventorySaveData
+public class InventoryData
 {
     public List<InventorySlotData> slots = new List<InventorySlotData>();
+}
+
+[System.Serializable]
+public class GameSaveData
+{
+    public PlayerData playerData;
+    public InventoryData backpackData;
+    public InventoryData toolbarData;
+    public PlantDataWrapper plantData;
+}
+
+[System.Serializable]
+public class PlantDataWrapper
+{
+    public List<PlantSaveData> plants = new List<PlantSaveData>();
 }
 
 public class SaveData : MonoBehaviour
@@ -102,34 +121,36 @@ public class SaveData : MonoBehaviour
 
     public void DeleteSavedFiles()
     {
-        // Get all .txt files in the persistent data path
-        string[] txtFilePaths = Directory.GetFiles(Application.persistentDataPath, "*.txt");
-
         // Get all .json files in the persistent data path
         string[] jsonFilePaths = Directory.GetFiles(Application.persistentDataPath, "*.json");
 
-        // Combine the two file arrays
-        string[] allFilePaths = txtFilePaths.Concat(jsonFilePaths).ToArray();
-
         // Iterate through each file and delete it
-        foreach (string filePath in allFilePaths)
+        foreach (string filePath in jsonFilePaths)
         {
             File.Delete(filePath);
         }
     }
 
-    /* ---- Inventory Save & Load ---- */
-    public void SaveInventory(string inventoryName, Inventory inventoryToSave)
+    public void SaveGameData(
+        Inventory backpack, Inventory toolbar,
+        int currentMoney, int currentDay, int currentDayIndex, int sellingPrice,
+        List<PlantSaveData> plant)
     {
-        string filePath = Application.persistentDataPath + $"/{inventoryName}.json";
+        string filePath = Application.persistentDataPath + $"/GameData.json";
 
-        InventorySaveData inventorySaveData = new InventorySaveData();
+        GameSaveData gameSaveData = new GameSaveData
+        {
+            playerData = new PlayerData(currentMoney, currentDay, currentDayIndex, sellingPrice),
+            backpackData = new InventoryData(),
+            toolbarData = new InventoryData(),
+            plantData = new PlantDataWrapper()
+        };
 
-        foreach (var slot in inventoryToSave.GetSlots)
+        foreach (var slot in backpack.GetSlots)
         {
             if (!slot.isEmpty)
             {
-                inventorySaveData.slots.Add(new InventorySlotData
+                gameSaveData.backpackData.slots.Add(new InventorySlotData
                 {
                     itemName = slot.itemName,
                     currentCount = slot.currentCount,
@@ -138,143 +159,112 @@ public class SaveData : MonoBehaviour
             }
         }
 
-        string json = JsonUtility.ToJson(inventorySaveData, true);
+        foreach (var slot in toolbar.GetSlots)
+        {
+            if (!slot.isEmpty)
+            {
+                gameSaveData.toolbarData.slots.Add(new InventorySlotData
+                {
+                    itemName = slot.itemName,
+                    currentCount = slot.currentCount,
+                    plantName = slot.item?.plantData?.plantName
+                });
+            }
+        }
+        gameSaveData.plantData.plants = plant;
+        
+        string json = JsonUtility.ToJson(gameSaveData, true);
         File.WriteAllText(filePath, json);
     }
 
-    public void LoadInventory(string inventoryName)
+    public void LoadGameData()
     {
-        string filePath = Application.persistentDataPath + $"/{inventoryName}.json";
-        if (!File.Exists(filePath)) return;
+        string filePath = Application.persistentDataPath + "/GameData.json";
 
-        string json = File.ReadAllText(filePath);
-        InventorySaveData inventorySaveData = JsonUtility.FromJson<InventorySaveData>(json);
-
-        Inventory currentInventory = inventoryName == "Backpack"
-            ? InventoryManager.instance.backpack
-            : InventoryManager.instance.toolbar;
-
-        if (currentInventory != null)
+        if (File.Exists(filePath))
         {
-            currentInventory.Clear();
-            foreach (var slotData in inventorySaveData.slots)
+            string json = File.ReadAllText(filePath);
+            GameSaveData gameSaveData = JsonUtility.FromJson<GameSaveData>(json);
+
+            if (gameSaveData.playerData != null)
             {
-                int key = Animator.StringToHash(slotData.itemName);
+                Player.Instance.money = gameSaveData.playerData.money;
+                GameManager.instance.timeManager.day = gameSaveData.playerData.currentDay;
+                GameManager.instance.timeManager.currentDayIndex = gameSaveData.playerData.currentDayIndex;
+                GameManager.instance.itemBox.sellingPrice = gameSaveData.playerData.sellingPrice;
+
+                if (gameSaveData.playerData.sellingPrice > 0)
+                {
+                    GameManager.instance.itemBox.SellItems();
+                    GameManager.instance.itemBox.ResetSellingPrice();
+                }
+            }
+            LoadInventoryFromData(InventoryManager.instance.backpack, gameSaveData.backpackData);
+            LoadInventoryFromData(InventoryManager.instance.toolbar, gameSaveData.toolbarData);
+            LoadPlantFromData(gameSaveData.plantData);
+        }
+    }
+    private void LoadPlantFromData(PlantDataWrapper plantsDataWrapper)
+    {
+        List<PlantSaveData> plantSaveDataList = new List<PlantSaveData>();
+        plantSaveDataList.Clear();
+
+        foreach (var plantsData in plantsDataWrapper.plants)
+        {
+            int plantKey = Animator.StringToHash(plantsData.plantName);
+            allPlant.TryGetValue(plantKey, out PlantData plantData);
+            plantsData.plantData = plantData;
+        }
+        plantSaveDataList = plantsDataWrapper.plants;
+
+        GameManager.instance.plantGrowthManager.SetTilePlantSaveData(plantSaveDataList);
+    }
+
+    private void LoadInventoryFromData(Inventory inventory, InventoryData inventoryData)
+    {
+        if (inventory != null)
+        {
+            inventory.Clear();
+            foreach (var slotsData in inventoryData.slots)
+            {
+                int key = Animator.StringToHash(slotsData.itemName);
                 if (allItem.TryGetValue(key, out var itemData))
                 {
                     PlantData plantData = null;
 
-                    // 해당 item의 plantData 가져오기
-                    if (!string.IsNullOrEmpty(slotData.plantName))
+                    if (!string.IsNullOrEmpty(slotsData.plantName))
                     {
-                        int plantKey = Animator.StringToHash(slotData.plantName);
+                        int plantKey = Animator.StringToHash(slotsData.plantName);
                         allPlant.TryGetValue(plantKey, out plantData);
-                    };
+                    }
 
-                    for (int i = 0; i < slotData.currentCount; i++)
+                    for (int i = 0; i < slotsData.currentCount; i++)
                     {
                         Item item = new GameObject("Item").AddComponent<Item>();
                         item.itemData = itemData;
                         item.plantData = plantData;
-                        currentInventory.Add(item);
+                        inventory.Add(item);
                     }
                 }
             }
         }
     }
 
-
-    /* ---- Plant Save & Load ----*/
-    public void SavePlants(List<PlantSaveData> plantSaveDataList)
+    public void LoadPlants()
     {
-        string filePath = Application.persistentDataPath + $"/plants.txt";
 
-        using (StreamWriter sw = new StreamWriter(filePath, false))
-        {
-            sw.WriteLine($"-- PlantData --");
-            foreach (var plant in plantSaveDataList)
-            {
-                sw.WriteLine($"{plant.plantData.plantName}{SPLIT_CHAR}{plant.position.x}{SPLIT_CHAR}{plant.position.y}{SPLIT_CHAR}{plant.position.z}{SPLIT_CHAR}{plant.growthStage}{SPLIT_CHAR}{plant.growthDay}{SPLIT_CHAR}{plant.currentState}{SPLIT_CHAR}{plant.isWatered}");
-            }
-        }
     }
 
-    public List<PlantSaveData> LoadPlants()
+    public bool HasSavedData()
     {
-        string filePath = Application.persistentDataPath + $"/plants.txt";
-        List<PlantSaveData> plantSaveDataList = new List<PlantSaveData>();
+        string saveDataPath = Application.persistentDataPath + "/GameData.json";
 
-        if (File.Exists(filePath))
-        {
-            using (StreamReader sr = new StreamReader(filePath))
-            {
-                string line;
-                while ((line = sr.ReadLine()) != null)
-                {
-                    string[] data = line.Split(SPLIT_CHAR);
-                    if (data.Length == 8)
-                    {
-                        string plantName = data[0];
-                        Vector3Int position = new Vector3Int(int.Parse(data[1]), int.Parse(data[2]), int.Parse(data[3]));
-                        int growthStage = int.Parse(data[4]);
-                        int growthDay = int.Parse(data[5]);
-                        string currentState = data[6];
-                        bool isWatered = bool.Parse(data[7]);
-
-                        int key = Animator.StringToHash(plantName);
-                        PlantData plantData;
-                        if (allPlant.TryGetValue(key, out plantData))
-                        {
-                            PlantSaveData saveData = new PlantSaveData(plantData, position, growthStage, growthDay, currentState, isWatered);
-                            plantSaveDataList.Add(saveData);
-                        }
-                    }
-                }
-            }
-        }
-        return plantSaveDataList;
-    }
-
-    public void SavePlayerData(int currentMoney, int currentDay, int currentDayIndex, int sellingPrice)
-    {
-        string filePath = Application.persistentDataPath + "/PlayerData.json";
-        PlayerSaveData playerSaveData = new PlayerSaveData(currentMoney, currentDay, currentDayIndex, sellingPrice);
-
-        string json = JsonUtility.ToJson(playerSaveData, true);
-        File.WriteAllText(filePath, json);
-    }
-
-    public void LoadPlayerData()
-    {
-        string filePath = Application.persistentDataPath + "/PlayerData.json";
-        if (File.Exists(filePath))
-        {
-            string json = File.ReadAllText(filePath);
-            PlayerSaveData playerSaveData = JsonUtility.FromJson<PlayerSaveData>(json);
-
-            Player.Instance.money = playerSaveData.money;
-            GameManager.instance.timeManager.day = playerSaveData.currentDay;
-            GameManager.instance.timeManager.currentDayIndex = playerSaveData.currentDayIndex;
-            GameManager.instance.itemBox.sellingPrice = playerSaveData.sellingPrice;
-
-            if (playerSaveData.sellingPrice > 0)
-            {
-                GameManager.instance.itemBox.SellItems();
-                GameManager.instance.itemBox.ResetSellingPrice();
-            }
-        }
-    }
-    public bool HasSavedInventory()
-    {
-        string backpackPath = Application.persistentDataPath + "/Backpack.json";
-        string toolbarPath = Application.persistentDataPath + "/Toolbar.json";
-
-        return File.Exists(backpackPath) || File.Exists(toolbarPath);
+        return File.Exists(saveDataPath);
     }
 
     public bool HasSavedPlant()
     {
-        string plantPath = Application.persistentDataPath + "/plants.txt";
+        string plantPath = Application.persistentDataPath + "/plants.json";
 
         return File.Exists(plantPath);
     }

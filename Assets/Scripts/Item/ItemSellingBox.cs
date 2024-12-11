@@ -171,8 +171,6 @@ public class ItemSellingBox : MonoBehaviour
         int newTotalMoney = Player.Instance.money + dailyEarnings;
 
         StartCoroutine(InGameUI.instance.UpdateMoneyEffect(Player.Instance.money, newTotalMoney));
-        SaveData.instance.SavePlayerData(Player.Instance.money, GameManager.instance.timeManager.day,
-                                GameManager.instance.timeManager.currentDayIndex, dailyEarnings);
     }
 
     public int GetSellingPrice()
