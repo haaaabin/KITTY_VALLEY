@@ -27,7 +27,7 @@ public class Inventory
             plantData = null;
             item = null;
         }
-        
+
         // 슬롯이 비어있는지 확인
         public bool isEmpty
         {
@@ -112,7 +112,7 @@ public class Inventory
     public IReadOnlyList<Slot> GetSlots => slots.AsReadOnly();
 
     // 인벤토리에 아이템 추가
-    public void Add(Item item)
+    public bool Add(Item item)
     {
         // 슬롯의 타입이 추가하려는 아이템의 타입과 같고 maxAllowed보다 적으면
         foreach (Slot slot in slots)
@@ -128,7 +128,7 @@ public class Inventory
                 {
                     slot.AddItem(item);
                 }
-                return;
+                return true;
             }
         }
 
@@ -147,9 +147,10 @@ public class Inventory
                 {
                     slot.AddItem(item);
                 }
-                return;
+                return true;
             }
         }
+        return false;
     }
 
     public void Remove(int index, bool isDrop = false)

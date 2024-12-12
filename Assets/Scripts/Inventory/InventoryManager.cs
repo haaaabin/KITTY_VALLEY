@@ -32,19 +32,24 @@ public class InventoryManager : MonoBehaviour
 
     }
 
-    public void AddStartItem(string inventoryName)
+    public void AddStartItem()
     {
         foreach (var item in startItems)
         {
-            inventoryByName[inventoryName].Add(item);
+            toolbar.Add(item);
         }
     }
 
-    public void Add(string inventoryName, Item item)
+    public void Add(Item item)
     {
-        if (inventoryByName.ContainsKey(inventoryName))
+        if(toolbar.Add(item))
         {
-            inventoryByName[inventoryName].Add(item);
+            return;
+        }
+        
+        if(backpack.Add(item))
+        {
+            return;
         }
     }
 

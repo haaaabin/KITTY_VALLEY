@@ -14,7 +14,7 @@ public class Collectable : MonoBehaviour
             if (item != null && item.canInteract)
             {
                 SoundManager.Instance.Play("EFFECT/Pick", SoundType.EFFECT);
-                player.inventoryManager.Add("Toolbar", item);
+                player.inventoryManager.Add(item);
                 Destroy(this.gameObject);
             }
         }

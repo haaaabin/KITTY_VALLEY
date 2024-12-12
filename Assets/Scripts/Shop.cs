@@ -41,7 +41,7 @@ public class Shop : MonoBehaviour
             {
                 player.money -= item.itemData.price;
                 StartCoroutine(InGameUI.instance.UpdateMoneyEffect(player.money + item.itemData.price, player.money));
-                player.inventoryManager.Add("Toolbar", item);
+                player.inventoryManager.Add(item);
                 SoundManager.Instance.Play("EFFECT/Click", SoundType.EFFECT);
             }
             else
