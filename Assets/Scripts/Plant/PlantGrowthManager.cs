@@ -229,6 +229,11 @@ public class PlantGrowthManager : MonoBehaviour
             plantGrowthDays[position] = currentGrowthDay;
             currentGrowthStages[position] = currentGrowthStage;
             GameManager.instance.tileManager.SetWateringTile(position, isWatered);
+
+            if (isWatered)
+            {
+                StartCoroutine(GrowPlant(position));
+            }
         }
     }
 
