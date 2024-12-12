@@ -24,27 +24,12 @@ public class TileManager : MonoBehaviour
                 seedMap.SetTile(position, hiddenInteractableTile);
             }
         }
-
     }
 
     public void SetInteracted(Vector3Int position)
     {
         interactableMap.SetTile(position, interactedTile);
         tileStates[position] = "Plowed";
-    }
-
-    public List<Vector3Int> SavePlowedTiles()
-    {
-        List<Vector3Int> plowedTilePositions = new List<Vector3Int>();
-
-        foreach (var tile in tileStates)
-        {
-            if (tile.Value == "Plowed")
-            {
-                plowedTilePositions.Add(tile.Key);
-            }
-        }
-        return plowedTilePositions;
     }
 
     public List<Vector3Int> SaveSeededTiles()
@@ -135,16 +120,4 @@ public class TileManager : MonoBehaviour
         return new List<Vector3Int>(wateredTiles.Keys);
     }
 
-    public List<Vector3Int> GetAllTilePositions()
-    {
-        List<Vector3Int> tilePositions = new List<Vector3Int>();
-        foreach (var position in interactableMap.cellBounds.allPositionsWithin)
-        {
-            if (interactableMap.HasTile(position))
-            {
-                tilePositions.Add(position);
-            }
-        }
-        return tilePositions;
-    }
 }

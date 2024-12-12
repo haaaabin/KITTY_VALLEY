@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -191,7 +190,7 @@ public class PlantGrowthManager : MonoBehaviour
 
         foreach (var position in plantDataDict.Keys)
         {
-            string plantName = GetPlantName(position);
+            string plantName = plantDataDict[position].plantName;
             int growthStage = currentGrowthStages[position];
             int growthDay = plantGrowthDays[position];
             string currentState = GameManager.instance.tileManager.GetTileState(position);
@@ -237,7 +236,6 @@ public class PlantGrowthManager : MonoBehaviour
         }
     }
 
-
     public PlantData GetPlantData(Vector3Int position)
     {
         if (plantDataDict.ContainsKey(position))
@@ -255,13 +253,6 @@ public class PlantGrowthManager : MonoBehaviour
     public void ClearPlantSaveData()
     {
         plantSaveDataList.Clear();
-    }
-
-    public string GetPlantName(Vector3Int position)
-    {
-        if (plantDataDict.ContainsKey(position))
-            return plantDataDict[position].plantName;
-        return "";
     }
 }
 
