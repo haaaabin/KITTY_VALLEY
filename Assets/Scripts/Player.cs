@@ -310,7 +310,8 @@ public class Player : MonoBehaviour
         }
         else if (other.gameObject.CompareTag("HouseRoof"))
         {
-            houseRoofTileMap.color = new Color(1f, 1f, 1f, 0f);
+            if(houseRoofTileMap != null)
+                houseRoofTileMap.color = new Color(1f, 1f, 1f, 0f);
         }
         else if (other.gameObject.CompareTag("PostBox"))
         {
@@ -326,7 +327,8 @@ public class Player : MonoBehaviour
         }
         else if (other.gameObject.CompareTag("HouseRoof"))
         {
-            houseRoofTileMap.color = new Color(1f, 1f, 1f, 1f);
+            if(houseRoofTileMap != null)
+                houseRoofTileMap.color = new Color(1f, 1f, 1f, 1f);
         }
         else if (other.gameObject.CompareTag("PostBox"))
         {
