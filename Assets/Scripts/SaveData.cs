@@ -3,25 +3,12 @@ using UnityEngine;
 using System.IO;
 
 [System.Serializable]
-public class PlantSaveData
+public class GameSaveData
 {
-    public PlantData plantData;
-    public string plantName;
-    public Vector3Int position;
-    public int growthStage;
-    public int growthDay;
-    public string currentState;
-    public bool isWatered;
-
-    public PlantSaveData(string plantName, Vector3Int position, int growthStage, int growthDay, string currentState, bool isWatered)
-    {
-        this.plantName = plantName;
-        this.position = position;
-        this.growthStage = growthStage;
-        this.growthDay = growthDay;
-        this.currentState = currentState;
-        this.isWatered = isWatered;
-    }
+    public PlayerData playerData;
+    public InventoryData backpackData;
+    public InventoryData toolbarData;
+    public PlantDataWrapper plantData;
 }
 
 [System.Serializable]
@@ -48,7 +35,6 @@ public class InventorySlotData
     public int currentCount;
     public string plantName;
 }
-
 [System.Serializable]
 public class InventoryData
 {
@@ -56,14 +42,26 @@ public class InventoryData
 }
 
 [System.Serializable]
-public class GameSaveData
+public class PlantSaveData
 {
-    public PlayerData playerData;
-    public InventoryData backpackData;
-    public InventoryData toolbarData;
-    public PlantDataWrapper plantData;
-}
+    public PlantData plantData;
+    public string plantName;
+    public Vector3Int position;
+    public int growthStage;
+    public int growthDay;
+    public string currentState;
+    public bool isWatered;
 
+    public PlantSaveData(string plantName, Vector3Int position, int growthStage, int growthDay, string currentState, bool isWatered)
+    {
+        this.plantName = plantName;
+        this.position = position;
+        this.growthStage = growthStage;
+        this.growthDay = growthDay;
+        this.currentState = currentState;
+        this.isWatered = isWatered;
+    }
+}
 [System.Serializable]
 public class PlantDataWrapper
 {
@@ -77,7 +75,6 @@ public class SaveData : MonoBehaviour
 
     private static Dictionary<int, ItemData> allItem = new Dictionary<int, ItemData>();
     private static Dictionary<int, PlantData> allPlant = new Dictionary<int, PlantData>();
-    private const char SPLIT_CHAR = '_';
 
     void Awake()
     {
