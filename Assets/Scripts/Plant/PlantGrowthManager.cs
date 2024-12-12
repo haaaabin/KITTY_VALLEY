@@ -147,12 +147,19 @@ public class PlantGrowthManager : MonoBehaviour
         // 아래로 부드럽게 내려오는 애니메이션
         while (elapsedTime < landDuration)
         {
-            plant.transform.position = Vector2.SmoothDamp(plant.transform.position, initialPosition, ref velocity, smoothTime);
-            elapsedTime += Time.deltaTime;
+            if (plant != null)
+            {
+                plant.transform.position = Vector2.SmoothDamp(plant.transform.position, initialPosition, ref velocity, smoothTime);
+                elapsedTime += Time.deltaTime;
+            }
+            if (interactable != null)
+            {
+                interactable.canInteract = true;
+            }
+
             yield return null; // 다음 프레임을 기다림
         }
 
-        interactable.canInteract = true;
         // 마지막으로 정확한 착지 위치로 설정
         plant.transform.position = initialPosition;
     }
