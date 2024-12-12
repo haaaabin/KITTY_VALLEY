@@ -19,6 +19,7 @@ public class ItemSellingBox : MonoBehaviour
     private int itemPrice = 0;
     private int itemCount = 0;
     private Inventory.Slot selectedSlot;
+    public bool isOpenItemSellingBox = false;
 
     private void Start()
     {
@@ -57,6 +58,7 @@ public class ItemSellingBox : MonoBehaviour
         isBoxOpen = true;
         anim.SetBool("isOpen", isBoxOpen);
         sellingPanel.SetActive(true);
+        isOpenItemSellingBox = true;
 
         InitializePanel();
 
@@ -71,6 +73,7 @@ public class ItemSellingBox : MonoBehaviour
         isBoxOpen = false;
         anim.SetBool("isOpen", isBoxOpen);
         sellingPanel.SetActive(false);
+        isOpenItemSellingBox = false;
 
         if (InGameUI.instance != null && InGameUI.instance.isInventoryOpen)
         {

@@ -12,6 +12,7 @@ public class Shop : MonoBehaviour
 
     private bool isPlayerInRange = false;
     private bool isBuying = false;
+    public bool isOpenShopPanel = false;
     private Player player;
 
     private void Start()
@@ -20,14 +21,6 @@ public class Shop : MonoBehaviour
 
         riceBuyBtn.onClick.AddListener(() => BuyItem(sellItems[0]));
         tomatoBuyBtn.onClick.AddListener(() => BuyItem(sellItems[1]));
-    }
-
-    private void Update()
-    {
-        if (isPlayerInRange && Input.GetMouseButtonDown(0))
-        {
-            shopPanel.SetActive(true);
-        }
     }
 
     public void BuyItem(Item item)
@@ -63,6 +56,9 @@ public class Shop : MonoBehaviour
         if (other.gameObject.name == "Player")
         {
             isPlayerInRange = true;
+            shopPanel.SetActive(true);
+            isOpenShopPanel = true;
+            InGameUI.instance.ToggleInventoryUI();
         }
     }
 
@@ -72,6 +68,8 @@ public class Shop : MonoBehaviour
         {
             isPlayerInRange = false;
             shopPanel.SetActive(false);
+            isOpenShopPanel = false;
+            InGameUI.instance.ToggleInventoryUI();
         }
     }
 }

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using UnityEditor.ShaderGraph.Internal;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -32,9 +33,10 @@ public class InGameUI : MonoBehaviour
 
     private Vector2 closeInventoryPos;
     private Vector2 openInventoryPos;
-    private float moveDistance = 270f;
-    private float moveSpeed = 5f;
+    private float moveSpeed = 6f;
     private bool isInventoryMoving = false;
+    private Shop shop;
+    private ItemSellingBox itemSellingBox;
 
     private void Awake()
     {
@@ -49,8 +51,8 @@ public class InGameUI : MonoBehaviour
         }
 
         InitializeInventory();
-        closeInventoryPos = inventoryPanel.anchoredPosition;
-        openInventoryPos = closeInventoryPos + new Vector2(0, moveDistance);
+        closeInventoryPos = new Vector2(0, 50);
+        openInventoryPos = new Vector2(0, 320f);
     }
 
     private void Start()
@@ -90,14 +92,20 @@ public class InGameUI : MonoBehaviour
         effectSlider.value = 0.5f;
         bgmSlider.onValueChanged.AddListener((value) => SoundManager.Instance.OnVolumeChanged(value, SoundType.BGM));
         effectSlider.onValueChanged.AddListener((value) => SoundManager.Instance.OnVolumeChanged(value, SoundType.EFFECT));
+
+        shop = FindObjectOfType<Shop>();
+        itemSellingBox = FindObjectOfType<ItemSellingBox>();
     }
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.E) && !isInventoryMoving)
+        if (Input.GetKeyDown(KeyCode.E))
         {
-            SoundManager.Instance.Play("EFFECT/Click", SoundType.EFFECT);
-            ToggleInventoryUI();
+            if (!isInventoryMoving && !shop.isOpenShopPanel && !itemSellingBox.isOpenItemSellingBox)
+            {
+                SoundManager.Instance.Play("EFFECT/Click", SoundType.EFFECT);
+                ToggleInventoryUI();
+            }
         }
 
         if (Input.GetKeyDown(KeyCode.Escape))
@@ -106,7 +114,6 @@ public class InGameUI : MonoBehaviour
                 settingPanel.SetActive(false);
         }
     }
-
 
     #region 인벤토리 UI 
     private void InitializeInventory()
@@ -122,6 +129,8 @@ public class InGameUI : MonoBehaviour
 
     public void ToggleInventoryUI()
     {
+        if (isInventoryMoving) return;
+
         isInventoryOpen = !isInventoryOpen;
         Vector2 targetPosition = isInventoryOpen ? openInventoryPos : closeInventoryPos;
         StartCoroutine(MovePanel(targetPosition));
