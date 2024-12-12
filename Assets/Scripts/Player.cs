@@ -172,20 +172,17 @@ public class Player : MonoBehaviour
 
         targetPosition = new Vector3Int(Mathf.FloorToInt(worldMousePosition.x), Mathf.FloorToInt(worldMousePosition.y), 0);
 
+        // 플레이어의 월드 좌표를 그리드 좌표로 변환
         Vector3 playerPosition = transform.position;
         Vector3Int gridPlayerPosition = new Vector3Int(Mathf.FloorToInt(playerPosition.x), Mathf.FloorToInt(playerPosition.y), 0);
 
         validTiles = new Vector3Int[]
         {
             gridPlayerPosition,
-            gridPlayerPosition + new Vector3Int(-1,1,0),
             gridPlayerPosition + new Vector3Int(0,1,0),
-            gridPlayerPosition + new Vector3Int(1,1,0),
-            gridPlayerPosition + new Vector3Int(-1,0,0),
-            gridPlayerPosition + new Vector3Int(1,0,0),
-            gridPlayerPosition + new Vector3Int(-1,-1,0),
             gridPlayerPosition + new Vector3Int(0,-1,0),
-            gridPlayerPosition + new Vector3Int(1,-1,0)
+            gridPlayerPosition + new Vector3Int(1,0,0),
+            gridPlayerPosition + new Vector3Int(-1,0,0),
         };
 
         isValidTile = false;
@@ -219,6 +216,9 @@ public class Player : MonoBehaviour
 
             if (Input.GetMouseButtonDown(0))
             {
+                // targePosition의 방향대로 애니메이션 방향 설정
+                SetAnimationDirection(targetPosition);
+
                 string tileName = tileManager.GetTileName(targetPosition);
                 string tileState = tileManager.GetTileState(targetPosition);
 
@@ -257,6 +257,22 @@ public class Player : MonoBehaviour
                 }
             }
         }
+    }
+
+    private void SetAnimationDirection(Vector3 targetPosition)
+    {
+        Vector3 playerPosition = transform.position;
+        Vector3Int gridPlayerPosition = new Vector3Int(Mathf.FloorToInt(playerPosition.x), Mathf.FloorToInt(playerPosition.y), 0);
+
+        // 현재 위치와 targetPosition을 비교하여 방향 계산
+        Vector3 direction = (targetPosition - gridPlayerPosition).normalized;
+
+        // 방향을 x, y 값으로 애니메이션 파라미터에 설정
+        anim.SetFloat("Horizontal", direction.x);
+        anim.SetFloat("Vertical", direction.y);
+
+        // 이전 이동 방향을 저장
+        lastMoveDirection = direction;
     }
 
     private void Hoeing()
