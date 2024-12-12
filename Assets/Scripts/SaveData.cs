@@ -1,9 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
-using System.Linq;
-using TMPro;
-using Unity.VisualScripting;
 
 [System.Serializable]
 public class PlantSaveData
@@ -250,22 +247,10 @@ public class SaveData : MonoBehaviour
         }
     }
 
-    public void LoadPlants()
-    {
-
-    }
-
     public bool HasSavedData()
     {
         string saveDataPath = Application.persistentDataPath + "/GameData.json";
 
         return File.Exists(saveDataPath);
-    }
-
-    public bool HasSavedPlant()
-    {
-        string plantPath = Application.persistentDataPath + "/plants.json";
-
-        return File.Exists(plantPath);
     }
 }
