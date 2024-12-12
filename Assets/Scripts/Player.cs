@@ -177,6 +177,7 @@ public class Player : MonoBehaviour
 
         validTiles = new Vector3Int[]
         {
+            gridPlayerPosition,
             gridPlayerPosition + new Vector3Int(-1,1,0),
             gridPlayerPosition + new Vector3Int(0,1,0),
             gridPlayerPosition + new Vector3Int(1,1,0),
