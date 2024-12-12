@@ -23514,12 +23514,16 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 2127624473019068566, guid: d9b6dab7a8831834ea2d858de9134854, type: 3}
+      propertyPath: m_Size.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2127624473019068566, guid: d9b6dab7a8831834ea2d858de9134854, type: 3}
       propertyPath: m_Size.y
-      value: 0.36850727
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 2127624473019068566, guid: d9b6dab7a8831834ea2d858de9134854, type: 3}
       propertyPath: m_Offset.y
-      value: -0.30425614
+      value: -0.24591295
       objectReference: {fileID: 0}
     - target: {fileID: 5864131022845358242, guid: d9b6dab7a8831834ea2d858de9134854, type: 3}
       propertyPath: houseRoofTileMap

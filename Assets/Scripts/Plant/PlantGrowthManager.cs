@@ -105,6 +105,8 @@ public class PlantGrowthManager : MonoBehaviour
                 StartCoroutine(FloatAndLand(plant));
             }
         }
+        // 저장 데이터에서도 삭제
+        plantSaveDataList.RemoveAll(data => data.position == position);
         RemovePlantData(position);
     }
 
@@ -178,6 +180,8 @@ public class PlantGrowthManager : MonoBehaviour
     // 식물의 상태 저장
     public List<PlantSaveData> SavePlantDataList()
     {
+        plantSaveDataList.Clear(); // 기존 저장 데이터 초기화
+
         foreach (var position in plantDataDict.Keys)
         {
             string plantName = GetPlantName(position);
@@ -190,13 +194,6 @@ public class PlantGrowthManager : MonoBehaviour
         }
         return plantSaveDataList;
     }
-
-    // // 저장된 식물 데이터 불러오기 
-    // public void LoadPlantsData()
-    // {
-    //     List<PlantSaveData> plantSaveDataList = SaveData.instance.LoadPlants();
-    //     SetTilePlantSaveData(plantSaveDataList);
-    // }
 
     // 저장된 식물 데이터를 기반으로 타일과 관련된 정보 설정
     public void SetTilePlantSaveData(List<PlantSaveData> plantSaveDataList)
@@ -224,7 +221,6 @@ public class PlantGrowthManager : MonoBehaviour
             plantDataDict[position] = plantData;
             plantGrowthDays[position] = currentGrowthDay;
             currentGrowthStages[position] = currentGrowthStage;
-
             GameManager.instance.tileManager.SetWateringTile(position, isWatered);
         }
     }
