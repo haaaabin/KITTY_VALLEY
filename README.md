@@ -14,7 +14,7 @@
 
 1. [프로젝트 개요](#Intro)
 2. [게임 기능](#Features)
-3. [게임 플레이 영상](#Play)
+3. [게임 플레이](#Play)
 4. [핵심 기능](#CoreFeatures)
 <br/>
 
@@ -56,9 +56,10 @@
 ![Inventory-ezgif com-video-to-gif-converter](https://github.com/user-attachments/assets/eebd03e8-8ed2-4d68-b263-6b0919d09028)
 ![Drop-ezgif com-video-to-gif-converter](https://github.com/user-attachments/assets/b3056266-edd1-45dc-b7d6-3e4219514c54)
 ![OnDayEnd-ezgif com-video-to-gif-converter](https://github.com/user-attachments/assets/d8cd3d1c-a4d2-4ba5-85b6-cf9f5ed0a107)
-![Seed-ezgif com-video-to-gif-converter](https://github.com/user-attachments/assets/60abef6c-3b51-4f96-8158-87251016880e)
-![Harvest-ezgif com-video-to-gif-converter](https://github.com/user-attachments/assets/f3f05f1f-b8ef-432a-b5b4-53a02bbf01d9)
-![Save-ezgif com-video-to-gif-converter](https://github.com/user-attachments/assets/0c5c070a-e240-4deb-b2b5-13768f6e775f)
+![Shop-ezgif com-video-to-gif-converter](https://github.com/user-attachments/assets/7ef89135-b101-45d4-bdd9-6c82a6117b93)
+![Seed-ezgif com-video-to-gif-converter (1)](https://github.com/user-attachments/assets/daceb67b-afc3-4b5d-9099-e7f3cc0c56c2)
+![Harvest-ezgif com-video-to-gif-converter](https://github.com/user-attachments/assets/c7731736-6ee0-42b2-90a8-224095f02e6f)
+![Save-ezgif com-video-to-gif-converter (1)](https://github.com/user-attachments/assets/5ab81b3a-c02f-4457-bfc0-52af5845fd55)
 <br/>
 
 <a name="CoreFeatures"></a>
