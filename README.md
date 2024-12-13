@@ -49,9 +49,16 @@
 <br/>
 
 <a name="Play"></a>
-## 게임 플레이 영상
-https://youtu.be/Fo32gxrJpj0
+## 게임 플레이
 
+![Tree-ezgif com-video-to-gif-converter](https://github.com/user-attachments/assets/4eb5383d-9b33-4093-98c6-539f1de4a0bf)
+![ItemBox-ezgif com-video-to-gif-converter](https://github.com/user-attachments/assets/ea50d89d-af3f-4b14-a8f4-59d0cf22aab4)
+![Inventory-ezgif com-video-to-gif-converter](https://github.com/user-attachments/assets/eebd03e8-8ed2-4d68-b263-6b0919d09028)
+![Drop-ezgif com-video-to-gif-converter](https://github.com/user-attachments/assets/b3056266-edd1-45dc-b7d6-3e4219514c54)
+![OnDayEnd-ezgif com-video-to-gif-converter](https://github.com/user-attachments/assets/d8cd3d1c-a4d2-4ba5-85b6-cf9f5ed0a107)
+![Seed-ezgif com-video-to-gif-converter](https://github.com/user-attachments/assets/60abef6c-3b51-4f96-8158-87251016880e)
+![Harvest-ezgif com-video-to-gif-converter](https://github.com/user-attachments/assets/f3f05f1f-b8ef-432a-b5b4-53a02bbf01d9)
+![Save-ezgif com-video-to-gif-converter](https://github.com/user-attachments/assets/0c5c070a-e240-4deb-b2b5-13768f6e775f)
 <br/>
 
 <a name="CoreFeatures"></a>
