@@ -14,7 +14,7 @@
 
 1. [프로젝트 개요](#Intro)
 2. [게임 기능](#Features)
-3. [게임 플레이 영상](#Play)
+3. [게임 플레이](#Play)
 4. [핵심 기능](#CoreFeatures)
 <br/>
 
@@ -49,9 +49,17 @@
 <br/>
 
 <a name="Play"></a>
-## 게임 플레이 영상
-https://youtu.be/Fo32gxrJpj0
+## 게임 플레이
 
+![Tree-ezgif com-video-to-gif-converter](https://github.com/user-attachments/assets/4eb5383d-9b33-4093-98c6-539f1de4a0bf)
+![ItemBox-ezgif com-video-to-gif-converter](https://github.com/user-attachments/assets/ea50d89d-af3f-4b14-a8f4-59d0cf22aab4)
+![Inventory-ezgif com-video-to-gif-converter](https://github.com/user-attachments/assets/eebd03e8-8ed2-4d68-b263-6b0919d09028)
+![Drop-ezgif com-video-to-gif-converter](https://github.com/user-attachments/assets/b3056266-edd1-45dc-b7d6-3e4219514c54)
+![OnDayEnd-ezgif com-video-to-gif-converter](https://github.com/user-attachments/assets/d8cd3d1c-a4d2-4ba5-85b6-cf9f5ed0a107)
+![Shop-ezgif com-video-to-gif-converter](https://github.com/user-attachments/assets/7ef89135-b101-45d4-bdd9-6c82a6117b93)
+![Seed-ezgif com-video-to-gif-converter (1)](https://github.com/user-attachments/assets/daceb67b-afc3-4b5d-9099-e7f3cc0c56c2)
+![Harvest-ezgif com-video-to-gif-converter](https://github.com/user-attachments/assets/c7731736-6ee0-42b2-90a8-224095f02e6f)
+![Save-ezgif com-video-to-gif-converter (1)](https://github.com/user-attachments/assets/5ab81b3a-c02f-4457-bfc0-52af5845fd55)
 <br/>
 
 <a name="CoreFeatures"></a>
@@ -77,6 +85,4 @@ https://youtu.be/Fo32gxrJpj0
 <br/>
  
 -  저장/로드 시스템 [코드](https://github.com/haaaabin/KITTY_VALLEY/blob/main/Assets/Scripts/SaveData.cs)
-    - 인벤토리의 데이터와 플레이어의 데이터(돈, 날짜)를 JSON 파일로 직렬화와 역직렬화를 통해 저장하고 로드합니다.
-    - 식물 데이터의 경우 게임 오브젝트와 타일 정보를 저장하고 있기 때문에 복잡한 직렬화와 역직렬화 대신 텍스트 파일로 저장하고 로드하는 방식으로 관리합니다.
-      
+    - 인벤토리, 식물, 플레이어의 데이터(돈, 날짜)를 JSON 파일로 직렬화와 역직렬화를 통해 저장하고 로드합니다.
