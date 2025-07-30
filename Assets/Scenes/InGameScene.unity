@@ -1822,19 +1822,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 74d878e298794d947be4220878096849, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  inventoryToSave:
-    slots: []
-    selectedSlot:
-      itemName: 
-      icon: {fileID: 0}
-      currentCount: 0
-      maxAllowed: 99
-      price: 0
-      isSellable: 0
-      item: {fileID: 0}
-      plantData: {fileID: 0}
-    curSlots: 0
-    maxSlots: 0
 --- !u!1 &374728769
 GameObject:
   m_ObjectHideFlags: 0
@@ -8799,6 +8786,7 @@ MonoBehaviour:
   sellItems:
   - {fileID: 6324485900466675690, guid: 3cdcfbff282e81d4597572e740771c8d, type: 3}
   - {fileID: 1767441087838186580, guid: 1abca68073ac5c546aa41e72c5ab728c, type: 3}
+  isOpenShopPanel: 0
 --- !u!61 &1789136728
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -11285,6 +11273,7 @@ MonoBehaviour:
   checkBtn: {fileID: 59304368}
   isBoxOpen: 0
   sellingPrice: 0
+  isOpenItemSellingBox: 0
 --- !u!95 &2112621580
 Animator:
   serializedVersion: 5

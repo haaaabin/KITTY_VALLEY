@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 39056d074fbe38e4da22ecf1d8323cba
+guid: 3bd174a28c63f5f4493a7dd90b1a24a9
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -93,26 +93,102 @@ TextureImporter:
     ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: iPhone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Inventory_Light_Herat_Spritesheet_14
+      name: UI Big Play Button_0
       rect:
         serializedVersion: 2
-        x: 8
-        y: 96
-        width: 95
-        height: 23
+        x: 3
+        y: 35
+        width: 90
+        height: 27
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 013324d3fd59ad342abbc6f4f36beb07
-      internalID: -1433186094
+      spriteID: 2ace44339e7d4ab49ad46ee8899b2551
+      internalID: -828100962
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UI Big Play Button_1
+      rect:
+        serializedVersion: 2
+        x: 99
+        y: 35
+        width: 90
+        height: 25
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8067d75cb3656df4b95088df996235f7
+      internalID: 872677285
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UI Big Play Button_2
+      rect:
+        serializedVersion: 2
+        x: 3
+        y: 3
+        width: 90
+        height: 27
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3538eeb3098c05645b47d991c3c893a0
+      internalID: -1252105654
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UI Big Play Button_3
+      rect:
+        serializedVersion: 2
+        x: 99
+        y: 3
+        width: 90
+        height: 25
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c494df09de08d4a40834eb96c3aa3c6c
+      internalID: -1715356187
       vertices: []
       indices: 
       edges: []
@@ -128,24 +204,10 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      Inventory_Light_Herat_Spritesheet_0: -2137127931
-      Inventory_Light_Herat_Spritesheet_1: -1180567
-      Inventory_Light_Herat_Spritesheet_10: -448552914
-      Inventory_Light_Herat_Spritesheet_11: -236058102
-      Inventory_Light_Herat_Spritesheet_12: 1351552141
-      Inventory_Light_Herat_Spritesheet_13: -487982535
-      Inventory_Light_Herat_Spritesheet_14: -1433186094
-      Inventory_Light_Herat_Spritesheet_15: -1529693664
-      Inventory_Light_Herat_Spritesheet_16: 543957132
-      Inventory_Light_Herat_Spritesheet_17: 1327543490
-      Inventory_Light_Herat_Spritesheet_2: 1259619249
-      Inventory_Light_Herat_Spritesheet_3: 1766207783
-      Inventory_Light_Herat_Spritesheet_4: -1031117622
-      Inventory_Light_Herat_Spritesheet_5: -2027872304
-      Inventory_Light_Herat_Spritesheet_6: -1505402576
-      Inventory_Light_Herat_Spritesheet_7: -1997286631
-      Inventory_Light_Herat_Spritesheet_8: -1646877851
-      Inventory_Light_Herat_Spritesheet_9: -1968990099
+      UI Big Play Button_0: -828100962
+      UI Big Play Button_1: 872677285
+      UI Big Play Button_2: -1252105654
+      UI Big Play Button_3: -1715356187
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

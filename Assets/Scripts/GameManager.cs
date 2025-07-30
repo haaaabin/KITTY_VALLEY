@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -33,6 +34,8 @@ public class GameManager : MonoBehaviour
         itemBox = FindObjectOfType<ItemSellingBox>();
 
         SceneManager.sceneLoaded += OnSceneLoaded;
+
+
     }
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)

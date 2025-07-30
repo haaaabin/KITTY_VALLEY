@@ -41,7 +41,6 @@ public class PlantGrowthManager : MonoBehaviour
             GameManager.instance.tileManager.seedMap.SetTile(position, GameManager.instance.tileManager.plantedTile);
 
             plantDataDict[position] = plantData;
-            Debug.Log(plantDataDict[position].plantName);
             plantGrowthDays[position] = 0;
             currentGrowthStages[position] = 0;
         }
@@ -163,7 +162,8 @@ public class PlantGrowthManager : MonoBehaviour
         plant.transform.position = initialPosition;
     }
 
-    void OnDayEnd()
+    // 식물 성장 이벤트
+    private void OnDayEnd()
     {
         // wateredTiles의 키를 미리 복사하여 List에 저장
         List<Vector3Int> wateredTilesKey = GameManager.instance.tileManager.GetWateredTilesKeys();
