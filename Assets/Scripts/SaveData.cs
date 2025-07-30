@@ -35,6 +35,7 @@ public class InventorySlotData
     public int currentCount;
     public string plantName;
 }
+
 [System.Serializable]
 public class InventoryData
 {
@@ -71,7 +72,6 @@ public class PlantDataWrapper
 public class SaveData : MonoBehaviour
 {
     public static SaveData instance;
-    public Inventory inventoryToSave = null;    // 저장할 인벤토리
 
     private static Dictionary<int, ItemData> allItem = new Dictionary<int, ItemData>();
     private static Dictionary<int, PlantData> allPlant = new Dictionary<int, PlantData>();
@@ -89,11 +89,11 @@ public class SaveData : MonoBehaviour
     // Resources 폴더에서 ItemData 객체들을 불러와서 allItem 딕셔너리에 해시 값으로 저장
     private void CreateItemDictionary()
     {
-        ItemData[] allItems = Resources.FindObjectsOfTypeAll<ItemData>();
+        ItemData[] allItems = Resources.LoadAll<ItemData>("ItemDatas");
 
         foreach (ItemData i in allItems)
         {
-            int key = Animator.StringToHash(i.itemName);  // 아이템의 이름을 해시 값으로 변환해 고유한 키로 사용
+            int key = Animator.StringToHash(i.itemName);
 
             if (!allItem.ContainsKey(key))
                 allItem.Add(key, i);
@@ -102,35 +102,24 @@ public class SaveData : MonoBehaviour
 
     private void CreatePlantDataDictionary()
     {
-        PlantData[] allPlants = Resources.FindObjectsOfTypeAll<PlantData>();
+        PlantData[] allPlants = Resources.LoadAll<PlantData>("PlantDatas");
 
         foreach (PlantData i in allPlants)
         {
-            int key = Animator.StringToHash(i.plantName);
+            int key = Animator.StringToHash(i.plantName);  // 아이템의 이름을 해시 값으로 변환해 고유한 키로 사용
 
             if (!allPlant.ContainsKey(key))
                 allPlant.Add(key, i);
         }
     }
 
-    public void DeleteSavedFiles()
-    {
-        // Get all .json files in the persistent data path
-        string[] jsonFilePaths = Directory.GetFiles(Application.persistentDataPath, "*.json");
-
-        // Iterate through each file and delete it
-        foreach (string filePath in jsonFilePaths)
-        {
-            File.Delete(filePath);
-        }
-    }
-
+    // 저장
     public void SaveGameData(
         Inventory backpack, Inventory toolbar,
         int currentMoney, int currentDay, int currentDayIndex, int sellingPrice,
         List<PlantSaveData> plant)
     {
-        string filePath = Application.persistentDataPath + $"/GameData.json";
+        string filePath = Application.persistentDataPath + "/GameData.json";
 
         GameSaveData gameSaveData = new GameSaveData
         {
@@ -165,8 +154,9 @@ public class SaveData : MonoBehaviour
                 });
             }
         }
+
         gameSaveData.plantData.plants = plant;
-        
+
         string json = JsonUtility.ToJson(gameSaveData, true);
         File.WriteAllText(filePath, json);
     }
@@ -237,17 +227,24 @@ public class SaveData : MonoBehaviour
                         Item item = new GameObject("Item").AddComponent<Item>();
                         item.itemData = itemData;
                         item.plantData = plantData;
+
                         inventory.Add(item);
                     }
                 }
             }
         }
     }
-
     public bool HasSavedData()
     {
         string saveDataPath = Application.persistentDataPath + "/GameData.json";
 
         return File.Exists(saveDataPath);
+    }
+    
+    public void DeleteSavedFiles()
+    {
+        string[] jsonFilePaths = Directory.GetFiles(Application.persistentDataPath, "*.json");
+        foreach (string filePath in jsonFilePaths)
+            File.Delete(filePath);
     }
 }
